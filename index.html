@@ -70,8 +70,13 @@ body{
 .progress-text{font-size:13px;color:var(--text2);margin-top:6px;text-align:right}
 /* Task Group */
 .task-group{margin-bottom:8px}
-.group-header{font-size:13px;font-weight:600;color:var(--text2);padding:10px 0 6px;border-bottom:1px solid var(--border);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.group-header{font-size:13px;font-weight:600;color:var(--text2);padding:10px 0 6px;border-bottom:1px solid var(--border);margin-bottom:6px;display:flex;align-items:center;gap:6px;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;transition:color .2s}
+.group-header:active{color:var(--text1)}
 .group-header span{flex:1}
+.group-toggle{font-size:12px;transition:transform .3s ease;color:var(--text3);flex-shrink:0;width:20px;text-align:center}
+.group-header.collapsed .group-toggle{transform:rotate(-90deg)}
+.group-body{overflow:hidden;transition:max-height .3s ease,opacity .3s ease;max-height:2000px;opacity:1}
+.group-body.collapsed{max-height:0;opacity:0;margin:0;padding:0}
 .must-add-btn{font-size:11px;font-weight:500;color:var(--green);background:var(--green-light);border:1px solid rgba(76,175,80,0.3);border-radius:12px;padding:2px 10px;cursor:pointer;transition:all .2s}
 .must-add-btn:active{background:var(--green);color:#fff}
 .must-del-btn{width:20px;height:20px;border-radius:50%;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:14px;line-height:1;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0}
@@ -550,40 +555,68 @@ if(!localStorage.getItem('orders')){
   }catch(e){/* 网络异常时使用本地数据，静默处理 */}
 })();
 
+function getCollapsedGroups(){
+  return LS.get('collapsedGroups',{});
+}
+function toggleGroupCollapse(groupName){
+  const collapsed=getCollapsedGroups();
+  collapsed[groupName]=!collapsed[groupName];
+  LS.set('collapsedGroups',collapsed);
+  renderTasks();
+}
 function renderTasks(){
   const tasks=getTasks();
   const total=getTotalTasks();
   const container=$('taskContainer');
   container.innerHTML='';
+  const collapsed=getCollapsedGroups();
   let lastGroup='';
+  let currentBody=null;
   tasks.forEach((t,i)=>{
     if(t.group&&t.group!==lastGroup){
       lastGroup=t.group;
       const gh=document.createElement('div');
-      gh.className='group-header';
+      const isCollapsed=!!collapsed[t.group];
+      gh.className='group-header'+(isCollapsed?' collapsed':'');
+      gh.setAttribute('data-group',t.group);
+      // 展开/收起箭头
+      const arrow=document.createElement('span');
+      arrow.className='group-toggle';
+      arrow.textContent='▼';
+      gh.appendChild(arrow);
+      // 标题
+      const titleSpan=document.createElement('span');
+      titleSpan.textContent=t.group;
+      gh.appendChild(titleSpan);
       // 必完成事件分组头带添加按钮
       if(t.cat==='must'){
-        gh.innerHTML=`<span>${t.group}</span><button class="must-add-btn" onclick="event.stopPropagation();openMustDoModal()">+ 添加</button>`;
-      }else{
-        gh.textContent=t.group;
+        const addBtn=document.createElement('button');
+        addBtn.className='must-add-btn';
+        addBtn.textContent='+ 添加';
+        addBtn.setAttribute('data-action','add-mustdo');
+        gh.appendChild(addBtn);
       }
       container.appendChild(gh);
+      // 创建分组内容容器
+      currentBody=document.createElement('div');
+      currentBody.className='group-body'+(isCollapsed?' collapsed':'');
+      container.appendChild(currentBody);
     }
+    const target=currentBody||container;
     if(t.hint){
-      // 提示行，不可点击
       const hint=document.createElement('div');
       hint.className='task-item hint-item';
       hint.innerHTML=`<span class="task-emoji">${t.emoji}</span><div class="task-info"><div class="task-title" style="color:var(--text3);font-size:12px">${t.title}</div></div>`;
-      container.appendChild(hint);
+      target.appendChild(hint);
       return;
     }
     const div=document.createElement('div');
     div.className='task-item'+(planState.done.includes(i)?' done':'');
-    div.onclick=()=>toggleTask(i);
+    div.setAttribute('data-task-index',i);
     // 必完成事件的删除按钮
     let mustDel='';
     if(t.cat==='must'&&t.mustIdx!==undefined){
-      mustDel=`<button class="must-del-btn" onclick="event.stopPropagation();removeMustDo(${t.mustIdx})">×</button>`;
+      mustDel=`<button class="must-del-btn" data-action="remove-mustdo" data-must-idx="${t.mustIdx}">×</button>`;
     }
     div.innerHTML=`
       <span class="task-emoji">${t.emoji}</span>
@@ -595,7 +628,7 @@ function renderTasks(){
       ${mustDel}
       <span class="task-check">${planState.done.includes(i)?'✓':''}</span>
     `;
-    container.appendChild(div);
+    target.appendChild(div);
   });
   updateProgress(total);
 }
@@ -664,6 +697,42 @@ function launchConfetti(){
 }
 if(planState.done.length===getTotalTasks())showCelebration();
 renderTasks();
+
+// 每日计划事件委托（一次性初始化）
+(function(){
+  const tc=$('taskContainer');
+  tc.addEventListener('click',function(e){
+    const target=e.target;
+    // 点击必完成添加按钮
+    if(target.getAttribute('data-action')==='add-mustdo'||target.closest('[data-action="add-mustdo"]')){
+      e.stopPropagation();
+      openMustDoModal();
+      return;
+    }
+    // 点击必完成删除按钮
+    const delBtn=target.closest('[data-action="remove-mustdo"]');
+    if(delBtn){
+      e.stopPropagation();
+      const mustIdx=parseInt(delBtn.getAttribute('data-must-idx'));
+      removeMustDo(mustIdx);
+      return;
+    }
+    // 点击分组标题（展开/收起）
+    const header=target.closest('.group-header');
+    if(header){
+      const groupName=header.getAttribute('data-group');
+      if(groupName)toggleGroupCollapse(groupName);
+      return;
+    }
+    // 点击任务项（打卡）
+    const taskItem=target.closest('[data-task-index]');
+    if(taskItem){
+      const idx=parseInt(taskItem.getAttribute('data-task-index'));
+      toggleTask(idx);
+      return;
+    }
+  });
+})();
 
 // ======================== MODALS ========================
 function openModal(type){

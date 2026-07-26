@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>灵感收集本</title>
+<style>
+:root{
+  --bg:#FAF8F5;--card:#FFFFFF;--text:#2D2D2D;--text2:#666;--text3:#999;
+  --border:#E8E4E0;--shadow:0 2px 12px rgba(0,0,0,0.06);
+  --pink:#EC407A;--pink-light:#FCE4EC;
+  --orange:#FFA726;--orange-light:#FFF3E0;
+  --purple:#AB47BC;--purple-light:#F3E5F5;
+  --blue:#42A5F5;--blue-light:#E3F2FD;
+  --green:#4CAF50;--green-light:#E8F5E9;
+  --radius:14px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1A1A1A;--card:#2A2A2A;--text:#E0E0E0;--text2:#AAA;--text3:#777;
+    --border:#3A3A3A;--shadow:0 2px 12px rgba(0,0,0,0.3);
+    --pink-light:#3A1A2A;--orange-light:#3A2A1A;--purple-light:#2A1A3A;
+    --blue-light:#1A2A3A;--green-light:#1B3A1B;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:-apple-system,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--text);
+  max-width:420px;margin:0 auto;min-height:100vh;
+  padding-bottom:80px;overflow-x:hidden;
+}
+
+/* Header */
+.header{
+  position:sticky;top:0;z-index:100;background:var(--bg);
+  padding:16px 16px 12px;border-bottom:1px solid var(--border);
+}
+.header h1{font-size:20px;font-weight:700;color:var(--text)}
+.header p{font-size:13px;color:var(--text3);margin-top:4px}
+
+/* Tab bar */
+.tab-bar{
+  display:flex;margin:12px 16px;gap:8px;
+}
+.tab{
+  flex:1;padding:10px 8px;border-radius:10px;border:1px solid var(--border);
+  background:var(--card);text-align:center;cursor:pointer;
+  font-size:13px;font-weight:500;color:var(--text2);
+  transition:all .2s ease;
+}
+.tab.active-pink{background:var(--pink-light);color:var(--pink);border-color:var(--pink)}
+.tab.active-orange{background:var(--orange-light);color:var(--orange);border-color:var(--orange)}
+.tab.active-purple{background:var(--purple-light);color:var(--purple);border-color:var(--purple)}
+
+/* Section */
+.section{margin:0 16px 16px;display:none}
+.section.active{display:block}
+.section-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;
+}
+.section-title{
+  font-size:15px;font-weight:600;color:var(--text);
+}
+.section-count{
+  font-size:12px;color:var(--text3);
+  background:var(--bg);padding:2px 8px;border-radius:10px;
+}
+
+/* Item card */
+.item{
+  background:var(--card);border-radius:var(--radius);
+  padding:14px;margin-bottom:10px;
+  box-shadow:var(--shadow);border:1px solid var(--border);
+  position:relative;
+  transition:all .2s ease;
+}
+.item.pink{border-left:4px solid var(--pink)}
+.item.orange{border-left:4px solid var(--orange)}
+.item.purple{border-left:4px solid var(--purple)}
+.item:active{transform:scale(0.99)}
+
+.item-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.4}
+.item-desc{font-size:13px;color:var(--text2);line-height:1.5}
+.item-date{font-size:11px;color:var(--text3);margin-top:6px}
+.item-actions{
+  position:absolute;top:12px;right:12px;
+  display:flex;gap:6px;
+}
+.item-btn{
+  width:28px;height:28px;border-radius:50%;border:none;
+  background:var(--bg);cursor:pointer;font-size:13px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.item-btn:active{transform:scale(0.85)}
+
+/* Empty state */
+.empty{
+  text-align:center;padding:40px 20px;color:var(--text3);
+}
+.empty-emoji{font-size:40px;margin-bottom:12px}
+.empty-text{font-size:14px;line-height:1.6}
+
+/* FAB */
+.fab{
+  position:fixed;bottom:24px;right:50%;transform:translateX(calc(210px - 30px));
+  width:56px;height:56px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,#EC407A,#AB47BC);
+  color:#fff;font-size:26px;cursor:pointer;
+  box-shadow:0 4px 16px rgba(236,64,122,0.4);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;z-index:50;
+}
+@media(max-width:420px){
+  .fab{right:20px;transform:none}
+}
+.fab:active{transform:scale(0.9)}
+@media(max-width:420px){
+  .fab:active{transform:scale(0.9)}
+}
+
+/* Modal */
+.modal-overlay{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0.5);z-index:200;
+  display:none;align-items:flex-end;justify-content:center;
+}
+.modal-overlay.show{display:flex}
+.modal{
+  background:var(--card);border-radius:20px 20px 0 0;
+  width:100%;max-width:420px;padding:20px 16px 30px;
+  animation:slideUp .3s ease;
+}
+@keyframes slideUp{
+  from{transform:translateY(100%)}
+  to{transform:translateY(0)}
+}
+.modal-handle{
+  width:36px;height:4px;background:var(--border);
+  border-radius:2px;margin:0 auto 16px;
+}
+.modal h2{font-size:17px;font-weight:600;margin-bottom:16px;text-align:center}
+.modal label{
+  display:block;font-size:13px;color:var(--text2);
+  margin-bottom:6px;font-weight:500;
+}
+.modal input,.modal textarea{
+  width:100%;padding:12px;border:1px solid var(--border);
+  border-radius:10px;background:var(--bg);color:var(--text);
+  font-size:14px;margin-bottom:14px;
+  font-family:inherit;resize:vertical;
+}
+.modal input:focus,.modal textarea:focus{
+  outline:none;border-color:var(--pink);
+}
+.modal textarea{min-height:80px}
+.modal-btns{display:flex;gap:10px;margin-top:6px}
+.modal-btn{
+  flex:1;padding:14px;border-radius:12px;border:none;
+  font-size:15px;font-weight:600;cursor:pointer;
+  transition:all .2s;
+}
+.modal-btn:active{transform:scale(0.97)}
+.btn-cancel{background:var(--bg);color:var(--text2)}
+.btn-save{background:linear-gradient(135deg,#EC407A,#AB47BC);color:#fff}
+.btn-delete{background:#FF5252;color:#fff;flex:0.6}
+
+/* Long press hint */
+.press-hint{
+  text-align:center;padding:8px;font-size:12px;color:var(--text3);
+}
+
+/* Floating toast */
+.toast{
+  position:fixed;bottom:90px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,0.75);color:#fff;
+  padding:8px 18px;border-radius:20px;font-size:13px;
+  opacity:0;transition:opacity .3s;pointer-events:none;z-index:300;
+  white-space:nowrap;
+}
+.toast.show{opacity:1}
+
+/* Search */
+.search-bar{
+  margin:0 16px 12px;position:relative;
+}
+.search-bar input{
+  width:100%;padding:10px 12px 10px 36px;
+  border:1px solid var(--border);border-radius:10px;
+  background:var(--card);color:var(--text);font-size:14px;
+}
+.search-bar input:focus{outline:none;border-color:var(--pink)}
+.search-bar .search-icon{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  font-size:15px;color:var(--text3);
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📒 灵感收集本</h1>
+  <p>随时记录灵感，长按卡片可编辑</p>
+</div>
+
+<!-- 搜索 -->
+<div class="search-bar">
+  <span class="search-icon">🔍</span>
+  <input type="text" id="searchInput" placeholder="搜索灵感..." oninput="filterItems()">
+</div>
+
+<!-- Tabs -->
+<div class="tab-bar">
+  <div class="tab active-pink" id="tab-topic" onclick="switchTab('topic')">💡 选题</div>
+  <div class="tab" id="tab-scene" onclick="switchTab('scene')">🎬 拍摄场景</div>
+  <div class="tab" id="tab-video" onclick="switchTab('video')">🎥 视频形式</div>
+</div>
+
+<!-- 三个板块 -->
+<div class="section active" id="sec-topic"></div>
+<div class="section" id="sec-scene"></div>
+<div class="section" id="sec-video"></div>
+
+<!-- FAB -->
+<button class="fab" onclick="openAddModal()">+</button>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h2 id="modalTitle">添加灵感</h2>
+    <label>标题</label>
+    <input type="text" id="inputTitle" placeholder="一句话概括这个灵感">
+    <label>备注</label>
+    <textarea id="inputDesc" placeholder="补充细节，比如具体内容、参考链接等（选填）"></textarea>
+    <div class="modal-btns" id="modalBtns">
+      <button class="modal-btn btn-cancel" onclick="closeModal()">取消</button>
+      <button class="modal-btn btn-save" onclick="saveItem()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ 数据 ============
+const STORAGE_KEY = 'inspiration_data_v2';
+let data = {topic:[], scene:[], video:[]};
+let currentTab = 'topic';
+let editingId = null; // null = 新增，否则为编辑
+const TAB_COLORS = {topic:'pink', scene:'orange', video:'purple'};
+const TAB_NAMES = {topic:'选题灵感', scene:'拍摄场景', video:'视频形式'};
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      data = {topic:parsed.topic||[], scene:parsed.scene||[], video:parsed.video||[]};
+    }
+  }catch(e){}
+}
+
+function saveData(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function genId(){
+  return Date.now().toString(36) + Math.random().toString(36).substr(2,5);
+}
+
+// ============ 渲染 ============
+function renderAll(){
+  ['topic','scene','video'].forEach(renderSection);
+}
+
+function renderSection(cat){
+  const sec = document.getElementById('sec-'+cat);
+  const items = data[cat] || [];
+  const query = (document.getElementById('searchInput').value||'').trim().toLowerCase();
+  
+  let filtered = items;
+  if(query){
+    filtered = items.filter(it => 
+      (it.title||'').toLowerCase().includes(query) || 
+      (it.desc||'').toLowerCase().includes(query)
+    );
+  }
+  
+  if(filtered.length === 0){
+    const emptyMsg = query ? '没有匹配的灵感' : '还没有灵感，点击右下角 + 添加';
+    sec.innerHTML = `
+      <div class="section-header">
+        <span class="section-title">${TAB_NAMES[cat]}</span>
+        <span class="section-count">${items.length} 条</span>
+      </div>
+      <div class="empty">
+        <div class="empty-emoji">${query?'🔍':'💭'}</div>
+        <div class="empty-text">${emptyMsg}</div>
+      </div>
+    `;
+    return;
+  }
+  
+  const color = TAB_COLORS[cat];
+  sec.innerHTML = `
+    <div class="section-header">
+      <span class="section-title">${TAB_NAMES[cat]}</span>
+      <span class="section-count">${items.length} 条</span>
+    </div>
+    ${filtered.map(it=>`
+      <div class="item ${color}" data-id="${it.id}"
+        onmousedown="startPress(event,'${it.id}')" onmouseup="endPress()" onmouseleave="endPress()"
+        ontouchstart="startPress(event,'${it.id}')" ontouchend="endPress()" ontouchmove="endPress()"
+        onclick="handleItemClick(event,'${it.id}')">
+        <div class="item-actions">
+          <button class="item-btn" onclick="event.stopPropagation();deleteItem('${cat}','${it.id}')">🗑</button>
+        </div>
+        <div class="item-title">${escHtml(it.title)}</div>
+        ${it.desc ? `<div class="item-desc">${escHtml(it.desc)}</div>` : ''}
+        <div class="item-date">${it.date||''}</div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function escHtml(s){
+  if(!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ============ Tab 切换 ============
+function switchTab(tab){
+  currentTab = tab;
+  ['topic','scene','video'].forEach(t=>{
+    const tabEl = document.getElementById('tab-'+t);
+    const secEl = document.getElementById('sec-'+t);
+    tabEl.className = 'tab' + (t===tab ? ` active-${TAB_COLORS[t]}` : '');
+    secEl.className = 'section' + (t===tab ? ' active' : '');
+  });
+}
+
+// ============ 搜索 ============
+function filterItems(){
+  renderAll();
+}
+
+// ============ 长按编辑 ============
+let pressTimer = null;
+let pressTriggered = false;
+
+function startPress(e, id){
+  pressTriggered = false;
+  pressTimer = setTimeout(()=>{
+    pressTriggered = true;
+    // 找到这个item属于哪个cat
+    let cat = null;
+    for(const c of ['topic','scene','video']){
+      if(data[c].find(it=>it.id===id)){cat=c;break;}
+    }
+    if(cat) openEditModal(cat, id);
+    // 震动反馈
+    if(navigator.vibrate) navigator.vibrate(30);
+  }, 500);
+}
+
+function endPress(){
+  clearTimeout(pressTimer);
+}
+
+function handleItemClick(e, id){
+  if(pressTriggered){
+    e.preventDefault();
+    e.stopPropagation();
+    pressTriggered = false;
+    return;
+  }
+  // 普通点击不做事（或者可以展开详情）
+}
+
+// ============ Modal ============
+function openAddModal(){
+  editingId = null;
+  document.getElementById('modalTitle').textContent = `添加${TAB_NAMES[currentTab]}`;
+  document.getElementById('inputTitle').value = '';
+  document.getElementById('inputDesc').value = '';
+  document.getElementById('modalBtns').innerHTML = `
+    <button class="modal-btn btn-cancel" onclick="closeModal()">取消</button>
+    <button class="modal-btn btn-save" onclick="saveItem()">保存</button>
+  `;
+  document.getElementById('modalOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('inputTitle').focus(), 300);
+}
+
+function openEditModal(cat, id){
+  const item = data[cat].find(it=>it.id===id);
+  if(!item) return;
+  editingId = {cat, id};
+  document.getElementById('modalTitle').textContent = '编辑灵感';
+  document.getElementById('inputTitle').value = item.title || '';
+  document.getElementById('inputDesc').value = item.desc || '';
+  document.getElementById('modalBtns').innerHTML = `
+    <button class="modal-btn btn-delete" onclick="deleteAndClose()">删除</button>
+    <button class="modal-btn btn-cancel" onclick="closeModal()">取消</button>
+    <button class="modal-btn btn-save" onclick="saveItem()">保存</button>
+  `;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('show');
+  editingId = null;
+}
+
+function closeModalOutside(e){
+  if(e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function saveItem(){
+  const title = document.getElementById('inputTitle').value.trim();
+  const desc = document.getElementById('inputDesc').value.trim();
+  if(!title){
+    showToast('标题不能为空');
+    return;
+  }
+  
+  const now = new Date();
+  const dateStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${now.getMinutes().toString().padStart(2,'0')}`;
+  
+  if(editingId){
+    // 编辑模式
+    const {cat, id} = editingId;
+    const item = data[cat].find(it=>it.id===id);
+    if(item){
+      item.title = title;
+      item.desc = desc;
+      item.date = dateStr + ' (已编辑)';
+    }
+    showToast('已更新 ✓');
+  } else {
+    // 新增模式
+    const newItem = {
+      id: genId(),
+      title,
+      desc,
+      date: dateStr
+    };
+    data[currentTab].unshift(newItem);
+    showToast('已添加 ✓');
+  }
+  
+  saveData();
+  renderAll();
+  closeModal();
+}
+
+function deleteItem(cat, id){
+  data[cat] = data[cat].filter(it=>it.id!==id);
+  saveData();
+  renderAll();
+  showToast('已删除');
+}
+
+function deleteAndClose(){
+  if(editingId){
+    const {cat, id} = editingId;
+    deleteItem(cat, id);
+  }
+  closeModal();
+}
+
+// ============ Toast ============
+function showToast(text){
+  const toast = document.getElementById('toast');
+  toast.textContent = text;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'), 1500);
+}
+
+// ============ 初始化 ============
+loadData();
+renderAll();
+</script>
+</body>
+</html>
