@@ -510,11 +510,31 @@ if(!localStorage.getItem('orders')){
     const remoteKey=JSON.stringify(data.map(o=>o.name+'|'+o.status+'|'+o.note).sort());
     const localKey=JSON.stringify(local.map(o=>o.name+'|'+o.status+'|'+o.note).sort());
     if(remoteKey!==localKey){
-      // 如果用户在本设备手动改过状态，不以远程覆盖
-      if(localStorage.getItem('ordersLocalChanged')==='1')return;
-      LS.set('orders',data);
-      // 如果商单页面正在显示，刷新列表
-      if($('orderList'))renderOrderList();
+      // 智能合并：远程新增的商单自动加入，本地修改的状态保留
+      if(localStorage.getItem('ordersLocalChanged')==='1'){
+        // 构建本地索引（按name+brand匹配）
+        const localMap={};
+        local.forEach(o=>{const k=(o.name||'')+'|'+(o.brand||'');localMap[k]=o});
+        // 以远程为基础，但保留本地的状态修改
+        const merged=data.map(r=>{
+          const k=(r.name||'')+'|'+(r.brand||'');
+          const l=localMap[k];
+          // 如果本地有这个商单且手动改过状态，保留本地状态
+          if(l&&l._localModified)return {...r,status:l.status,note:l.note,_localModified:true};
+          return r;
+        });
+        // 检查远程是否有新增的（本地没有的）
+        const remoteNames=new Set(data.map(o=>(o.name||'')+'|'+(o.brand||'')));
+        const localOnly=local.filter(o=>!remoteNames.has((o.name||'')+'|'+(o.brand||'')));
+        // 本地独有的（远程没有的）也保留
+        const finalData=[...merged,...localOnly];
+        LS.set('orders',finalData);
+        // 如果商单页面正在显示，刷新列表
+        if($('orderList'))renderOrderList();
+      }else{
+        LS.set('orders',data);
+        if($('orderList'))renderOrderList();
+      }
     }
   }catch(e){/* 网络异常时使用本地数据，静默处理 */}
 })();
@@ -1064,11 +1084,12 @@ function renderOrderList(){
 function cycleOrderStatus(i){
   const orders=LS.get('orders',[]);
   orders[i].status=(orders[i].status+1)%6;
+  orders[i]._localModified=true;
   LS.set('orders',orders);
   localStorage.setItem('ordersLocalChanged','1');
   renderOrderList();
 }
-function delOrder(i){const a=LS.get('orders',[]);a.splice(i,1);LS.set('orders',a);localStorage.setItem('ordersLocalChanged','1');renderOrderList()}
+function delOrder(i){const a=LS.get('orders',[]);a[i]._localModified=true;a.splice(i,1);LS.set('orders',a);localStorage.setItem('ordersLocalChanged','1');renderOrderList()}
 
 // --- Review ---
 function renderReview(title,body){
