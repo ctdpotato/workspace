@@ -426,51 +426,6 @@ textarea.input-field{resize:vertical;min-height:80px}
   <div class="card"><div class="card-title">💼 工作台</div><div class="placeholder">工作模块加载中...</div></div>
 </div>
 
-<!-- Page 3: Life -->
-<div class="page" id="page-life">
-  <!-- Top 3 (plan content duplicated here) -->
-  <div class="top3-section" id="top3Section"></div>
-  <!-- Time Blocks (plan content duplicated here) -->
-  <div class="timeblock-section" id="timeblockSection"></div>
-  <!-- Check-in (plan content duplicated here) -->
-  <div class="checkin-section" id="checkinSection"></div>
-  <!-- Stats (plan content duplicated here) -->
-  <div class="stats-section" id="statsSection"></div>
-  <!-- Weekly Exercise -->
-  <div class="card weekly-exercise">
-    <div class="we-header">
-      <button class="we-nav" onclick="changeWeek(-1)">◀</button>
-      <div style="text-align:center">
-        <span class="we-week-label" id="weWeekLabel"></span>
-        <span class="we-today-badge" id="weTodayBadge"></span>
-      </div>
-      <button class="we-nav" onclick="changeWeek(1)">▶</button>
-    </div>
-    <div class="we-stats" id="weStats"></div>
-    <div id="weDayList"></div>
-  </div>
-  <!-- Qiqi -->
-  <div class="card">
-    <div class="card-title">🍼 七七记录</div>
-    <div class="input-row" style="margin-bottom:10px">
-      <input class="input-field" id="qiqiInput" placeholder="记录七七的日常...">
-      <button class="btn btn-primary btn-sm" onclick="addQiqi()">+</button>
-    </div>
-    <div id="qiqiList"></div>
-  </div>
-  <!-- Calendar -->
-  <div class="card">
-    <div class="card-title">📅 运动日历</div>
-    <div id="calendarContainer"></div>
-    <div class="cal-stats" id="calStats"></div>
-  </div>
-  <!-- Diet -->
-  <div class="card">
-    <div class="card-title">🥗 今日饮食</div>
-    <div id="dietCard"></div>
-  </div>
-</div>
-
 <!-- Page 4: Topics -->
 <div class="page" id="page-topics">
   <div class="topic-header">
@@ -502,8 +457,7 @@ textarea.input-field{resize:vertical;min-height:80px}
 <div class="tab-bar">
   <button class="tab-item active" onclick="switchTab(0)"><span class="tab-icon">📋</span>计划</button>
   <button class="tab-item" onclick="switchTab(1)"><span class="tab-icon">💼</span>工作</button>
-  <button class="tab-item" onclick="switchTab(2)"><span class="tab-icon">🌿</span>生活</button>
-  <button class="tab-item" onclick="switchTab(3)"><span class="tab-icon">📋</span>选题</button>
+  <button class="tab-item" onclick="switchTab(2)"><span class="tab-icon">📋</span>选题</button>
 </div>
 
 <script>
@@ -534,7 +488,6 @@ function switchTab(idx){
   const pages=document.querySelectorAll('.page');
   pages.forEach((p,i)=>{p.classList.toggle('active',i===idx)});
   if(idx===0)syncToPlanTab();
-  if(idx===2)renderLife();
   if(idx===3)renderTopics();
 }
 
