@@ -71,6 +71,13 @@ body{
 /* Task Group */
 .task-group{margin-bottom:8px}
 .group-header{font-size:13px;font-weight:600;color:var(--text2);padding:10px 0 6px;border-bottom:1px solid var(--border);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.group-header span{flex:1}
+.must-add-btn{font-size:11px;font-weight:500;color:var(--green);background:var(--green-light);border:1px solid rgba(76,175,80,0.3);border-radius:12px;padding:2px 10px;cursor:pointer;transition:all .2s}
+.must-add-btn:active{background:var(--green);color:#fff}
+.must-del-btn{width:20px;height:20px;border-radius:50%;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:14px;line-height:1;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0}
+.must-del-btn:active{background:var(--bg)}
+.hint-item{opacity:0.6;cursor:default!important}
+.hint-item:active{background:transparent!important}
 /* Task Item */
 .task-item{
   display:flex;align-items:center;padding:10px 4px;gap:10px;
@@ -420,30 +427,49 @@ function getTasks(){
   const dow=new Date().getDay();// 0=Sun
   const isCore=[1,3,6].includes(dow);// Mon,Wed,Sat
   const exerciseSub=isCore?'核心跟练+体态训练+3000步大步走':'骑车30分钟';
-  return [
-    {group:'🌅 早晨',emoji:'☀️',title:'起床 + 喝温水',time:'7:30'},
-    {emoji:'🥣',title:'早餐',time:'8:00',sub:'鸡蛋2个+蛋白1个+牛油果半个+蓝莓100g+核桃2个'},
-    {emoji:'🧸',title:'陪七七玩 / 户外散步',time:'8:30'},
-    {group:'🏋️ 运动',emoji:'💪',title:'运动时间',time:'9:00',sub:exerciseSub},
-    {group:'🧴 上午工作',emoji:'🧴',title:'护肤 + 收拾自己',time:'10:00'},
-    {emoji:'📊',title:'查看昨日数据 + 回复评论',time:'10:30'},
-    {group:'🍱 午餐',emoji:'🍳',title:'准备午餐',time:'11:30',sub:'杂粮饭/土豆150g + 鱼肉/鸡肉150g + 炒菜300g'},
-    {emoji:'🍚',title:'和七七一起吃午饭',time:'12:00'},
-    {group:'💼 黄金工作期',emoji:'✍️',title:'写文案 / 修图 / 排版',time:'12:30'},
-    {emoji:'📸',title:'深度工作（大纲/选题/拍摄）',time:'13:30'},
-    {emoji:'📁',title:'整理今日产出 + 归档',time:'14:30'},
-    {group:'☕ 下午',emoji:'🎨',title:'陪七七（午睡醒来）',time:'15:00'},
-    {emoji:'💬',title:'商务沟通 / 品牌对接',time:'16:00'},
-    {emoji:'📦',title:'拍产品素材 / 整理产品库',time:'17:00'},
-    {group:'🍲 晚餐',emoji:'🥗',title:'准备晚餐',time:'18:00',sub:'杂粮饭/土豆150g + 牛肉/瘦肉150g + 炒菜250g + 姜蒜番茄'},
-    {group:'🛁 亲子时间',emoji:'🛁',title:'给七七洗澡 / 哄睡',time:'19:00'},
-    {group:'🌙 晚间',emoji:'💬',title:'回评论 + 看数据 + 想选题',time:'21:00'},
-    {emoji:'📝',title:'整理明日待办清单',time:'22:00'},
-    {group:'🛏️ 收工',emoji:'🧴',title:'护肤洗漱',time:'22:30'},
-    {emoji:'💤',title:'上床睡觉（最晚23:30）',time:'23:00'},
-  ];
+  // 用户自定义必完成事件
+  const mustDoKey='mustDo_'+today();
+  const mustDoItems=LS.get(mustDoKey,[]);
+  // 构建任务列表，按分类分组
+  const tasks=[];
+  // === 🔴 必完成事件 ===
+  mustDoItems.forEach((item,idx)=>{
+    tasks.push({group:idx===0?'🔴 必完成事件':'',emoji:'⭐',title:item.text,time:item.time||'--',cat:'must',mustIdx:idx});
+  });
+  if(mustDoItems.length===0){
+    tasks.push({group:'🔴 必完成事件',emoji:'💡',title:'点击下方「+必完成」添加今日重点',time:'',cat:'must',hint:true});
+  }
+  // === 💼 工作 ===
+  tasks.push({group:'💼 工作',emoji:'🧴',title:'护肤 + 收拾自己',time:'10:00',cat:'work'});
+  tasks.push({emoji:'📊',title:'查看昨日数据 + 回复评论',time:'10:30',cat:'work'});
+  tasks.push({emoji:'✍️',title:'写文案 / 修图 / 排版',time:'12:30',cat:'work'});
+  tasks.push({emoji:'📸',title:'深度工作（大纲/选题/拍摄）',time:'13:30',cat:'work'});
+  tasks.push({emoji:'📁',title:'整理今日产出 + 归档',time:'14:30',cat:'work'});
+  tasks.push({emoji:'💬',title:'商务沟通 / 品牌对接',time:'16:00',cat:'work'});
+  tasks.push({emoji:'📦',title:'拍产品素材 / 整理产品库',time:'17:00',cat:'work'});
+  tasks.push({emoji:'💬',title:'回评论 + 看数据 + 想选题',time:'21:00',cat:'work'});
+  tasks.push({emoji:'📝',title:'整理明日待办清单',time:'22:00',cat:'work'});
+  // === 🧒 孩子 ===
+  tasks.push({group:'🧒 孩子',emoji:'🧸',title:'陪七七玩 / 户外散步',time:'8:30',cat:'kid'});
+  tasks.push({emoji:'🍚',title:'和七七一起吃午饭',time:'12:00',cat:'kid'});
+  tasks.push({emoji:'🎨',title:'陪七七（午睡醒来）',time:'15:00',cat:'kid'});
+  tasks.push({emoji:'🛁',title:'给七七洗澡 / 哄睡',time:'19:00',cat:'kid'});
+  // === 🏠 生活日常 ===
+  tasks.push({group:'🏠 生活日常',emoji:'☀️',title:'起床 + 喝温水',time:'7:30',cat:'life'});
+  tasks.push({emoji:'🥣',title:'早餐',time:'8:00',sub:'鸡蛋2个+蛋白1个+牛油果半个+蓝莓100g+核桃2个',cat:'life'});
+  tasks.push({emoji:'💪',title:'运动时间',time:'9:00',sub:exerciseSub,cat:'life'});
+  tasks.push({emoji:'🍳',title:'准备午餐',time:'11:30',sub:'杂粮饭/土豆150g + 鱼肉/鸡肉150g + 炒菜300g',cat:'life'});
+  tasks.push({emoji:'🥗',title:'准备晚餐',time:'18:00',sub:'杂粮饭/土豆150g + 牛肉/瘦肉150g + 炒菜250g + 姜蒜番茄',cat:'life'});
+  tasks.push({emoji:'🧴',title:'护肤洗漱',time:'22:30',cat:'life'});
+  tasks.push({emoji:'💤',title:'上床睡觉（最晚23:30）',time:'23:00',cat:'life'});
+  return tasks;
 }
-const TOTAL_TASKS=20;
+// TOTAL_TASKS 动态计算
+function getTotalTasks(){
+  const mustDoKey='mustDo_'+today();
+  const mustDoItems=LS.get(mustDoKey,[]);
+  return mustDoItems.length+9+4+7; // must + work(9) + kid(4) + life(7)
+}
 let planState=LS.get('plan_'+today(),{done:[]});
 
 function checkDayReset(){
@@ -526,6 +552,7 @@ if(!localStorage.getItem('orders')){
 
 function renderTasks(){
   const tasks=getTasks();
+  const total=getTotalTasks();
   const container=$('taskContainer');
   container.innerHTML='';
   let lastGroup='';
@@ -534,12 +561,30 @@ function renderTasks(){
       lastGroup=t.group;
       const gh=document.createElement('div');
       gh.className='group-header';
-      gh.textContent=t.group;
+      // 必完成事件分组头带添加按钮
+      if(t.cat==='must'){
+        gh.innerHTML=`<span>${t.group}</span><button class="must-add-btn" onclick="event.stopPropagation();openMustDoModal()">+ 添加</button>`;
+      }else{
+        gh.textContent=t.group;
+      }
       container.appendChild(gh);
+    }
+    if(t.hint){
+      // 提示行，不可点击
+      const hint=document.createElement('div');
+      hint.className='task-item hint-item';
+      hint.innerHTML=`<span class="task-emoji">${t.emoji}</span><div class="task-info"><div class="task-title" style="color:var(--text3);font-size:12px">${t.title}</div></div>`;
+      container.appendChild(hint);
+      return;
     }
     const div=document.createElement('div');
     div.className='task-item'+(planState.done.includes(i)?' done':'');
     div.onclick=()=>toggleTask(i);
+    // 必完成事件的删除按钮
+    let mustDel='';
+    if(t.cat==='must'&&t.mustIdx!==undefined){
+      mustDel=`<button class="must-del-btn" onclick="event.stopPropagation();removeMustDo(${t.mustIdx})">×</button>`;
+    }
     div.innerHTML=`
       <span class="task-emoji">${t.emoji}</span>
       <div class="task-info">
@@ -547,11 +592,12 @@ function renderTasks(){
         ${t.sub?'<div class="task-sub">'+t.sub+'</div>':''}
       </div>
       <span class="task-time">${t.time}</span>
+      ${mustDel}
       <span class="task-check">${planState.done.includes(i)?'✓':''}</span>
     `;
     container.appendChild(div);
   });
-  updateProgress();
+  updateProgress(total);
 }
 
 function toggleTask(i){
@@ -561,13 +607,40 @@ function toggleTask(i){
   else planState.done.push(i);
   LS.set(key,planState);
   renderTasks();
-  if(planState.done.length===TOTAL_TASKS)showCelebration();
+  const total=getTotalTasks();
+  if(planState.done.length===total)showCelebration();
 }
 
-function updateProgress(){
+function updateProgress(total){
+  if(!total)total=getTotalTasks();
   const n=planState.done.length;
-  $('progressFill').style.width=(n/TOTAL_TASKS*100)+'%';
-  $('progressText').textContent=n+'/'+TOTAL_TASKS;
+  $('progressFill').style.width=(n/total*100)+'%';
+  $('progressText').textContent=n+'/'+total;
+}
+
+// === 必完成事件管理 ===
+function openMustDoModal(){
+  openModal('mustdo');
+}
+function addMustDo(){
+  const text=$('mustDoInput').value.trim();
+  if(!text)return;
+  const time=$('mustDoTime').value||'';
+  const key='mustDo_'+today();
+  const items=LS.get(key,[]);
+  items.push({text:text,time:time});
+  LS.set(key,items);
+  planState={done:[]};LS.set('plan_'+today(),planState);
+  renderTasks();
+  closeModal();
+}
+function removeMustDo(idx){
+  const key='mustDo_'+today();
+  const items=LS.get(key,[]);
+  items.splice(idx,1);
+  LS.set(key,items);
+  planState={done:[]};LS.set('plan_'+today(),planState);
+  renderTasks();
 }
 
 function showCelebration(){
@@ -589,7 +662,7 @@ function launchConfetti(){
   }
   setTimeout(()=>c.innerHTML='',3000);
 }
-if(planState.done.length===TOTAL_TASKS)showCelebration();
+if(planState.done.length===getTotalTasks())showCelebration();
 renderTasks();
 
 // ======================== MODALS ========================
@@ -605,6 +678,7 @@ function openModal(type){
     case 'review':renderReview(title,body);break;
     case 'hot':renderHot(title,body);break;
     case 'memo':renderMemo(title,body);break;
+    case 'mustdo':renderMustDoModal(title,body);break;
   }
 }
 function closeModal(){
@@ -885,6 +959,17 @@ function renderMemoList(){
   `).join('');
 }
 function delMemo(i){const a=LS.get('memos',[]);a.splice(i,1);LS.set('memos',a);renderMemoList()}
+
+// --- Must Do Modal ---
+function renderMustDoModal(title,body){
+  title.textContent='⭐ 添加今日必完成';
+  body.innerHTML=`
+    <input class="input-field" id="mustDoInput" placeholder="输入必完成事项，如：提交伊菲丹文案" style="margin-bottom:8px">
+    <input class="input-field" id="mustDoTime" type="time" style="margin-bottom:12px;width:auto;display:inline-block">
+    <button class="btn btn-primary" style="width:100%;margin-bottom:12px" onclick="addMustDo()">添加</button>
+    <div style="font-size:11px;color:var(--text3);text-align:center">每天可添加多个，第二天自动清空</div>
+  `;
+}
 
 // ======================== LIFE TAB ========================
 let _weekOffset=0;
