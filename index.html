@@ -446,7 +446,7 @@ function checkDayReset(){
 checkDayReset();
 
 // 商单远程数据同步
-const ORDERS_REMOTE_URL='https://www.coze.cn/s/zEQOAJBuEE0/';
+const ORDERS_REMOTE_URL='https://ctdpotato.github.io/workspace/orders.json';
 const ORDERS_FALLBACK=[
   {name:'Valcena抗糖前体胶囊',brand:'Valcena',date:'',note:'已完成交付',status:5,account:'宝珠'},
   {name:'舒芙蕾慕斯',brand:'',date:'',note:'已完成交付',status:5,account:'宝珠'},
@@ -464,7 +464,9 @@ const ORDERS_FALLBACK=[
   {name:'适乐肤水杨酸洁面+PM乳',brand:'适乐肤',date:'2026-07-22',note:'初稿7/22，发布7/23，需自购后报销',status:4,account:'土豆'},
   {name:'AMIRO觅光X镜',brand:'AMIRO觅光',date:'2026-08-01',note:'档期8/1-2，返点25%，报价3000，寄拍',status:0,account:'土豆'},
   {name:'奥妙',brand:'奥妙',date:'2026-07-23',note:'公司接的，今天拍摄',status:2,account:'土豆'},
+  {name:'若也礼盒',brand:'若也',date:'2026-07-26',note:'返点20%，送品，报价3000',status:0,account:'土豆'},
 ];
+
 // 旧数据迁移：4状态→6状态 + 账号字段
 function migrateOrders(orders){
   const baobaoBrands=['Valcena','舒芙蕾','海蓝之谜','奥妙','兰蔻','颜芝迷'];
@@ -1124,73 +1126,12 @@ function renderReviewList(){
 function delReview(i){const a=LS.get('reviews',[]);a.splice(i,1);LS.set('reviews',a);renderReviewList()}
 
 // --- Hot ---
-// Fetch suggested topics from GitHub Pages JSON file
-async function fetchSuggestedTopics(){
-  try{
-    const base=location.href.replace(/\/[^/]*$/,'/');
-    const resp=await fetch(base+'suggested_topics.json',{cache:'no-store'});
-    if(!resp.ok)return;
-    const data=await resp.json();
-    if(data&&data.topics&&data.date){
-      LS.set('suggestedTopics',data);
-    }
-  }catch(e){/* 静默降级 */}
-}
-// Load suggested topics on page load
-fetchSuggestedTopics();
-
 function renderHot(title,body){
   title.textContent='🔥 爆款热点';
-  const sugData=LS.get('suggestedTopics',null);
-  const todayStr=new Date().toISOString().slice(0,10);
-  const isToday=sugData&&sugData.date===todayStr;
-  const sugDateStr=sugData?new Date(sugData.date).toLocaleDateString('zh-CN',{month:'long',day:'numeric'}):'';
-
-  // Build suggested topics HTML grouped by account
-  let sugHtml='';
-  if(sugData&&sugData.topics&&sugData.topics.length>0){
-    // Group by account
-    const groups={};
-    sugData.topics.forEach(t=>{
-      if(!groups[t.account])groups[t.account]=[];
-      groups[t.account].push(t);
-    });
-    sugHtml='<div style="margin-bottom:16px">';
-    sugHtml+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">';
-    sugHtml+='<div style="font-size:15px;font-weight:600">📌 今日热点推荐</div>';
-    if(isToday){
-      sugHtml+='<span style="font-size:11px;color:var(--green,#52c41a);background:#f0fff4;padding:2px 8px;border-radius:10px">✓ '+sugDateStr+'更新</span>';
-    }else{
-      sugHtml+='<span style="font-size:11px;color:var(--text3);background:var(--bg);padding:2px 8px;border-radius:10px">'+sugDateStr+'推荐 · 今日尚未更新</span>';
-    }
-    sugHtml+='</div>';
-    Object.keys(groups).forEach(accId=>{
-      const acc=ACCOUNTS.find(a=>a.id===accId);
-      if(!acc)return;
-      sugHtml+='<div style="margin-bottom:12px;padding:10px;background:'+acc.color+'08;border-radius:10px;border:1px solid '+acc.color+'20">';
-      sugHtml+='<div style="font-size:13px;font-weight:600;margin-bottom:8px">'+acc.emoji+' '+acc.name+'</div>';
-      groups[accId].forEach(t=>{
-        const tags=(t.tags||[]).map(tag=>'<span style="display:inline-block;background:#f0f5ff;color:#1677ff;font-size:11px;padding:1px 6px;border-radius:4px;margin-right:4px;margin-bottom:4px">#'+esc(tag)+'</span>').join('');
-        sugHtml+='<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">';
-        sugHtml+='<div style="flex:1;min-width:0">';
-        sugHtml+='<div style="font-size:14px;font-weight:500;margin-bottom:4px">'+esc(t.title)+'</div>';
-        if(t.reason)sugHtml+='<div style="font-size:11px;color:var(--text3);margin-bottom:4px">💡 '+esc(t.reason)+'</div>';
-        if(tags)sugHtml+='<div>'+tags+'</div>';
-        sugHtml+='</div>';
-        sugHtml+='<button class="btn btn-primary btn-sm" style="white-space:nowrap;margin-left:8px;flex-shrink:0" onclick="adoptTopic(\''+t.id+'\')">采纳</button>';
-        sugHtml+='</div>';
-      });
-      sugHtml+='</div>';
-    });
-    sugHtml+='</div>';
-  }else{
-    sugHtml='<div style="text-align:center;padding:20px 10px;color:var(--text3);font-size:13px">📭 暂无热点推荐，等待下次更新</div>';
-  }
-
+  const hots=LS.get('hots',[]);
   body.innerHTML=`
-    ${sugHtml}
-    <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
-      <div style="font-size:13px;font-weight:600;margin-bottom:8px">✍️ 手动添加热点</div>
+    <div class="placeholder">🚧 自动热点功能开发中...</div>
+    <div style="margin-top:12px">
       <div class="input-row">
         <input class="input-field" id="hotInput" placeholder="手动添加热点...">
         <button class="btn btn-primary btn-sm" onclick="addHot()">添加</button>
@@ -1200,35 +1141,6 @@ function renderHot(title,body){
   `;
   renderHotList();
   $('hotInput').addEventListener('keydown',e=>{if(e.key==='Enter')addHot()});
-}
-function adoptTopic(topicId){
-  const sugData=LS.get('suggestedTopics',null);
-  if(!sugData||!sugData.topics)return;
-  const idx=sugData.topics.findIndex(t=>t.id===topicId);
-  if(idx===-1)return;
-  const t=sugData.topics[idx];
-  const acc=ACCOUNTS.find(a=>a.id===t.account);
-  // Add to topics
-  const topics=LS.get('topics',[]);
-  topics.unshift({
-    id:'t_'+Date.now().toString(36)+Math.random().toString(36).substr(2,5),
-    title:t.title,
-    accountId:t.account,
-    date:new Date().toISOString().slice(0,10),
-    priority:'medium',
-    type:(t.tags||[]).join('、'),
-    done:false,
-    createdAt:new Date().toISOString()
-  });
-  LS.set('topics',topics);
-  // Remove from suggested
-  sugData.topics.splice(idx,1);
-  LS.set('suggestedTopics',sugData);
-  // Re-render
-  renderHot($('modalTitleText'),$('modalBody'));
-  // Show feedback
-  const accName=acc?acc.name:'';
-  alert('已采纳「'+t.title+'」到'+accName+'的选题列表！');
 }
 function addHot(){
   const inp=$('hotInput');const v=inp.value.trim();if(!v)return;
