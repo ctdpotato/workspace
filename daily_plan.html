@@ -54,7 +54,7 @@ body{
 .tab-item.active{color:var(--green)}
 .tab-item .tab-icon{font-size:22px;margin-bottom:2px}
 /* Pages */
-.page{display:none;padding:12px 14px;animation:fadeIn .3s ease}
+.page{display:none;padding:12px 14px 80px;animation:fadeIn .3s ease}
 .page.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 /* Cards */
@@ -258,6 +258,31 @@ textarea.input-field{resize:vertical;min-height:80px}
 .topic-empty{padding:16px;text-align:center;font-size:12px;color:var(--text3)}
 .topic-week-label{font-size:11px;font-weight:600;color:var(--text2);padding:8px 12px 4px;background:var(--bg);border-bottom:1px solid var(--border)}
 
+/* === WEEKLY EXERCISE MODULE === */
+.weekly-exercise{margin-bottom:16px}
+.we-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.we-nav{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--card);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .2s;flex-shrink:0;min-height:32px;padding:0}
+.we-nav:active{background:var(--green-light);border-color:var(--green)}
+.we-week-label{font-size:13px;font-weight:600;color:var(--text)}
+.we-today-badge{font-size:10px;color:var(--green);font-weight:600;margin-left:4px}
+.we-stats{font-size:12px;color:var(--text3);text-align:center;margin-bottom:12px;padding:6px 10px;background:var(--green-light);border-radius:8px}
+.we-day-card{background:var(--card);border-radius:10px;padding:10px 12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.04);border:1px solid transparent;transition:all .2s}
+.we-day-card.is-today{border-color:var(--green);box-shadow:0 2px 8px rgba(76,175,80,0.15)}
+.we-day-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.we-day-name{font-size:14px;font-weight:600;color:var(--text)}
+.we-day-date{font-size:11px;color:var(--text3);margin-left:6px}
+.we-day-result{font-size:12px;color:var(--green);font-weight:600}
+.we-options{display:flex;gap:6px}
+.we-opt{flex:1;padding:8px 4px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg);font-size:12px;cursor:pointer;text-align:center;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:44px;justify-content:center}
+.we-opt:active{transform:scale(0.95)}
+.we-opt .we-opt-emoji{font-size:18px;line-height:1}
+.we-opt .we-opt-label{font-size:10px;color:var(--text2);line-height:1.2}
+.we-opt.active{border-color:var(--green);background:var(--green-light)}
+.we-opt.active .we-opt-label{color:var(--green);font-weight:600}
+.we-opt.rest-opt.active{border-color:#FF9800;background:#FFF3E0}
+.we-opt.rest-opt.active .we-opt-label{color:#E65100;font-weight:600}
+.we-empty{text-align:center;padding:20px;color:var(--text3);font-size:13px}
+
 /* === NEW DAILY PLAN STYLES === */
 /* Top 3 Section */
 .top3-section{margin-bottom:16px}
@@ -395,6 +420,83 @@ textarea.input-field{resize:vertical;min-height:80px}
 
 <!-- Confetti Container -->
 <div class="confetti-container" id="confettiContainer"></div>
+
+<!-- Page 2: Work (placeholder) -->
+<div class="page" id="page-work">
+  <div class="card"><div class="card-title">💼 工作台</div><div class="placeholder">工作模块加载中...</div></div>
+</div>
+
+<!-- Page 3: Life -->
+<div class="page" id="page-life">
+  <!-- Weekly Exercise -->
+  <div class="card weekly-exercise">
+    <div class="we-header">
+      <button class="we-nav" onclick="changeWeek(-1)">◀</button>
+      <div style="text-align:center">
+        <span class="we-week-label" id="weWeekLabel"></span>
+        <span class="we-today-badge" id="weTodayBadge"></span>
+      </div>
+      <button class="we-nav" onclick="changeWeek(1)">▶</button>
+    </div>
+    <div class="we-stats" id="weStats"></div>
+    <div id="weDayList"></div>
+  </div>
+  <!-- Qiqi -->
+  <div class="card">
+    <div class="card-title">🍼 七七记录</div>
+    <div class="input-row" style="margin-bottom:10px">
+      <input class="input-field" id="qiqiInput" placeholder="记录七七的日常...">
+      <button class="btn btn-primary btn-sm" onclick="addQiqi()">+</button>
+    </div>
+    <div id="qiqiList"></div>
+  </div>
+  <!-- Calendar -->
+  <div class="card">
+    <div class="card-title">📅 运动日历</div>
+    <div id="calendarContainer"></div>
+    <div class="cal-stats" id="calStats"></div>
+  </div>
+  <!-- Diet -->
+  <div class="card">
+    <div class="card-title">🥗 今日饮食</div>
+    <div id="dietCard"></div>
+  </div>
+</div>
+
+<!-- Page 4: Topics -->
+<div class="page" id="page-topics">
+  <div class="topic-header">
+    <div class="section-title" style="margin:0">📋 选题管理</div>
+    <button class="btn btn-primary btn-sm" onclick="openTopicAdd()">+ 添加</button>
+  </div>
+  <div class="topic-tabs">
+    <button class="topic-tab active" onclick="switchTopicView('week')">本周</button>
+    <button class="topic-tab" onclick="switchTopicView('month')">本月</button>
+    <button class="topic-tab" onclick="switchTopicView('all')">全部</button>
+  </div>
+  <div class="topic-stats" id="topicStats"></div>
+  <div id="topicContainer"></div>
+</div>
+
+<!-- Modal Overlay -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOverlay(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">
+      <span id="modalTitleText"></span>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- Tab Bar -->
+<div class="tab-bar">
+  <button class="tab-item active" onclick="switchTab(0)"><span class="tab-icon">📋</span>计划</button>
+  <button class="tab-item" onclick="switchTab(1)"><span class="tab-icon">💼</span>工作</button>
+  <button class="tab-item" onclick="switchTab(2)"><span class="tab-icon">🌿</span>生活</button>
+  <button class="tab-item" onclick="switchTab(3)"><span class="tab-icon">📋</span>选题</button>
+</div>
 
 <script>
 // ======================== UTILS ========================
@@ -1323,7 +1425,87 @@ function renderMemoList(){
 function delMemo(i){const a=LS.get('memos',[]);a.splice(i,1);LS.set('memos',a);renderMemoList()}
 
 // ======================== LIFE TAB ========================
-function renderLife(){renderQiqi();renderCalendar();renderDiet()}
+let _weekOffset=0;
+function getMonday(d){d=new Date(d);const day=d.getDay()||7;d.setDate(d.getDate()-(day-1));d.setHours(0,0,0,0);return d}
+function dateStr(d){return d.toISOString().slice(0,10)}
+function changeWeek(offset){_weekOffset+=offset;renderWeeklyExercise()}
+
+function renderWeeklyExercise(){
+  const now=new Date();
+  const monday=getMonday(now);
+  monday.setDate(monday.getDate()+_weekOffset*7);
+  const days=[];
+  for(let i=0;i<7;i++){const d=new Date(monday);d.setDate(monday.getDate()+i);days.push(d)}
+  const startStr=days[0].toISOString().slice(0,10);
+  const endStr=days[6].toISOString().slice(0,10);
+  const startM=days[0].getMonth()+1,startD=days[0].getDate();
+  const endM=days[6].getMonth()+1,endD=days[6].getDate();
+  const todayStr=today();
+  const isCurrentWeek=_weekOffset===0;
+  // Week label
+  $('weWeekLabel').textContent=`${startM}/${startD} - ${endM}/${endD}`;
+  $('weTodayBadge').textContent=isCurrentWeek?'(本周)':'';
+  // Load data
+  const weData=LS.get('weeklyExercise',{});
+  const weekData=(weData.weeks||{})[startStr]||{};
+  // Options
+  const opts=[
+    {id:'骑车',emoji:'🚴',label:'骑车'},
+    {id:'游泳',emoji:'🏊',label:'游泳'},
+    {id:'健身房',emoji:'🏋️',label:'健身房'},
+    {id:'休息',emoji:'😴',label:'休息'}
+  ];
+  // Stats
+  const filled=days.filter(d=>weekData[dateStr(d)]).length;
+  const exerciseDays=days.filter(d=>{const v=weekData[dateStr(d)];return v&&v!=='休息'}).length;
+  $('weStats').textContent=`已安排 ${filled}/7 天 · 运动 ${exerciseDays} 天`;
+  // Day cards
+  let html='';
+  const dayNames=['周一','周二','周三','周四','周五','周六','周日'];
+  days.forEach((d,i)=>{
+    const ds=dateStr(d);
+    const selected=weekData[ds];
+    const isToday=ds===todayStr;
+    html+=`<div class="we-day-card${isToday?' is-today':''}">
+      <div class="we-day-header">
+        <div>
+          <span class="we-day-name">${dayNames[i]}</span>
+          <span class="we-day-date">${d.getMonth()+1}/${d.getDate()}</span>
+          ${isToday?'<span style="font-size:10px;color:var(--green);margin-left:4px">今天</span>':''}
+        </div>
+        ${selected?'<span class="we-day-result">'+opts.find(o=>o.id===selected)?.emoji+' '+selected+'</span>':''}
+      </div>
+      <div class="we-options">
+        ${opts.map(o=>{
+          const isActive=selected===o.id;
+          const isRest=o.id==='休息';
+          return`<button class="we-opt${isActive?' active':''}${isRest?' rest-opt':''}" onclick="setExercise('${ds}','${o.id}')">
+            <span class="we-opt-emoji">${o.emoji}</span>
+            <span class="we-opt-label">${o.label}</span>
+          </button>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+  $('weDayList').innerHTML=html;
+}
+
+function setExercise(ds,exercise){
+  const monday=getMonday(new Date(ds+'T00:00:00'));
+  const weekStart=dateStr(monday);
+  const weData=LS.get('weeklyExercise',{});
+  if(!weData.weeks)weData.weeks={};
+  if(!weData.weeks[weekStart])weData.weeks[weekStart]={};
+  if(weData.weeks[weekStart][ds]===exercise){
+    delete weData.weeks[weekStart][ds];
+  }else{
+    weData.weeks[weekStart][ds]=exercise;
+  }
+  LS.set('weeklyExercise',weData);
+  renderWeeklyExercise();
+}
+
+function renderLife(){renderWeeklyExercise();renderQiqi();renderCalendar();renderDiet()}
 
 // --- Qiqi ---
 function renderQiqi(){
