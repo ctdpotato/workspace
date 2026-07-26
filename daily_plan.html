@@ -407,14 +407,15 @@ textarea.input-field{resize:vertical;min-height:80px}
 </div>
 
 <!-- Page 1: Daily Plan -->
-<div class="page" id="page-plan">
-  <div class="card">
-    <div class="card-title">🌿 生活</div>
-    <div class="placeholder" style="text-align:center;padding:40px 20px;color:#999;">
-      所有日常内容已整合到「生活」页面<br><br>
-      👇 请点击底部「🌿 生活」查看
-    </div>
-  </div>
+<div class="page active" id="page-plan">
+  <!-- Top 3 -->
+  <div class="top3-section" id="top3Section-plan"></div>
+  <!-- Time Blocks -->
+  <div class="timeblock-section" id="timeblockSection-plan"></div>
+  <!-- Check-in -->
+  <div class="checkin-section" id="checkinSection-plan"></div>
+  <!-- Stats -->
+  <div class="stats-section" id="statsSection-plan"></div>
 </div>
 
 <!-- Confetti Container -->
@@ -426,17 +427,15 @@ textarea.input-field{resize:vertical;min-height:80px}
 </div>
 
 <!-- Page 3: Life -->
-<div class="page active" id="page-life">
-
-  <!-- Top 3 -->
+<div class="page" id="page-life">
+  <!-- Top 3 (plan content duplicated here) -->
   <div class="top3-section" id="top3Section"></div>
-  <!-- Time Blocks -->
+  <!-- Time Blocks (plan content duplicated here) -->
   <div class="timeblock-section" id="timeblockSection"></div>
-  <!-- Check-in -->
+  <!-- Check-in (plan content duplicated here) -->
   <div class="checkin-section" id="checkinSection"></div>
-  <!-- Stats -->
+  <!-- Stats (plan content duplicated here) -->
   <div class="stats-section" id="statsSection"></div>
-
   <!-- Weekly Exercise -->
   <div class="card weekly-exercise">
     <div class="we-header">
@@ -501,9 +500,9 @@ textarea.input-field{resize:vertical;min-height:80px}
 
 <!-- Tab Bar -->
 <div class="tab-bar">
-  <button class="tab-item" onclick="switchTab(0)"><span class="tab-icon">📋</span>计划</button>
+  <button class="tab-item active" onclick="switchTab(0)"><span class="tab-icon">📋</span>计划</button>
   <button class="tab-item" onclick="switchTab(1)"><span class="tab-icon">💼</span>工作</button>
-  <button class="tab-item active" onclick="switchTab(2)"><span class="tab-icon">🌿</span>生活</button>
+  <button class="tab-item" onclick="switchTab(2)"><span class="tab-icon">🌿</span>生活</button>
   <button class="tab-item" onclick="switchTab(3)"><span class="tab-icon">📋</span>选题</button>
 </div>
 
@@ -534,6 +533,7 @@ function switchTab(idx){
   document.querySelectorAll('.tab-item').forEach((t,i)=>{t.classList.toggle('active',i===idx)});
   const pages=document.querySelectorAll('.page');
   pages.forEach((p,i)=>{p.classList.toggle('active',i===idx)});
+  if(idx===0)syncToPlanTab();
   if(idx===2)renderLife();
   if(idx===3)renderTopics();
 }
@@ -841,6 +841,21 @@ function renderPlanAll(){
   renderTimeBlocks();
   renderCheckins();
   renderStats();
+  // Sync to plan tab (if plan tab sections exist)
+  syncToPlanTab();
+}
+function syncToPlanTab(){
+  const sections = [
+    ['top3Section', 'top3Section-plan'],
+    ['timeblockSection', 'timeblockSection-plan'],
+    ['checkinSection', 'checkinSection-plan'],
+    ['statsSection', 'statsSection-plan']
+  ];
+  sections.forEach(([srcId, dstId]) => {
+    const src = document.getElementById(srcId);
+    const dst = document.getElementById(dstId);
+    if(src && dst) dst.innerHTML = src.innerHTML;
+  });
 }
 renderPlanAll();
 
