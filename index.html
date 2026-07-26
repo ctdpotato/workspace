@@ -256,6 +256,18 @@ textarea.input-field{resize:vertical;min-height:80px}
 .topic-status-0{background:#f0f0f0;color:#999}
 .topic-status-1{background:#FFF3E0;color:#E65100}
 .topic-status-2{background:#E8F5E9;color:#2E7D32}
+.hot-account-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.hot-acc-tab{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500;color:var(--text2)}
+.hot-acc-tab:active{transform:scale(0.95)}
+.hot-acc-tab.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary);font-weight:600}
+.hot-topic-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:10px;background:var(--card);margin-bottom:8px;border:1px solid var(--border)}
+.hot-topic-item input[type="checkbox"]{margin-top:3px;width:16px;height:16px;accent-color:var(--primary);cursor:pointer;flex-shrink:0}
+.hot-topic-content{flex:1;min-width:0}
+.hot-topic-title{font-size:14px;font-weight:600;color:var(--text)}
+.hot-topic-suggest{font-size:12px;color:var(--text2);margin-top:4px;padding:4px 8px;background:#f8f8f8;border-radius:6px;line-height:1.5}
+.hot-topic-date{font-size:11px;color:var(--text3);margin-top:4px}
+.hot-add-bar{display:flex;gap:8px;margin-top:12px;align-items:center}
+.hot-update-info{font-size:11px;color:var(--text3);margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -752,39 +764,113 @@ function renderReviewList(){
 }
 function delReview(i){const a=LS.get('reviews',[]);a.splice(i,1);LS.set('reviews',a);renderReviewList()}
 
-// --- Hot ---
+// --- Hot (爆款热点 - 按账号分类+人设融合) ---
+let currentHotAccount='土豆';
+let hotTopicsData={土豆:[],宝珠:[]};
+let selectedHotTopics=new Set();
+const HOT_ACCOUNTS=['土豆','宝珠'];
+const HOT_TOPICS_URL='https://raw.githubusercontent.com/ctdpotato/workspace/main/hot_topics.json';
+
 function renderHot(title,body){
   title.textContent='🔥 爆款热点';
-  const hots=LS.get('hots',[]);
+  selectedHotTopics=new Set();
   body.innerHTML=`
-    <div class="placeholder">🚧 自动热点功能开发中...</div>
-    <div style="margin-top:12px">
-      <div class="input-row">
-        <input class="input-field" id="hotInput" placeholder="手动添加热点...">
-        <button class="btn btn-primary btn-sm" onclick="addHot()">添加</button>
-      </div>
-      <div id="hotList"></div>
+    <div class="hot-account-tabs" id="hotAccountTabs"></div>
+    <div class="hot-update-info" id="hotUpdateInfo"></div>
+    <div id="hotTopicsList"></div>
+    <div class="hot-add-bar" id="hotAddBar" style="display:none">
+      <button class="btn btn-primary btn-sm" onclick="addSelectedToTopics()">✓ 加入选题</button>
+      <span id="hotSelectedCount" style="font-size:12px;color:var(--text3)"></span>
     </div>
   `;
-  renderHotList();
-  $('hotInput').addEventListener('keydown',e=>{if(e.key==='Enter')addHot()});
+  renderHotAccountTabs();
+  loadHotTopics();
 }
-function addHot(){
-  const inp=$('hotInput');const v=inp.value.trim();if(!v)return;
-  const hots=LS.get('hots',[]);
-  hots.unshift({text:v,time:new Date().toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})});
-  LS.set('hots',hots);inp.value='';renderHotList();
+
+function renderHotAccountTabs(){
+  $('hotAccountTabs').innerHTML=HOT_ACCOUNTS.map(acc=>{
+    const isActive=acc===currentHotAccount?'active':'';
+    return `<button class="hot-acc-tab ${isActive}" onclick="switchHotAccount('${acc}')">${acc}</button>`;
+  }).join('');
 }
-function renderHotList(){
-  const hots=LS.get('hots',[]);
-  $('hotList').innerHTML=hots.map((h,i)=>`
-    <div class="list-item">
-      <div class="list-item-text">${esc(h.text)}<div class="list-item-sub">${h.time}</div></div>
-      <button class="delete-btn" onclick="delHot(${i})">×</button>
+
+function switchHotAccount(account){
+  currentHotAccount=account;
+  selectedHotTopics=new Set();
+  renderHotAccountTabs();
+  renderHotTopicsList();
+}
+
+async function loadHotTopics(){
+  try{
+    const resp=await fetch(HOT_TOPICS_URL+'?t='+Date.now(),{cache:'no-store'});
+    if(resp.ok){
+      const data=await resp.json();
+      if(data&&data.topics){
+        hotTopicsData=data.topics;
+        if(data.updateDate){
+          $('hotUpdateInfo').textContent='最近更新：'+data.updateDate;
+        }
+      }
+    }
+  }catch(e){}
+  renderHotTopicsList();
+}
+
+function renderHotTopicsList(){
+  const topics=hotTopicsData[currentHotAccount]||[];
+  const list=$('hotTopicsList');
+  const addBar=$('hotAddBar');
+  if(!list)return;
+  if(topics.length===0){
+    list.innerHTML='<div class="placeholder">暂无热点推荐，每天早上8:00自动更新</div>';
+    addBar.style.display='none';
+    return;
+  }
+  list.innerHTML=topics.map((t,i)=>`
+    <div class="hot-topic-item">
+      <input type="checkbox" id="hc_${i}" onchange="toggleHotTopic(${i},this.checked)" ${selectedHotTopics.has(i)?'checked':''}>
+      <div class="hot-topic-content">
+        <div class="hot-topic-title">${esc(t.title)}</div>
+        <div class="hot-topic-suggest">💡 ${esc(t.suggest)}</div>
+        <div class="hot-topic-date">${t.date||''}</div>
+      </div>
     </div>
   `).join('');
+  addBar.style.display=selectedHotTopics.size>0?'flex':'none';
+  const cnt=$('hotSelectedCount');
+  if(cnt)cnt.textContent='已选 '+selectedHotTopics.size+' 条';
 }
-function delHot(i){const a=LS.get('hots',[]);a.splice(i,1);LS.set('hots',a);renderHotList()}
+
+function toggleHotTopic(index,checked){
+  if(checked)selectedHotTopics.add(index);
+  else selectedHotTopics.delete(index);
+  const addBar=$('hotAddBar');
+  if(addBar)addBar.style.display=selectedHotTopics.size>0?'flex':'none';
+  const cnt=$('hotSelectedCount');
+  if(cnt)cnt.textContent='已选 '+selectedHotTopics.size+' 条';
+}
+
+function addSelectedToTopics(){
+  const topics=hotTopicsData[currentHotAccount]||[];
+  const targetKey='topics_'+currentHotAccount;
+  const existing=LS.get(targetKey,[]);
+  let added=0;
+  selectedHotTopics.forEach(i=>{
+    if(topics[i]){
+      existing.unshift({
+        title:topics[i].title,
+        status:0,
+        time:new Date().toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})
+      });
+      added++;
+    }
+  });
+  LS.set(targetKey,existing);
+  selectedHotTopics=new Set();
+  renderHotTopicsList();
+  alert('已加入 '+added+' 条选题到「'+currentHotAccount+'」的选题计划');
+}
 
 // --- Memo ---
 function renderMemo(title,body){
