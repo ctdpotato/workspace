@@ -224,23 +224,25 @@ textarea.input-field{resize:vertical;min-height:80px}
 .we-nav:active{background:var(--green-light);border-color:var(--green)}
 .we-week-label{font-size:13px;font-weight:600;color:var(--text)}
 .we-today-badge{font-size:10px;color:var(--green);font-weight:600;margin-left:4px}
-.we-stats{font-size:12px;color:var(--text3);text-align:center;margin-bottom:12px;padding:6px 10px;background:var(--green-light);border-radius:8px}
-.we-day-card{background:var(--card);border-radius:10px;padding:10px 12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.04);border:1px solid transparent;transition:all .2s}
-.we-day-card.is-today{border-color:var(--green);box-shadow:0 2px 8px rgba(76,175,80,0.15)}
-.we-day-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.we-day-name{font-size:14px;font-weight:600;color:var(--text)}
-.we-day-date{font-size:11px;color:var(--text3);margin-left:6px}
-.we-day-result{font-size:12px;color:var(--green);font-weight:600}
-.we-options{display:flex;gap:6px}
-.we-opt{flex:1;padding:8px 4px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg);font-size:12px;cursor:pointer;text-align:center;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:44px;justify-content:center}
-.we-opt:active{transform:scale(0.95)}
-.we-opt .we-opt-emoji{font-size:18px;line-height:1}
-.we-opt .we-opt-label{font-size:10px;color:var(--text2);line-height:1.2}
-.we-opt.active{border-color:var(--green);background:var(--green-light)}
-.we-opt.active .we-opt-label{color:var(--green);font-weight:600}
-.we-opt.rest-opt.active{border-color:#FF9800;background:#FFF3E0}
-.we-opt.rest-opt.active .we-opt-label{color:#E65100;font-weight:600}
-.we-empty{text-align:center;padding:20px;color:var(--text3);font-size:13px}
+.we-stats{font-size:12px;color:var(--text3);text-align:center;margin-bottom:14px;padding:6px 10px;background:var(--green-light);border-radius:8px}
+.we-day-row{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;margin-bottom:6px;background:var(--card);border:1.5px solid var(--border);transition:all .25s}
+.we-day-row.is-today{border-color:var(--green);box-shadow:0 2px 10px rgba(76,175,80,0.12)}
+.we-day-row.is-done{background:var(--green-light);border-color:rgba(76,175,80,0.3)}
+.we-day-label{min-width:52px;flex-shrink:0}
+.we-day-name{font-size:14px;font-weight:700;color:var(--text);display:block;line-height:1.2}
+.we-day-date{font-size:10px;color:var(--text3);display:block}
+.we-day-row.is-today .we-day-name{color:var(--green)}
+.we-emoji-group{display:flex;gap:4px;flex:1}
+.we-emoji-btn{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;padding:0;flex-shrink:0}
+.we-emoji-btn:active{transform:scale(0.9)}
+.we-emoji-btn.active{border-color:var(--green);background:var(--green-light);box-shadow:0 2px 6px rgba(76,175,80,0.18)}
+.we-emoji-btn.rest-btn.active{border-color:#FF9800;background:#FFF3E0;box-shadow:0 2px 6px rgba(255,152,0,0.18)}
+.we-check-btn{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0;position:relative;padding:0}
+.we-check-btn:active{transform:scale(0.9)}
+.we-check-btn.checked{border-color:var(--green);background:var(--green);animation:checkBounce .4s ease}
+.we-check-btn.checked::after{content:'✓';color:#fff;font-size:18px;font-weight:700}
+.we-check-btn:not(.checked)::after{content:'';display:block;width:10px;height:10px;border-radius:50%;background:var(--border);opacity:0.4}
+@keyframes checkBounce{0%{transform:scale(0.8)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
 
 /* Topics Plan */
 .topics-header{margin-bottom:12px}
@@ -324,7 +326,6 @@ textarea.input-field{resize:vertical;min-height:80px}
 
 <!-- Page 3: Life -->
 <div class="page" id="page-life">
-  <!-- Weekly Exercise -->
   <div class="card weekly-exercise">
     <div class="we-header">
       <button class="we-nav" onclick="changeWeek(-1)">◀</button>
@@ -336,26 +337,6 @@ textarea.input-field{resize:vertical;min-height:80px}
     </div>
     <div class="we-stats" id="weStats"></div>
     <div id="weDayList"></div>
-  </div>
-  <!-- Qiqi -->
-  <div class="card">
-    <div class="card-title">🍼 七七记录</div>
-    <div class="input-row" style="margin-bottom:10px">
-      <input class="input-field" id="qiqiInput" placeholder="记录七七的日常...">
-      <button class="btn btn-primary btn-sm" onclick="addQiqi()">+</button>
-    </div>
-    <div id="qiqiList"></div>
-  </div>
-  <!-- Calendar -->
-  <div class="card">
-    <div class="card-title">📅 运动日历</div>
-    <div id="calendarContainer"></div>
-    <div class="cal-stats" id="calStats"></div>
-  </div>
-  <!-- Diet -->
-  <div class="card">
-    <div class="card-title">🥗 今日饮食</div>
-    <div id="dietCard"></div>
   </div>
 </div>
 
@@ -912,55 +893,52 @@ function renderWeeklyExercise(){
   monday.setDate(monday.getDate()+_weekOffset*7);
   const days=[];
   for(let i=0;i<7;i++){const d=new Date(monday);d.setDate(monday.getDate()+i);days.push(d)}
-  const startStr=days[0].toISOString().slice(0,10);
-  const endStr=days[6].toISOString().slice(0,10);
+  const weekKey=days[0].toISOString().slice(0,10);
   const startM=days[0].getMonth()+1,startD=days[0].getDate();
   const endM=days[6].getMonth()+1,endD=days[6].getDate();
   const todayStr=today();
   const isCurrentWeek=_weekOffset===0;
-  // Week label
   $('weWeekLabel').textContent=`${startM}/${startD} - ${endM}/${endD}`;
   $('weTodayBadge').textContent=isCurrentWeek?'(本周)':'';
   // Load data
   const weData=LS.get('weeklyExercise',{});
-  const weekData=(weData.weeks||{})[startStr]||{};
+  const weekData=(weData.weeks||{})[weekKey]||{};
+  const doneData=(weData.done||{})[weekKey]||{};
   // Options
   const opts=[
-    {id:'骑车',emoji:'🚴',label:'骑车'},
-    {id:'游泳',emoji:'🏊',label:'游泳'},
-    {id:'健身房',emoji:'🏋️',label:'健身房'},
-    {id:'休息',emoji:'😴',label:'休息'}
+    {id:'骑车',emoji:'🚴'},
+    {id:'游泳',emoji:'🏊'},
+    {id:'健身',emoji:'💪'},
+    {id:'休息',emoji:'😴'}
   ];
   // Stats
-  const filled=days.filter(d=>weekData[dateStr(d)]).length;
-  const exerciseDays=days.filter(d=>{const v=weekData[dateStr(d)];return v&&v!=='休息'}).length;
-  $('weStats').textContent=`已安排 ${filled}/7 天 · 运动 ${exerciseDays} 天`;
-  // Day cards
+  const doneCount=days.filter(d=>doneData[dateStr(d)]).length;
+  const exerciseCount=days.filter(d=>{const v=weekData[dateStr(d)];return v&&v!=='休息'}).length;
+  $('weStats').textContent=`运动 ${exerciseCount} 天 · 已完成 ${doneCount}/7 天`;
+  // Day rows
   let html='';
   const dayNames=['周一','周二','周三','周四','周五','周六','周日'];
   days.forEach((d,i)=>{
     const ds=dateStr(d);
     const selected=weekData[ds];
+    const isDone=doneData[ds];
     const isToday=ds===todayStr;
-    html+=`<div class="we-day-card${isToday?' is-today':''}">
-      <div class="we-day-header">
-        <div>
-          <span class="we-day-name">${dayNames[i]}</span>
-          <span class="we-day-date">${d.getMonth()+1}/${d.getDate()}</span>
-          ${isToday?'<span style="font-size:10px;color:var(--green);margin-left:4px">今天</span>':''}
-        </div>
-        ${selected?'<span class="we-day-result">'+opts.find(o=>o.id===selected)?.emoji+' '+selected+'</span>':''}
+    let rowCls='we-day-row';
+    if(isToday)rowCls+=' is-today';
+    if(isDone)rowCls+=' is-done';
+    html+=`<div class="${rowCls}">
+      <div class="we-day-label">
+        <span class="we-day-name">${dayNames[i]}</span>
+        <span class="we-day-date">${d.getMonth()+1}/${d.getDate()}</span>
       </div>
-      <div class="we-options">
+      <div class="we-emoji-group">
         ${opts.map(o=>{
           const isActive=selected===o.id;
           const isRest=o.id==='休息';
-          return`<button class="we-opt${isActive?' active':''}${isRest?' rest-opt':''}" onclick="setExercise('${ds}','${o.id}')">
-            <span class="we-opt-emoji">${o.emoji}</span>
-            <span class="we-opt-label">${o.label}</span>
-          </button>`;
+          return`<button class="we-emoji-btn${isActive?' active':''}${isRest?' rest-btn':''}" onclick="setExercise('${ds}','${o.id}')">${o.emoji}</button>`;
         }).join('')}
       </div>
+      <button class="we-check-btn${isDone?' checked':''}" onclick="toggleComplete('${ds}')"></button>
     </div>`;
   });
   $('weDayList').innerHTML=html;
@@ -968,127 +946,31 @@ function renderWeeklyExercise(){
 
 function setExercise(ds,exercise){
   const monday=getMonday(new Date(ds+'T00:00:00'));
-  const weekStart=dateStr(monday);
+  const weekKey=monday.toISOString().slice(0,10);
   const weData=LS.get('weeklyExercise',{});
   if(!weData.weeks)weData.weeks={};
-  if(!weData.weeks[weekStart])weData.weeks[weekStart]={};
-  if(weData.weeks[weekStart][ds]===exercise){
-    delete weData.weeks[weekStart][ds];
+  if(!weData.weeks[weekKey])weData.weeks[weekKey]={};
+  if(weData.weeks[weekKey][ds]===exercise){
+    delete weData.weeks[weekKey][ds];
   }else{
-    weData.weeks[weekStart][ds]=exercise;
+    weData.weeks[weekKey][ds]=exercise;
   }
   LS.set('weeklyExercise',weData);
   renderWeeklyExercise();
 }
 
-function renderLife(){renderWeeklyExercise();renderQiqi();renderCalendar();renderDiet()}
-
-// --- Qiqi ---
-function renderQiqi(){
-  const records=LS.get('qiqi',[]);
-  $('qiqiList').innerHTML=records.map((r,i)=>`
-    <div class="list-item">
-      <span style="font-size:18px">🍼</span>
-      <div class="list-item-text">${esc(r.text)}<div class="list-item-sub">${r.time}</div></div>
-      <button class="delete-btn" onclick="delQiqi(${i})">×</button>
-    </div>
-  `).join('');
-}
-function addQiqi(){
-  const inp=$('qiqiInput');const v=inp.value.trim();if(!v)return;
-  const records=LS.get('qiqi',[]);
-  records.unshift({text:v,time:new Date().toLocaleString('zh-CN')});
-  LS.set('qiqi',records);inp.value='';renderQiqi();
-}
-function delQiqi(i){const a=LS.get('qiqi',[]);a.splice(i,1);LS.set('qiqi',a);renderQiqi()}
-$('qiqiInput').addEventListener('keydown',e=>{if(e.key==='Enter')addQiqi()});
-
-// --- Calendar ---
-function renderCalendar(){
-  const now=new Date();
-  const year=now.getFullYear(),month=now.getMonth();
-  const firstDay=new Date(year,month,1).getDay();
-  const daysInMonth=new Date(year,month+1,0).getDate();
-  const todayDate=now.getDate();
-  const exerciseData=LS.get('exercise_'+year+'_'+month,{});
-  const exerciseIcons={'核心训练':'💪','体态训练':'🧘','大步走':'🚶','骑车':'🚴','呼啦圈':'⭕','休息日':'😴'};
-  const headers=['日','一','二','三','四','五','六'];
-  let html='<div class="calendar-grid">';
-  headers.forEach(h=>html+=`<div class="cal-header">${h}</div>`);
-  for(let i=0;i<firstDay;i++)html+='<div class="cal-day empty"></div>';
-  for(let d=1;d<=daysInMonth;d++){
-    const key=d+'';
-    const ex=exerciseData[key];
-    const isToday=d===todayDate;
-    let cls='cal-day';
-    if(isToday)cls+=' today';
-    if(ex)cls+=' checked';
-    const icon=ex?exerciseIcons[ex]||'':'';
-    html+=`<div class="${cls}" onclick="pickExercise(${d})">
-      <span>${d}</span>
-      ${ex?`<span class="check-mark">✓</span><span class="exercise-icon">${icon}</span>`:''}
-    </div>`;
-  }
-  html+='</div>';
-  $('calendarContainer').innerHTML=html;
-  const totalDays=Object.keys(exerciseData).length;
-  const restDays=Object.values(exerciseData).filter(v=>v==='休息日').length;
-  $('calStats').textContent=`本月运动 ${totalDays-restDays} 天 / 共 ${daysInMonth} 天`;
+function toggleComplete(ds){
+  const monday=getMonday(new Date(ds+'T00:00:00'));
+  const weekKey=monday.toISOString().slice(0,10);
+  const weData=LS.get('weeklyExercise',{});
+  if(!weData.done)weData.done={};
+  if(!weData.done[weekKey])weData.done[weekKey]={};
+  weData.done[weekKey][ds]=!weData.done[weekKey][ds];
+  LS.set('weeklyExercise',weData);
+  renderWeeklyExercise();
 }
 
-function pickExercise(day){
-  const now=new Date();
-  const year=now.getFullYear(),month=now.getMonth();
-  const key='exercise_'+year+'_'+month;
-  const data=LS.get(key,{});
-  const types=['核心训练','体态训练','大步走','骑车','呼啦圈','休息日'];
-  const current=data[day+''];
-  const idx=current?types.indexOf(current):-1;
-  const next=types[(idx+1)%types.length];
-  if(current&&idx===types.length-1){delete data[day+'']}
-  else{data[day+'']=next}
-  LS.set(key,data);renderCalendar();
-}
-
-// --- Diet ---
-function renderDiet(){
-  const d=today();
-  const dietData=LS.get('diet_'+d,{meals:[{type:'早餐',items:[]},{type:'午餐',items:[]},{type:'晚餐',items:[]},{type:'加餐',items:[]}]});
-  const mealEmojis={'早餐':'🌅','午餐':'☀️','晚餐':'🌙','加餐':'🍎'};
-  let html='';
-  dietData.meals.forEach((meal,mi)=>{
-    html+=`<div class="meal-section">
-      <div class="meal-label">${mealEmojis[meal.type]||''} ${meal.type}</div>`;
-    meal.items.forEach((item,ii)=>{
-      html+=`<div class="meal-item">
-        <span class="meal-item-text">${esc(item)}</span>
-        <button class="delete-btn" onclick="delDietItem(${mi},${ii})">×</button>
-      </div>`;
-    });
-    html+=`<div class="input-row" style="margin-top:4px">
-      <input class="input-field" id="dietInput_${mi}" placeholder="添加食物..." style="font-size:13px">
-      <button class="btn btn-primary btn-sm" onclick="addDietItem(${mi})">+</button>
-    </div></div>`;
-  });
-  $('dietCard').innerHTML=html;
-  dietData.meals.forEach((_,mi)=>{
-    const inp=$('dietInput_'+mi);
-    if(inp)inp.addEventListener('keydown',e=>{if(e.key==='Enter')addDietItem(mi)});
-  });
-}
-function addDietItem(mi){
-  const inp=$('dietInput_'+mi);const v=inp.value.trim();if(!v)return;
-  const d=today();
-  const data=LS.get('diet_'+d,{meals:[{type:'早餐',items:[]},{type:'午餐',items:[]},{type:'晚餐',items:[]},{type:'加餐',items:[]}]});
-  data.meals[mi].items.push(v);
-  LS.set('diet_'+d,data);renderDiet();
-}
-function delDietItem(mi,ii){
-  const d=today();
-  const data=LS.get('diet_'+d,{meals:[]});
-  data.meals[mi].items.splice(ii,1);
-  LS.set('diet_'+d,data);renderDiet();
-}
+function renderLife(){renderWeeklyExercise()}
 
 // ======================== TOPICS PLAN ========================
 const TOPIC_ACCOUNTS=['土豆','宝珠'];
