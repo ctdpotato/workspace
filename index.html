@@ -952,20 +952,7 @@ function renderWeeklyExercise(){
       <button class="we-check-btn${isDone?' checked':''}" data-action="complete" data-date="${ds}"></button>
     </div>`;
   });
-  const list=$('weDayList');
-  list.innerHTML=html;
-  list.addEventListener('click',function(e){
-    const btn=e.target.closest('[data-action]');
-    if(!btn)return;
-    const ds=btn.dataset.date;
-    if(!ds)return;
-    toggleComplete(ds);
-  },{passive:true});
-  list.addEventListener('change',function(e){
-    if(e.target.tagName==='SELECT'&&e.target.dataset.date){
-      onExerciseChange(e.target);
-    }
-  });
+  $('weDayList').innerHTML=html;
 }
 
 function onExerciseChange(sel){
@@ -1019,7 +1006,25 @@ function toggleComplete(ds){
   renderWeeklyExercise();
 }
 
-function renderLife(){renderWeeklyExercise()}
+let _weListInited=false;
+function renderLife(){
+  renderWeeklyExercise();
+  if(!_weListInited){
+    _weListInited=true;
+    const list=$('weDayList');
+    list.addEventListener('click',function(e){
+      const btn=e.target.closest('[data-action]');
+      if(!btn)return;
+      const ds=btn.dataset.date;
+      if(ds)toggleComplete(ds);
+    });
+    list.addEventListener('change',function(e){
+      if(e.target.tagName==='SELECT'&&e.target.dataset.date){
+        onExerciseChange(e.target);
+      }
+    });
+  }
+}
 
 // ======================== TOPICS PLAN ========================
 const TOPIC_ACCOUNTS=['土豆','宝珠'];
