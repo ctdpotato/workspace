@@ -88,8 +88,6 @@ body{
   transition:all .3s ease;font-size:14px;color:transparent;
 }
 .task-item.done .task-check{background:var(--green);border-color:var(--green);color:#fff}
-.task-item.long-press-active{background:var(--blue-light);transform:scale(0.97);transition:all .15s}
-.task-edit-hint{font-size:10px;color:var(--text3);text-align:center;padding:4px 0 8px;opacity:0.6}
 /* Celebration */
 .celebration{
   display:none;text-align:center;padding:20px;
@@ -218,45 +216,31 @@ textarea.input-field{resize:vertical;min-height:80px}
 ::-webkit-scrollbar{width:0;height:0}
 /* Life tab full-width card */
 .life-full{grid-template-columns:1fr}
-/* Topic Management */
-.topic-header{display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px}
-.topic-tabs{display:flex;gap:6px}
-.topic-tab{padding:6px 14px;border-radius:16px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:13px;cursor:pointer;transition:all .2s}
-.topic-tab.active{background:var(--green);color:#fff;border-color:var(--green);font-weight:600}
-.topic-stats{font-size:12px;color:var(--text3);padding:4px 0 12px;text-align:center}
-.account-section{margin-bottom:16px}
-.account-header{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--card);border-radius:var(--radius) var(--radius) 0 0;border-bottom:2px solid var(--border);cursor:pointer;transition:all .2s}
-.account-header:active{opacity:0.8}
-.account-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.account-info{flex:1;min-width:0}
-.account-name{font-size:14px;font-weight:700;color:var(--text)}
-.account-desc{font-size:11px;color:var(--text3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.account-badge{font-size:10px;padding:2px 6px;border-radius:4px;color:#fff;font-weight:600;flex-shrink:0}
-.account-count{font-size:11px;color:var(--text3);flex-shrink:0}
-.account-collapse-icon{font-size:12px;color:var(--text3);transition:transform .2s;flex-shrink:0}
-.account-section.collapsed .account-collapse-icon{transform:rotate(-90deg)}
-.account-section.collapsed .topic-list{display:none}
-.account-section.collapsed .account-header{border-radius:var(--radius);border-bottom:none}
-.topic-list{background:var(--card);border-radius:0 0 var(--radius) var(--radius);padding:4px 0;border:1px solid var(--border);border-top:none}
-.topic-item{display:flex;align-items:center;padding:8px 12px;gap:8px;border-bottom:1px solid var(--border);transition:background .15s}
-.topic-item:last-child{border-bottom:none}
-.topic-item:active{background:var(--bg)}
-.topic-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s;font-size:12px;color:transparent}
-.topic-check.done{background:var(--green);border-color:var(--green);color:#fff}
-.topic-content{flex:1;min-width:0}
-.topic-title-text{font-size:13px;color:var(--text);line-height:1.4}
-.topic-item.completed .topic-title-text{text-decoration:line-through;color:var(--text3)}
-.topic-meta{display:flex;gap:6px;margin-top:3px;align-items:center;flex-wrap:wrap}
-.topic-tag{font-size:10px;padding:1px 5px;border-radius:3px;background:var(--bg);color:var(--text2)}
-.topic-date{font-size:10px;color:var(--text3)}
-.topic-priority{font-size:10px;padding:1px 5px;border-radius:3px;font-weight:600}
-.topic-priority.high{background:#FEE2E2;color:#DC2626}
-.topic-priority.medium{background:#FEF3C7;color:#D97706}
-.topic-priority.low{background:#E0F2FE;color:#0284C7}
-.topic-del{background:none;border:none;color:var(--text3);font-size:16px;cursor:pointer;padding:4px;opacity:0;transition:opacity .2s}
-.topic-item:hover .topic-del,.topic-item:active .topic-del{opacity:1}
-.topic-empty{padding:16px;text-align:center;font-size:12px;color:var(--text3)}
-.topic-week-label{font-size:11px;font-weight:600;color:var(--text2);padding:8px 12px 4px;background:var(--bg);border-bottom:1px solid var(--border)}
+
+/* === WEEKLY EXERCISE MODULE === */
+.weekly-exercise{margin-bottom:16px}
+.we-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.we-nav{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--card);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .2s;flex-shrink:0;min-height:32px;padding:0}
+.we-nav:active{background:var(--green-light);border-color:var(--green)}
+.we-week-label{font-size:13px;font-weight:600;color:var(--text)}
+.we-today-badge{font-size:10px;color:var(--green);font-weight:600;margin-left:4px}
+.we-stats{font-size:12px;color:var(--text3);text-align:center;margin-bottom:12px;padding:6px 10px;background:var(--green-light);border-radius:8px}
+.we-day-card{background:var(--card);border-radius:10px;padding:10px 12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.04);border:1px solid transparent;transition:all .2s}
+.we-day-card.is-today{border-color:var(--green);box-shadow:0 2px 8px rgba(76,175,80,0.15)}
+.we-day-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.we-day-name{font-size:14px;font-weight:600;color:var(--text)}
+.we-day-date{font-size:11px;color:var(--text3);margin-left:6px}
+.we-day-result{font-size:12px;color:var(--green);font-weight:600}
+.we-options{display:flex;gap:6px}
+.we-opt{flex:1;padding:8px 4px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg);font-size:12px;cursor:pointer;text-align:center;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:44px;justify-content:center}
+.we-opt:active{transform:scale(0.95)}
+.we-opt .we-opt-emoji{font-size:18px;line-height:1}
+.we-opt .we-opt-label{font-size:10px;color:var(--text2);line-height:1.2}
+.we-opt.active{border-color:var(--green);background:var(--green-light)}
+.we-opt.active .we-opt-label{color:var(--green);font-weight:600}
+.we-opt.rest-opt.active{border-color:#FF9800;background:#FFF3E0}
+.we-opt.rest-opt.active .we-opt-label{color:#E65100;font-weight:600}
+.we-empty{text-align:center;padding:20px;color:var(--text3);font-size:13px}
 </style>
 </head>
 <body>
@@ -313,35 +297,39 @@ textarea.input-field{resize:vertical;min-height:80px}
 
 <!-- Page 3: Life -->
 <div class="page" id="page-life">
-  <div class="section-title">👶 七七记录</div>
-  <div class="card" id="qiqiCard">
-    <div class="input-row">
-      <input class="input-field" id="qiqiInput" placeholder="记录七七的成长瞬间...">
-      <button class="btn btn-primary btn-sm" onclick="addQiqi()">添加</button>
+  <!-- Weekly Exercise -->
+  <div class="card weekly-exercise">
+    <div class="we-header">
+      <button class="we-nav" onclick="changeWeek(-1)">◀</button>
+      <div style="text-align:center">
+        <span class="we-week-label" id="weWeekLabel"></span>
+        <span class="we-today-badge" id="weTodayBadge"></span>
+      </div>
+      <button class="we-nav" onclick="changeWeek(1)">▶</button>
+    </div>
+    <div class="we-stats" id="weStats"></div>
+    <div id="weDayList"></div>
+  </div>
+  <!-- Qiqi -->
+  <div class="card">
+    <div class="card-title">🍼 七七记录</div>
+    <div class="input-row" style="margin-bottom:10px">
+      <input class="input-field" id="qiqiInput" placeholder="记录七七的日常...">
+      <button class="btn btn-primary btn-sm" onclick="addQiqi()">+</button>
     </div>
     <div id="qiqiList"></div>
   </div>
-  <div class="section-title">🏃‍♀️ 运动打卡</div>
+  <!-- Calendar -->
   <div class="card">
+    <div class="card-title">📅 运动日历</div>
     <div id="calendarContainer"></div>
     <div class="cal-stats" id="calStats"></div>
   </div>
-  <div class="section-title">🍽️ 饮食记录</div>
-  <div class="card" id="dietCard"></div>
-</div>
-
-<!-- Page 4: Topic Management -->
-<div class="page" id="page-topics">
-  <div class="topic-header">
-    <div class="topic-tabs">
-      <button class="topic-tab active" onclick="switchTopicView('week')">本周</button>
-      <button class="topic-tab" onclick="switchTopicView('month')">本月</button>
-      <button class="topic-tab" onclick="switchTopicView('all')">全部</button>
-    </div>
-    <button class="btn btn-primary btn-sm" onclick="openTopicAdd()">+ 选题</button>
+  <!-- Diet -->
+  <div class="card">
+    <div class="card-title">🥗 今日饮食</div>
+    <div id="dietCard"></div>
   </div>
-  <div class="topic-stats" id="topicStats"></div>
-  <div id="topicContainer"></div>
 </div>
 
 <!-- Bottom Tab Bar -->
@@ -354,9 +342,6 @@ textarea.input-field{resize:vertical;min-height:80px}
   </button>
   <button class="tab-item" onclick="switchTab(2)">
     <span class="tab-icon">🏠</span>生活
-  </button>
-  <button class="tab-item" onclick="switchTab(3)">
-    <span class="tab-icon">📝</span>选题
   </button>
 </div>
 
@@ -397,14 +382,12 @@ setInterval(updateTopNav,60000);
 // ======================== TAB SWITCH ========================
 function switchTab(idx){
   document.querySelectorAll('.tab-item').forEach((t,i)=>{t.classList.toggle('active',i===idx)});
-  const pages=document.querySelectorAll('.page');
-  pages.forEach((p,i)=>{p.classList.toggle('active',i===idx)});
+  document.querySelectorAll('.page').forEach((p,i)=>{p.classList.toggle('active',i===idx)});
   if(idx===2)renderLife();
-  if(idx===3)renderTopics();
 }
 
 // ======================== DAILY PLAN ========================
-function getDefaultTasks(){
+function getTasks(){
   const dow=new Date().getDay();// 0=Sun
   const isCore=[1,3,6].includes(dow);// Mon,Wed,Sat
   const exerciseSub=isCore?'核心跟练+体态训练+3000步大步走':'骑车30分钟';
@@ -431,12 +414,7 @@ function getDefaultTasks(){
     {emoji:'💤',title:'上床睡觉（最晚23:30）',time:'23:00'},
   ];
 }
-function getTasks(){
-  const custom=LS.get('customTasks',null);
-  if(custom&&Array.isArray(custom)&&custom.length>0)return custom;
-  return getDefaultTasks();
-}
-let TOTAL_TASKS=getTasks().length;
+const TOTAL_TASKS=20;
 let planState=LS.get('plan_'+today(),{done:[]});
 
 function checkDayReset(){
@@ -446,7 +424,7 @@ function checkDayReset(){
 checkDayReset();
 
 // 商单远程数据同步
-const ORDERS_REMOTE_URL='https://ctdpotato.github.io/workspace/orders.json';
+const ORDERS_REMOTE_URL='https://www.coze.cn/s/zEQOAJBuEE0/';
 const ORDERS_FALLBACK=[
   {name:'Valcena抗糖前体胶囊',brand:'Valcena',date:'',note:'已完成交付',status:5,account:'宝珠'},
   {name:'舒芙蕾慕斯',brand:'',date:'',note:'已完成交付',status:5,account:'宝珠'},
@@ -464,9 +442,7 @@ const ORDERS_FALLBACK=[
   {name:'适乐肤水杨酸洁面+PM乳',brand:'适乐肤',date:'2026-07-22',note:'初稿7/22，发布7/23，需自购后报销',status:4,account:'土豆'},
   {name:'AMIRO觅光X镜',brand:'AMIRO觅光',date:'2026-08-01',note:'档期8/1-2，返点25%，报价3000，寄拍',status:0,account:'土豆'},
   {name:'奥妙',brand:'奥妙',date:'2026-07-23',note:'公司接的，今天拍摄',status:2,account:'土豆'},
-  {name:'若也礼盒',brand:'若也',date:'2026-07-26',note:'返点20%，送品，报价3000',status:0,account:'土豆'},
 ];
-
 // 旧数据迁移：4状态→6状态 + 账号字段
 function migrateOrders(orders){
   const baobaoBrands=['Valcena','舒芙蕾','海蓝之谜','奥妙','兰蔻','颜芝迷'];
@@ -510,69 +486,16 @@ if(!localStorage.getItem('orders')){
     const remoteKey=JSON.stringify(data.map(o=>o.name+'|'+o.status+'|'+o.note).sort());
     const localKey=JSON.stringify(local.map(o=>o.name+'|'+o.status+'|'+o.note).sort());
     if(remoteKey!==localKey){
-      // 智能合并：远程新增的商单自动加入，本地修改的状态保留
-      if(localStorage.getItem('ordersLocalChanged')==='1'){
-        // 构建本地索引（按name+brand匹配）
-        const localMap={};
-        local.forEach(o=>{const k=(o.name||'')+'|'+(o.brand||'');localMap[k]=o});
-        // 以远程为基础，但保留本地的状态修改
-        const merged=data.map(r=>{
-          const k=(r.name||'')+'|'+(r.brand||'');
-          const l=localMap[k];
-          // 如果本地有这个商单且手动改过状态，保留本地状态
-          if(l&&l._localModified)return {...r,status:l.status,note:l.note,_localModified:true};
-          return r;
-        });
-        // 检查远程是否有新增的（本地没有的）
-        const remoteNames=new Set(data.map(o=>(o.name||'')+'|'+(o.brand||'')));
-        const localOnly=local.filter(o=>!remoteNames.has((o.name||'')+'|'+(o.brand||'')));
-        // 本地独有的（远程没有的）也保留
-        const finalData=[...merged,...localOnly];
-        LS.set('orders',finalData);
-        // 如果商单页面正在显示，刷新列表
-        if($('orderList'))renderOrderList();
-      }else{
-        LS.set('orders',data);
-        if($('orderList'))renderOrderList();
-      }
+      // 如果用户在本设备手动改过状态，不以远程覆盖
+      if(localStorage.getItem('ordersLocalChanged')==='1')return;
+      LS.set('orders',data);
+      // 如果商单页面正在显示，刷新列表
+      if($('orderList'))renderOrderList();
     }
   }catch(e){/* 网络异常时使用本地数据，静默处理 */}
 })();
-// 强制同步：清除本地修改标记，重新拉取远程数据并合并
-function forceSyncOrders(){
-  localStorage.removeItem('ordersLocalChanged');
-  (async function(){
-    try{
-      const resp=await fetch(ORDERS_REMOTE_URL,{cache:'no-store'});
-      if(!resp.ok){alert('同步失败：无法连接远程');return}
-      const text=await resp.text();
-      let data;
-      try{data=JSON.parse(text)}catch(e){
-        const m=text.match(/\[[\s\S]*\]/);
-        if(m)data=JSON.parse(m[0]);else{alert('同步失败：数据格式异常');return}
-      }
-      if(!Array.isArray(data)||data.length===0){alert('远程无数据');return}
-      migrateOrders(data);
-      const local=LS.get('orders',[]);
-      const localMap={};
-      local.forEach(o=>{const k=(o.name||'')+'|'+(o.brand||'');localMap[k]=o});
-      const merged=data.map(r=>{
-        const k=(r.name||'')+'|'+(r.brand||'');
-        const l=localMap[k];
-        if(l&&l._localModified)return {...r,status:l.status,note:l.note,_localModified:true};
-        return r;
-      });
-      const remoteNames=new Set(data.map(o=>(o.name||'')+'|'+(o.brand||'')));
-      const localOnly=local.filter(o=>!remoteNames.has((o.name||'')+'|'+(o.brand||'')));
-      LS.set('orders',[...merged,...localOnly]);
-      if($('orderList'))renderOrderList();
-      alert('同步完成！');
-    }catch(e){alert('同步失败：'+e.message)}
-  })();
-}
 
 function renderTasks(){
-  TOTAL_TASKS=getTasks().length;
   const tasks=getTasks();
   const container=$('taskContainer');
   container.innerHTML='';
@@ -587,40 +510,7 @@ function renderTasks(){
     }
     const div=document.createElement('div');
     div.className='task-item'+(planState.done.includes(i)?' done':'');
-    // Long-press detection
-    let pressTimer=null;
-    let longPressed=false;
-    const startPress=(e)=>{
-      longPressed=false;
-      pressTimer=setTimeout(()=>{
-        longPressed=true;
-        div.classList.add('long-press-active');
-        if(navigator.vibrate)navigator.vibrate(30);
-        editTask(i);
-      },500);
-    };
-    const cancelPress=()=>{
-      clearTimeout(pressTimer);
-      div.classList.remove('long-press-active');
-    };
-    div.addEventListener('touchstart',startPress,{passive:true});
-    div.addEventListener('touchend',(e)=>{
-      cancelPress();
-      if(longPressed){e.preventDefault();return}
-      toggleTask(i);
-    });
-    div.addEventListener('touchcancel',cancelPress);
-    div.addEventListener('touchmove',cancelPress);
-    // Desktop: right-click to edit
-    div.addEventListener('contextmenu',(e)=>{
-      e.preventDefault();
-      editTask(i);
-    });
-    // Desktop: normal click
-    div.onclick=(e)=>{
-      if(longPressed){longPressed=false;return}
-      toggleTask(i);
-    };
+    div.onclick=()=>toggleTask(i);
     div.innerHTML=`
       <span class="task-emoji">${t.emoji}</span>
       <div class="task-info">
@@ -632,11 +522,6 @@ function renderTasks(){
     `;
     container.appendChild(div);
   });
-  // Hint
-  const hint=document.createElement('div');
-  hint.className='task-edit-hint';
-  hint.textContent='长按任务可编辑内容';
-  container.appendChild(hint);
   updateProgress();
 }
 
@@ -648,79 +533,6 @@ function toggleTask(i){
   LS.set(key,planState);
   renderTasks();
   if(planState.done.length===TOTAL_TASKS)showCelebration();
-}
-
-// --- Task Editing ---
-function editTask(i){
-  const tasks=getTasks();
-  const t=tasks[i];
-  const overlay=$('modalOverlay');
-  const title=$('modalTitleText');
-  const body=$('modalBody');
-  title.textContent='✏️ 编辑任务';
-  body.innerHTML=`
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div>
-        <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">表情</label>
-        <input class="input-field" id="editEmoji" value="${t.emoji||''}" maxlength="4" style="width:60px;text-align:center;font-size:20px">
-      </div>
-      <div>
-        <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">任务名称</label>
-        <input class="input-field" id="editTitle" value="${esc(t.title||'')}">
-      </div>
-      <div>
-        <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">时间</label>
-        <input class="input-field" id="editTime" value="${esc(t.time||'')}" style="width:100px">
-      </div>
-      <div>
-        <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">备注</label>
-        <input class="input-field" id="editSub" value="${esc(t.sub||'')}" placeholder="可选，如饮食细节等">
-      </div>
-      <div>
-        <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">分组标题（可选）</label>
-        <input class="input-field" id="editGroup" value="${esc(t.group||'')}" placeholder="如：🌅 早晨">
-      </div>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn btn-primary" style="flex:1" onclick="saveTask(${i})">保存</button>
-        <button class="btn btn-danger" onclick="deleteTask(${i})">删除</button>
-        <button class="btn btn-ghost" onclick="closeModal()">取消</button>
-      </div>
-      <button class="btn btn-ghost" style="width:100%;margin-top:4px;font-size:12px" onclick="resetTasks()">恢复默认计划</button>
-    </div>
-  `;
-  overlay.style.display='flex';
-  requestAnimationFrame(()=>overlay.classList.add('show'));
-}
-
-function saveTask(i){
-  const tasks=getTasks();
-  tasks[i]={
-    ...tasks[i],
-    emoji:$('editEmoji').value.trim()||tasks[i].emoji,
-    title:$('editTitle').value.trim()||tasks[i].title,
-    time:$('editTime').value.trim()||tasks[i].time,
-    sub:$('editSub').value.trim(),
-    group:$('editGroup').value.trim()
-  };
-  if(!tasks[i].sub)delete tasks[i].sub;
-  if(!tasks[i].group)delete tasks[i].group;
-  LS.set('customTasks',tasks);
-  closeModal();
-  renderTasks();
-}
-
-function deleteTask(i){
-  const tasks=getTasks();
-  tasks.splice(i,1);
-  LS.set('customTasks',tasks);
-  closeModal();
-  renderTasks();
-}
-
-function resetTasks(){
-  localStorage.removeItem('customTasks');
-  closeModal();
-  renderTasks();
 }
 
 function updateProgress(){
@@ -773,305 +585,37 @@ function closeModal(){
 }
 function closeModalOverlay(e){if(e.target===$('modalOverlay'))closeModal()}
 
-// --- Ideas (灵感收集本：简化版 - 图片瀑布流) ---
-let inspTempImages=[];
-let inspEditingId=null;
-const INSPIRATION_STORAGE_KEY='inspiration_data_v3';
-
-function getInspData(){
-  try{const raw=localStorage.getItem(INSPIRATION_STORAGE_KEY);if(raw){const d=JSON.parse(raw);if(Array.isArray(d))return d}}catch(e){}
-  // Migrate from v2 (old category-based format)
-  try{
-    const old=localStorage.getItem('inspiration_data_v2');
-    if(old){
-      const p=JSON.parse(old);
-      const migrated=[...(p.topic||[]),...(p.scene||[]),...(p.video||[])].map(it=>({
-        id:it.id, note:it.title||(it.desc||''), images:it.images||[], date:it.date||''
-      }));
-      saveInspData(migrated);
-      return migrated;
-    }
-  }catch(e){}
-  return[];
-}
-function saveInspData(d){localStorage.setItem(INSPIRATION_STORAGE_KEY,JSON.stringify(d))}
-function genInspId(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
-
-// 图片压缩
-function compressImage(file,maxW=800,quality=0.7){
-  return new Promise((resolve)=>{
-    const reader=new FileReader();
-    reader.onload=function(e){
-      const img=new Image();
-      img.onload=function(){
-        let w=img.width,h=img.height;
-        if(w>maxW){h=Math.round(h*maxW/w);w=maxW}
-        if(h>maxW){w=Math.round(w*maxW/h);h=maxW}
-        const canvas=document.createElement('canvas');
-        canvas.width=w;canvas.height=h;
-        const ctx=canvas.getContext('2d');
-        ctx.drawImage(img,0,0,w,h);
-        resolve(canvas.toDataURL('image/jpeg',quality));
-      };
-      img.onerror=function(){resolve(null)};
-      img.src=e.target.result;
-    };
-    reader.onerror=function(){resolve(null)};
-    reader.readAsDataURL(file);
-  });
-}
-
+// --- Ideas ---
 function renderIdeas(title,body){
-  title.textContent='📒 灵感收集本';
-  addInspStyles();
+  title.textContent='💡 选题灵感';
+  const ideas=LS.get('ideas',[]);
   body.innerHTML=`
-    <div style="position:relative;margin-bottom:10px">
-      <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--text3)">🔍</span>
-      <input class="input-field" id="inspSearch" placeholder="搜索灵感..." style="padding-left:32px" oninput="renderInspContent()">
+    <div class="input-row">
+      <input class="input-field" id="ideaInput" placeholder="输入灵感...">
+      <button class="btn btn-primary btn-sm" onclick="addIdea()">添加</button>
     </div>
-    <div id="inspContent"></div>
-    <button class="btn btn-primary" style="width:100%;font-size:15px;padding:12px;margin-top:8px" onclick="openInspAdd()">+ 添加图片</button>
-    <div style="text-align:center;font-size:11px;color:var(--text3);margin-top:6px">长按图片可编辑备注</div>
+    <div id="ideaList"></div>
   `;
-  renderInspContent();
+  renderIdeaList();
+  $('ideaInput').addEventListener('keydown',e=>{if(e.key==='Enter')addIdea()});
 }
-
-function addInspStyles(){
-  if(document.getElementById('inspStyles'))return;
-  const s=document.createElement('style');s.id='inspStyles';
-  s.textContent=`
-    /* 瀑布流图片网格 */
-    .insp-masonry{column-count:3;column-gap:6px;padding:2px 0}
-    @media(min-width:500px){.insp-masonry{column-count:4}}
-    @media(min-width:700px){.insp-masonry{column-count:5}}
-    .insp-masonry-item{break-inside:avoid;margin-bottom:6px;border-radius:10px;overflow:hidden;background:var(--card);box-shadow:var(--shadow);border:1px solid var(--border);cursor:pointer;position:relative;transition:transform .15s}
-    .insp-masonry-item:active{transform:scale(0.97)}
-    .insp-masonry-item img{width:100%;display:block;object-fit:cover;background:var(--bg)}
-    .insp-masonry-item .insp-note{padding:6px 8px 8px;font-size:11px;color:var(--text2);line-height:1.4;word-break:break-word;background:var(--card);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-    .insp-masonry-item .insp-item-del{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.5);color:#fff;border:none;font-size:14px;line-height:24px;text-align:center;cursor:pointer;z-index:2;opacity:0;transition:opacity .2s}
-    .insp-masonry-item:active .insp-item-del,.insp-masonry-item:hover .insp-item-del{opacity:1}
-    .insp-masonry-empty{text-align:center;padding:30px 10px;color:var(--text3);font-size:13px}
-    /* 上传预览 */
-    .insp-preview-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-    .insp-preview-item{position:relative;width:72px;height:72px}
-    .insp-preview-item img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--border)}
-    .insp-preview-item .insp-preview-del{position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#ff4444;color:#fff;border:none;font-size:12px;line-height:20px;text-align:center;cursor:pointer}
-    .insp-upload-zone{border:1px dashed var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;color:var(--text3);font-size:13px;transition:all .2s;background:var(--bg)}
-    .insp-upload-zone:active{background:var(--pink-light);border-color:var(--pink)}
-    /* Lightbox */
-    .insp-lightbox{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column}
-    .insp-lightbox.show{display:flex}
-    .insp-lightbox img{max-width:95vw;max-height:80vh;object-fit:contain;border-radius:4px}
-    .insp-lightbox-close{position:absolute;top:16px;right:16px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;z-index:10001}
-    .insp-lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:24px;padding:12px 16px;cursor:pointer;border-radius:8px;z-index:10001}
-    .insp-lightbox-nav.prev{left:12px}
-    .insp-lightbox-nav.next{right:12px}
-    .insp-lightbox-counter{color:rgba(255,255,255,0.7);font-size:13px;margin-top:12px}
-    .insp-lightbox-note{color:rgba(255,255,255,0.8);font-size:13px;margin-top:8px;text-align:center;max-width:80vw;line-height:1.5;white-space:pre-wrap}
-    .insp-lightbox-edit{position:absolute;bottom:20px;right:20px;background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:13px;padding:8px 16px;cursor:pointer;border-radius:8px;z-index:10001}
-  `;
-  document.head.appendChild(s);
+function addIdea(){
+  const inp=$('ideaInput');const v=inp.value.trim();if(!v)return;
+  const ideas=LS.get('ideas',[]);
+  ideas.unshift({text:v,time:new Date().toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})});
+  LS.set('ideas',ideas);inp.value='';renderIdeaList();
 }
-
-function renderInspContent(){
-  const items=getInspData();
-  const query=($('inspSearch')?.value||'').trim().toLowerCase();
-  let filtered=items;
-  if(query)filtered=items.filter(it=>(it.note||'').toLowerCase().includes(query));
-  const c=$('inspContent');if(!c)return;
-
-  // 收集所有图片，展平为瀑布流
-  const allPhotos=[];
-  filtered.forEach(item=>{
-    (item.images||[]).forEach((src,i)=>{
-      allPhotos.push({item,imgSrc:src,imgIdx:i});
-    });
-  });
-
-  if(!allPhotos.length){
-    c.innerHTML='<div class="insp-masonry-empty">'+(query?'🔍 没有匹配的灵感':'💭 还没有灵感，点击下方添加图片')+'</div>';return;
-  }
-  c.innerHTML='<div class="insp-masonry">'+allPhotos.map(p=>{
-    // 只在每张图所属条目的第一张图上显示备注
-    const showNote=p.imgIdx===0&&p.item.note;
-    return '<div class="insp-masonry-item" onmousedown="startInspPress(event,\''+esc(p.item.id)+'\')" onmouseup="endInspPress()" onmouseleave="endInspPress()" ontouchstart="startInspPress(event,\''+esc(p.item.id)+'\')" ontouchend="endInspPress()" onclick="openInspLightbox(\''+esc(p.item.id)+'\','+p.imgIdx+')">'
-      +'<button class="insp-item-del" onclick="event.stopPropagation();if(confirm(\'删除这条灵感？\'))deleteInspItem(\''+esc(p.item.id)+'\')">×</button>'
-      +'<img src="'+p.imgSrc+'" loading="lazy">'
-      +(showNote?'<div class="insp-note">'+esc(p.item.note)+'</div>':'')
-      +'</div>';
-  }).join('')+'</div>';
+function renderIdeaList(){
+  const ideas=LS.get('ideas',[]);
+  const list=$('ideaList');
+  list.innerHTML=ideas.map((it,i)=>`
+    <div class="list-item">
+      <div class="list-item-text">${esc(it.text)}<div class="list-item-sub">${it.time}</div></div>
+      <button class="delete-btn" onclick="delIdea(${i})">×</button>
+    </div>
+  `).join('');
 }
-
-// Lightbox - 全局图片流浏览
-let inspLightboxAll=[];
-let inspLightboxCur=0;
-
-function openInspLightbox(itemId,startIdx){
-  const items=getInspData();
-  const query=($('inspSearch')?.value||'').trim().toLowerCase();
-  let filtered=items;
-  if(query)filtered=items.filter(it=>(it.note||'').toLowerCase().includes(query));
-
-  // 构建全局图片列表
-  inspLightboxAll=[];
-  filtered.forEach(it=>{
-    (it.images||[]).forEach((src,i)=>{
-      inspLightboxAll.push({src,note:it.note,itemId:it.id,imgIdx:i});
-    });
-  });
-
-  // 定位到当前图片
-  inspLightboxCur=inspLightboxAll.findIndex(p=>p.itemId===itemId&&p.imgIdx===startIdx);
-  if(inspLightboxCur<0)inspLightboxCur=0;
-
-  addInspStyles();
-  let lb=document.getElementById('inspLightbox');
-  if(!lb){lb=document.createElement('div');lb.id='inspLightbox';lb.className='insp-lightbox';document.body.appendChild(lb)}
-  renderInspLb();
-  lb.classList.add('show');
-}
-
-function renderInspLb(){
-  const lb=document.getElementById('inspLightbox');if(!lb)return;
-  const p=inspLightboxAll[inspLightboxCur];if(!p)return;
-  const total=inspLightboxAll.length;
-
-  let navHtml='';
-  if(total>1){
-    navHtml='<button class="insp-lightbox-nav prev" onclick="event.stopPropagation()">‹</button>'
-      +'<button class="insp-lightbox-nav next" onclick="event.stopPropagation()">›</button>'
-      +'<div class="insp-lightbox-counter">'+(inspLightboxCur+1)+' / '+total+'</div>';
-  }
-  lb.innerHTML='<button class="insp-lightbox-close" onclick="closeInspLightbox()">✕</button>'
-    +navHtml
-    +'<img src="'+p.src+'" id="inspLbImg">'
-    +(p.note?'<div class="insp-lightbox-note">'+esc(p.note)+'</div>':'')
-    +'<button class="insp-lightbox-edit" onclick="event.stopPropagation();closeInspLightbox();openInspEdit(\''+esc(p.itemId)+'\')">✏️ 编辑</button>';
-
-  if(total>1){
-    lb.querySelector('.prev').onclick=()=>{inspLightboxCur=(inspLightboxCur-1+total)%total;renderInspLb()};
-    lb.querySelector('.next').onclick=()=>{inspLightboxCur=(inspLightboxCur+1)%total;renderInspLb()};
-  }
-  lb.querySelector('.insp-lightbox-close').onclick=closeInspLightbox;
-  lb.onclick=(e)=>{if(e.target===lb)closeInspLightbox()};
-
-  // 触摸滑动
-  let sx=0,sy=0;
-  const imgEl=lb.querySelector('#inspLbImg');
-  imgEl.ontouchstart=(e)=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY};
-  imgEl.ontouchend=(e)=>{
-    const dx=e.changedTouches[0].clientX-sx;
-    if(Math.abs(dx)>50&&total>1){
-      if(dx<0)inspLightboxCur=(inspLightboxCur+1)%total;else inspLightboxCur=(inspLightboxCur-1+total)%total;
-      renderInspLb();
-    }
-  };
-}
-
-function closeInspLightbox(){
-  const lb=document.getElementById('inspLightbox');
-  if(lb){lb.classList.remove('show');lb.innerHTML=''}
-}
-
-// 长按编辑
-let inspPressTimer=null,inspPressTriggered=false;
-function startInspPress(e,id){
-  inspPressTriggered=false;
-  inspPressTimer=setTimeout(()=>{inspPressTriggered=true;if(navigator.vibrate)navigator.vibrate(30);openInspEdit(id)},500);
-}
-function endInspPress(){clearTimeout(inspPressTimer)}
-
-// 媒体预览
-function renderMediaPreview(){
-  const zone=$('inspMediaPreview');if(!zone)return;
-  let html='';
-  inspTempImages.forEach((src,i)=>{
-    html+='<div class="insp-preview-item"><img src="'+src+'"><button class="insp-preview-del" onclick="removeTempImage('+i+')">×</button></div>';
-  });
-  zone.innerHTML=html;
-}
-function removeTempImage(i){inspTempImages.splice(i,1);renderMediaPreview()}
-
-async function handleInspFileSelect(e){
-  const files=Array.from(e.target.files||[]);
-  for(const f of files){
-    if(f.type.startsWith('image/')){
-      const compressed=await compressImage(f);
-      if(compressed)inspTempImages.push(compressed);
-    }
-  }
-  renderMediaPreview();
-  e.target.value='';
-}
-
-// 添加灵感
-function openInspAdd(){
-  inspEditingId=null;
-  inspTempImages=[];
-  $('modalTitleText').textContent='+ 添加灵感';
-  $('modalBody').innerHTML=
-    '<div style="display:flex;flex-direction:column;gap:12px">'
-    +'<div class="insp-upload-zone" onclick="document.getElementById(\'inspFileInput\').click()">'
-    +'📷 点击选择图片（可多选，自动压缩）</div>'
-    +'<input type="file" id="inspFileInput" accept="image/*" multiple style="display:none" onchange="handleInspFileSelect(event)">'
-    +'<div class="insp-preview-grid" id="inspMediaPreview"></div>'
-    +'<div><label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">备注（选填）</label>'
-    +'<input class="input-field" id="inspInputNote" placeholder="简单记一下这个灵感"></div>'
-    +'<div style="display:flex;gap:8px">'
-    +'<button class="btn btn-primary" style="flex:1" onclick="saveInspItem()">保存</button>'
-    +'<button class="btn btn-ghost" onclick="backToInspList()">返回</button>'
-    +'</div></div>';
-}
-
-// 编辑灵感
-function openInspEdit(id){
-  const items=getInspData();const item=items.find(it=>it.id===id);if(!item)return;
-  inspEditingId=id;
-  inspTempImages=[...(item.images||[])];
-  $('modalTitleText').textContent='✏️ 编辑灵感';
-  $('modalBody').innerHTML=
-    '<div style="display:flex;flex-direction:column;gap:12px">'
-    +'<div class="insp-upload-zone" onclick="document.getElementById(\'inspFileInput\').click()">'
-    +'📷 点击添加更多图片</div>'
-    +'<input type="file" id="inspFileInput" accept="image/*" multiple style="display:none" onchange="handleInspFileSelect(event)">'
-    +'<div class="insp-preview-grid" id="inspMediaPreview"></div>'
-    +'<div><label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">备注</label>'
-    +'<input class="input-field" id="inspInputNote" value="'+esc(item.note||'')+'"></div>'
-    +'<div style="display:flex;gap:8px">'
-    +'<button class="btn btn-danger" onclick="if(confirm(\'删除这条灵感？\')){deleteInspItem(\''+esc(id)+'\');backToInspList()}">删除</button>'
-    +'<button class="btn btn-primary" style="flex:1" onclick="saveInspItem()">保存</button>'
-    +'<button class="btn btn-ghost" onclick="backToInspList()">返回</button>'
-    +'</div></div>';
-  renderMediaPreview();
-}
-
-function saveInspItem(){
-  if(!inspTempImages.length){showToast('请先选择图片');return}
-  const note=($('inspInputNote')?.value||'').trim();
-  const data=getInspData();
-  const now=new Date();
-  const dateStr=(now.getMonth()+1)+'/'+now.getDate()+' '+now.getHours()+':'+now.getMinutes().toString().padStart(2,'0');
-  if(inspEditingId){
-    const item=data.find(it=>it.id===inspEditingId);
-    if(item){item.note=note;item.images=[...inspTempImages];item.date=dateStr+' (已编辑)'}
-  }else{
-    data.unshift({id:genInspId(),note,images:[...inspTempImages],date:dateStr});
-  }
-  saveInspData(data);
-  inspTempImages=[];inspEditingId=null;
-  backToInspList();
-}
-
-function deleteInspItem(id){
-  const data=getInspData();
-  saveInspData(data.filter(it=>it.id!==id));
-  renderInspContent();
-}
-
-function backToInspList(){
-  inspTempImages=[];inspEditingId=null;
-  renderIdeas($('modalTitleText'),$('modalBody'));
-}
+function delIdea(i){const a=LS.get('ideas',[]);a.splice(i,1);LS.set('ideas',a);renderIdeaList()}
 
 // --- Orders ---
 function renderOrders(title,body){
@@ -1093,7 +637,7 @@ function renderOrderList(){
     return(a.date||'z').localeCompare(b.date||'z');
   });
   LS.set('orders',orders);
-  let html=`<button onclick="forceSyncOrders()" style="width:100%;padding:10px;margin-bottom:8px;border:none;border-radius:8px;background:#4a90d9;color:#fff;font-size:14px;font-weight:600;cursor:pointer">🔄 同步远程商单数据</button>`;
+  let html='';
   let lastStatus=-1;
   orders.forEach((o,i)=>{
     if(o.status!==lastStatus){
@@ -1116,12 +660,11 @@ function renderOrderList(){
 function cycleOrderStatus(i){
   const orders=LS.get('orders',[]);
   orders[i].status=(orders[i].status+1)%6;
-  orders[i]._localModified=true;
   LS.set('orders',orders);
   localStorage.setItem('ordersLocalChanged','1');
   renderOrderList();
 }
-function delOrder(i){const a=LS.get('orders',[]);a[i]._localModified=true;a.splice(i,1);LS.set('orders',a);localStorage.setItem('ordersLocalChanged','1');renderOrderList()}
+function delOrder(i){const a=LS.get('orders',[]);a.splice(i,1);LS.set('orders',a);localStorage.setItem('ordersLocalChanged','1');renderOrderList()}
 
 // --- Review ---
 function renderReview(title,body){
@@ -1241,7 +784,87 @@ function renderMemoList(){
 function delMemo(i){const a=LS.get('memos',[]);a.splice(i,1);LS.set('memos',a);renderMemoList()}
 
 // ======================== LIFE TAB ========================
-function renderLife(){renderQiqi();renderCalendar();renderDiet()}
+let _weekOffset=0;
+function getMonday(d){d=new Date(d);const day=d.getDay()||7;d.setDate(d.getDate()-(day-1));d.setHours(0,0,0,0);return d}
+function dateStr(d){return d.toISOString().slice(0,10)}
+function changeWeek(offset){_weekOffset+=offset;renderWeeklyExercise()}
+
+function renderWeeklyExercise(){
+  const now=new Date();
+  const monday=getMonday(now);
+  monday.setDate(monday.getDate()+_weekOffset*7);
+  const days=[];
+  for(let i=0;i<7;i++){const d=new Date(monday);d.setDate(monday.getDate()+i);days.push(d)}
+  const startStr=days[0].toISOString().slice(0,10);
+  const endStr=days[6].toISOString().slice(0,10);
+  const startM=days[0].getMonth()+1,startD=days[0].getDate();
+  const endM=days[6].getMonth()+1,endD=days[6].getDate();
+  const todayStr=today();
+  const isCurrentWeek=_weekOffset===0;
+  // Week label
+  $('weWeekLabel').textContent=`${startM}/${startD} - ${endM}/${endD}`;
+  $('weTodayBadge').textContent=isCurrentWeek?'(本周)':'';
+  // Load data
+  const weData=LS.get('weeklyExercise',{});
+  const weekData=(weData.weeks||{})[startStr]||{};
+  // Options
+  const opts=[
+    {id:'骑车',emoji:'🚴',label:'骑车'},
+    {id:'游泳',emoji:'🏊',label:'游泳'},
+    {id:'健身房',emoji:'🏋️',label:'健身房'},
+    {id:'休息',emoji:'😴',label:'休息'}
+  ];
+  // Stats
+  const filled=days.filter(d=>weekData[dateStr(d)]).length;
+  const exerciseDays=days.filter(d=>{const v=weekData[dateStr(d)];return v&&v!=='休息'}).length;
+  $('weStats').textContent=`已安排 ${filled}/7 天 · 运动 ${exerciseDays} 天`;
+  // Day cards
+  let html='';
+  const dayNames=['周一','周二','周三','周四','周五','周六','周日'];
+  days.forEach((d,i)=>{
+    const ds=dateStr(d);
+    const selected=weekData[ds];
+    const isToday=ds===todayStr;
+    html+=`<div class="we-day-card${isToday?' is-today':''}">
+      <div class="we-day-header">
+        <div>
+          <span class="we-day-name">${dayNames[i]}</span>
+          <span class="we-day-date">${d.getMonth()+1}/${d.getDate()}</span>
+          ${isToday?'<span style="font-size:10px;color:var(--green);margin-left:4px">今天</span>':''}
+        </div>
+        ${selected?'<span class="we-day-result">'+opts.find(o=>o.id===selected)?.emoji+' '+selected+'</span>':''}
+      </div>
+      <div class="we-options">
+        ${opts.map(o=>{
+          const isActive=selected===o.id;
+          const isRest=o.id==='休息';
+          return`<button class="we-opt${isActive?' active':''}${isRest?' rest-opt':''}" onclick="setExercise('${ds}','${o.id}')">
+            <span class="we-opt-emoji">${o.emoji}</span>
+            <span class="we-opt-label">${o.label}</span>
+          </button>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+  $('weDayList').innerHTML=html;
+}
+
+function setExercise(ds,exercise){
+  const monday=getMonday(new Date(ds+'T00:00:00'));
+  const weekStart=dateStr(monday);
+  const weData=LS.get('weeklyExercise',{});
+  if(!weData.weeks)weData.weeks={};
+  if(!weData.weeks[weekStart])weData.weeks[weekStart]={};
+  if(weData.weeks[weekStart][ds]===exercise){
+    delete weData.weeks[weekStart][ds];
+  }else{
+    weData.weeks[weekStart][ds]=exercise;
+  }
+  LS.set('weeklyExercise',weData);
+  renderWeeklyExercise();
+}
+
+function renderLife(){renderWeeklyExercise();renderQiqi();renderCalendar();renderDiet()}
 
 // --- Qiqi ---
 function renderQiqi(){
@@ -1349,195 +972,6 @@ function delDietItem(mi,ii){
   data.meals[mi].items.splice(ii,1);
   LS.set('diet_'+d,data);renderDiet();
 }
-
-// ======================== TOPIC MANAGEMENT ========================
-const ACCOUNTS=[
-  {id:'tudou',name:'陈土豆呀',emoji:'🥔',color:'#4ECDC4',desc:'护肤种草 · 专业测评 · 好物分享'},
-  {id:'kiki',name:'洗漱台富婆kiki',emoji:'💎',color:'#AB47BC',desc:'贵价真爱+百元性价比 · 洗漱台场景'},
-  {id:'fanqie',name:'橙番茄',emoji:'🍅',color:'#FF6B6B',desc:'护肤分享'},
-  {id:'acc4',name:'账号4',emoji:'✨',color:'#42A5F5',desc:'护肤内容'},
-  {id:'baozhu',name:'宝珠爱买买',emoji:'👜',color:'#FFA726',desc:'收纳+好物 · 松弛贵妇人设'},
-  {id:'vlog',name:'日常vlog',emoji:'🎬',color:'#66BB6A',desc:'非亲子日常 · 高变现目标'},
-  {id:'acc7',name:'第7个账号',emoji:'📦',color:'#EC407A',desc:'博主接过的产品 · 真实分享'}
-];
-let topicView='week';
-function getTopics(){return LS.get('topics',[])}
-function saveTopics(d){LS.set('topics',d)}
-function genTopicId(){return 't_'+Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
-
-function switchTopicView(v){
-  topicView=v;
-  document.querySelectorAll('.topic-tab').forEach(t=>{
-    t.classList.toggle('active',t.textContent==={week:'本周',month:'本月',all:'全部'}[v]);
-  });
-  renderTopics();
-}
-
-function getWeekRange(){
-  const now=new Date();
-  const day=now.getDay()||7;
-  const mon=new Date(now);mon.setDate(now.getDate()-(day-1));mon.setHours(0,0,0,0);
-  const sun=new Date(mon);sun.setDate(mon.getDate()+6);sun.setHours(23,59,59,999);
-  return{start:mon,end:sun};
-}
-function getMonthRange(){
-  const now=new Date();
-  const start=new Date(now.getFullYear(),now.getMonth(),1);
-  const end=new Date(now.getFullYear(),now.getMonth()+1,0,23,59,59,999);
-  return{start,end};
-}
-
-function filterTopicsByView(topics){
-  if(topicView==='all')return topics;
-  const range=topicView==='week'?getWeekRange():getMonthRange();
-  return topics.filter(t=>{
-    if(!t.date)return topicView==='all';
-    const d=new Date(t.date);
-    return d>=range.start&&d<=range.end;
-  });
-}
-
-function renderTopics(){
-  const topics=getTopics();
-  const filtered=filterTopicsByView(topics);
-  const container=$('topicContainer');
-  
-  // Stats
-  const total=filtered.length;
-  const done=filtered.filter(t=>t.done).length;
-  $('topicStats').textContent=`共 ${total} 个选题，已完成 ${done} 个`;
-  
-  // Group by account
-  let html='';
-  ACCOUNTS.forEach(acc=>{
-    const accTopics=filtered.filter(t=>t.accountId===acc.id);
-    if(accTopics.length===0&&topicView!=='all')return;
-    const accDone=accTopics.filter(t=>t.done).length;
-    html+=`<div class="account-section" id="acc_${acc.id}">
-      <div class="account-header" onclick="toggleAccount('${acc.id}')">
-        <div class="account-avatar" style="background:${acc.color}20">${acc.emoji}</div>
-        <div class="account-info">
-          <div class="account-name">${acc.name}</div>
-          <div class="account-desc">${acc.desc}</div>
-        </div>
-        <span class="account-count">${accDone}/${accTopics.length}</span>
-        <span class="account-collapse-icon">▼</span>
-      </div>
-      <div class="topic-list">`;
-    if(accTopics.length===0){
-      html+='<div class="topic-empty">暂无选题</div>';
-    }else{
-      accTopics.sort((a,b)=>{
-        if(a.done!==b.done)return a.done?1:-1;
-        if(a.date&&b.date)return a.date.localeCompare(b.date);
-        if(a.date)return -1;
-        if(b.date)return 1;
-        return 0;
-      });
-      accTopics.forEach(t=>{
-        const prioClass=t.priority||'medium';
-        const prioText={high:'紧急',medium:'普通',low:'低'}[prioClass];
-        html+=`<div class="topic-item${t.done?' completed':''}">
-          <div class="topic-check${t.done?' done':''}" onclick="toggleTopic('${t.id}')">${t.done?'✓':''}</div>
-          <div class="topic-content">
-            <div class="topic-title-text">${esc(t.title)}</div>
-            <div class="topic-meta">
-              ${t.date?`<span class="topic-date">📅 ${t.date}</span>`:''}
-              <span class="topic-priority ${prioClass}">${prioText}</span>
-              ${t.type?`<span class="topic-tag">${esc(t.type)}</span>`:''}
-            </div>
-          </div>
-          <button class="topic-del" onclick="deleteTopic('${t.id}')">×</button>
-        </div>`;
-      });
-    }
-    html+='</div></div>';
-  });
-  container.innerHTML=html||'<div class="topic-empty">当前视图暂无选题</div>';
-}
-
-function toggleAccount(id){
-  document.getElementById('acc_'+id).classList.toggle('collapsed');
-}
-
-function toggleTopic(id){
-  const topics=getTopics();
-  const t=topics.find(x=>x.id===id);
-  if(t){t.done=!t.done;saveTopics(topics);renderTopics()}
-}
-
-function deleteTopic(id){
-  if(!confirm('确定删除这个选题？'))return;
-  const topics=getTopics().filter(t=>t.id!==id);
-  saveTopics(topics);renderTopics();
-}
-
-function openTopicAdd(){
-  const overlay=$('modalOverlay');
-  const title=$('modalTitleText');
-  const body=$('modalBody');
-  title.textContent='📝 添加选题';
-  const todayStr=today();
-  body.innerHTML=`
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div>
-        <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">选题标题</label>
-        <input class="input-field" id="topicTitle" placeholder="输入选题标题...">
-      </div>
-      <div>
-        <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">选择账号</label>
-        <select class="input-field" id="topicAccount">
-          ${ACCOUNTS.map(a=>`<option value="${a.id}">${a.emoji} ${a.name} - ${a.desc}</option>`).join('')}
-        </select>
-      </div>
-      <div style="display:flex;gap:8px">
-        <div style="flex:1">
-          <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">计划日期</label>
-          <input class="input-field" id="topicDate" type="date" value="${todayStr}">
-        </div>
-        <div style="flex:1">
-          <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">优先级</label>
-          <select class="input-field" id="topicPriority">
-            <option value="high">🔴 紧急</option>
-            <option value="medium" selected>🟡 普通</option>
-            <option value="low">🔵 低</option>
-          </select>
-        </div>
-      </div>
-      <div>
-        <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">内容类型（选填）</label>
-        <input class="input-field" id="topicType" placeholder="如：测评、种草、横测、vlog...">
-      </div>
-      <div style="display:flex;gap:8px;margin-top:4px">
-        <button class="btn btn-primary" style="flex:1" onclick="saveTopic()">保存选题</button>
-        <button class="btn btn-ghost" onclick="closeModal()">取消</button>
-      </div>
-    </div>
-  `;
-  overlay.style.display='flex';
-  requestAnimationFrame(()=>overlay.classList.add('show'));
-}
-
-function saveTopic(){
-  const title=$('topicTitle').value.trim();
-  if(!title){alert('请输入选题标题');return}
-  const topics=getTopics();
-  topics.push({
-    id:genTopicId(),
-    title:title,
-    accountId:$('topicAccount').value,
-    date:$('topicDate').value||'',
-    priority:$('topicPriority').value,
-    type:$('topicType').value.trim(),
-    done:false,
-    createdAt:new Date().toISOString()
-  });
-  saveTopics(topics);
-  closeModal();
-  renderTopics();
-}
-
-renderTopics();
 
 // ======================== HELPERS ========================
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
