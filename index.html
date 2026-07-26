@@ -940,7 +940,7 @@ function renderWeeklyExercise(){
         <span class="we-day-date">${d.getMonth()+1}/${d.getDate()}</span>
       </div>
       <div class="we-select-wrap">
-        <select class="${selCls}" data-date="${ds}" onchange="onExerciseChange(this)">
+        <select class="${selCls}" data-date="${ds}">
           <option value=""${!selected?' selected':''}>➕ 未选</option>
           <option value="骑车"${selected==='骑车'?' selected':''}>🚴 骑车</option>
           <option value="游泳"${selected==='游泳'?' selected':''}>🏊 游泳</option>
@@ -954,13 +954,18 @@ function renderWeeklyExercise(){
   });
   const list=$('weDayList');
   list.innerHTML=html;
-  list.onclick=function(e){
+  list.addEventListener('click',function(e){
     const btn=e.target.closest('[data-action]');
     if(!btn)return;
     const ds=btn.dataset.date;
     if(!ds)return;
     toggleComplete(ds);
-  };
+  },{passive:true});
+  list.addEventListener('change',function(e){
+    if(e.target.tagName==='SELECT'&&e.target.dataset.date){
+      onExerciseChange(e.target);
+    }
+  });
 }
 
 function onExerciseChange(sel){
