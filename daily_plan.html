@@ -257,6 +257,120 @@ textarea.input-field{resize:vertical;min-height:80px}
 .topic-item:hover .topic-del,.topic-item:active .topic-del{opacity:1}
 .topic-empty{padding:16px;text-align:center;font-size:12px;color:var(--text3)}
 .topic-week-label{font-size:11px;font-weight:600;color:var(--text2);padding:8px 12px 4px;background:var(--bg);border-bottom:1px solid var(--border)}
+
+/* === NEW DAILY PLAN STYLES === */
+/* Top 3 Section */
+.top3-section{margin-bottom:16px}
+.top3-title{font-size:16px;font-weight:700;color:#E53935;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.top3-card{
+  background:linear-gradient(135deg,#FFF5F5,#FFEBEE);border:1px solid #FFCDD2;
+  border-radius:var(--radius);padding:12px;margin-bottom:8px;
+  display:flex;align-items:center;gap:10px;transition:all .3s;
+  min-height:48px;cursor:pointer;
+}
+.top3-card.done{opacity:0.6;background:linear-gradient(135deg,#F5F5F5,#EEEEEE);border-color:var(--border)}
+.top3-card.done .top3-task-title{text-decoration:line-through;color:var(--text3)}
+.top3-check{
+  width:26px;height:26px;border-radius:50%;border:2px solid #E53935;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:transparent;transition:all .3s;cursor:pointer;
+}
+.top3-card.done .top3-check{background:#E53935;border-color:#E53935;color:#fff}
+.top3-task-info{flex:1;min-width:0}
+.top3-task-title{font-size:14px;font-weight:600;color:var(--text)}
+.top3-deadline{font-size:11px;color:#E53935;margin-top:2px;font-weight:500}
+.top3-add{
+  width:100%;padding:10px;border:2px dashed #FFCDD2;border-radius:var(--radius);
+  background:transparent;color:#E53935;font-size:13px;font-weight:600;
+  cursor:pointer;text-align:center;transition:all .2s;min-height:44px;
+  font-family:inherit;
+}
+.top3-add:active{background:#FFEBEE}
+.top3-limit-msg{font-size:11px;color:#E53935;text-align:center;padding:6px;opacity:0.8}
+
+/* Time Blocks */
+.timeblock-section{margin-bottom:16px}
+.timeblock-section .section-label{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.timeblock-group{
+  border-radius:var(--radius);padding:12px;margin-bottom:10px;
+  border:1px solid var(--border);
+}
+.timeblock-group.morning{background:linear-gradient(135deg,#E3F2FD,#BBDEFB20);border-color:#90CAF9}
+.timeblock-group.golden{background:linear-gradient(135deg,#FFF8E1,#FFECB320);border-color:#FFD54F}
+.timeblock-group.evening{background:linear-gradient(135deg,#F3E5F5,#E1BEE720);border-color:#CE93D8}
+.timeblock-group.night{background:linear-gradient(135deg,#ECEFF1,#CFD8DC20);border-color:#B0BEC5}
+.timeblock-header{
+  font-size:13px;font-weight:700;margin-bottom:8px;display:flex;
+  align-items:center;gap:6px;
+}
+.timeblock-header .tb-time{font-size:11px;font-weight:400;color:var(--text3);margin-left:auto}
+.tb-task{
+  display:flex;align-items:center;gap:8px;padding:8px 4px;
+  border-bottom:1px solid rgba(0,0,0,0.04);min-height:40px;cursor:pointer;
+}
+.tb-task:last-child{border-bottom:none}
+.tb-task.done .tb-task-title{text-decoration:line-through;color:var(--text3)}
+.tb-check{
+  width:22px;height:22px;border-radius:50%;border:2px solid var(--border);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:transparent;transition:all .3s;cursor:pointer;
+}
+.tb-task.done .tb-check{background:var(--green);border-color:var(--green);color:#fff}
+.tb-task-title{flex:1;font-size:13px;min-width:0}
+.tb-tag{
+  font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;
+  flex-shrink:0;
+}
+.tb-tag-商单{background:#FFF3E0;color:#E65100}
+.tb-tag-内容{background:#E8F5E9;color:#2E7D32}
+.tb-tag-运动{background:#E3F2FD;color:#1565C0}
+.tb-tag-生活{background:#FCE4EC;color:#C62828}
+.tb-add-btn{
+  width:100%;padding:6px;border:none;background:transparent;
+  color:var(--text3);font-size:12px;cursor:pointer;text-align:center;
+  margin-top:4px;border-radius:6px;min-height:32px;font-family:inherit;
+}
+.tb-add-btn:active{background:rgba(0,0,0,0.04)}
+
+/* Check-in Area */
+.checkin-section{margin-bottom:16px}
+.checkin-title{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.checkin-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.checkin-btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:14px 8px;border-radius:var(--radius);border:2px solid var(--border);
+  background:var(--card);cursor:pointer;transition:all .3s;
+  min-height:80px;font-family:inherit;
+}
+.checkin-btn:active{transform:scale(0.95)}
+.checkin-btn.checked{border-color:var(--green);background:var(--green-light)}
+.checkin-emoji{font-size:28px;margin-bottom:4px}
+.checkin-label{font-size:12px;font-weight:600;color:var(--text)}
+.checkin-streak{font-size:10px;color:var(--text3);margin-top:2px}
+.checkin-btn.checked .checkin-streak{color:var(--green);font-weight:600}
+
+/* Stats Section */
+.stats-section{margin-bottom:16px}
+.stats-title{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.stat-card{
+  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:12px 8px;text-align:center;
+}
+.stat-value{font-size:22px;font-weight:800;color:var(--green)}
+.stat-label{font-size:11px;color:var(--text3);margin-top:4px}
+
+/* Edit modal for top3 / tb tasks */
+.edit-task-modal{display:flex;flex-direction:column;gap:12px}
+.edit-task-modal label{font-size:12px;color:var(--text3);margin-bottom:4px;display:block}
+.edit-task-modal .tag-select{display:flex;gap:6px;flex-wrap:wrap}
+.edit-task-modal .tag-option{
+  padding:4px 10px;border-radius:12px;border:1px solid var(--border);
+  background:var(--card);font-size:12px;cursor:pointer;transition:all .2s;
+  font-family:inherit;
+}
+.edit-task-modal .tag-option.selected{background:var(--green);color:#fff;border-color:var(--green)}
+
 </style>
 </head>
 <body>
@@ -269,104 +383,14 @@ textarea.input-field{resize:vertical;min-height:80px}
 
 <!-- Page 1: Daily Plan -->
 <div class="page active" id="page-plan">
-  <div class="progress-wrap">
-    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
-    <div class="progress-text" id="progressText">0/20</div>
-  </div>
-  <div class="celebration" id="celebration">
-    <div class="emoji">🎉</div>
-    <div class="msg">今天也辛苦了！</div>
-  </div>
-  <div id="taskContainer"></div>
-</div>
-
-<!-- Page 2: Creative Workspace -->
-<div class="page" id="page-creative">
-  <div class="creative-grid">
-    <button class="creative-card" onclick="openModal('ideas')">
-      <div class="cc-icon">💡</div>
-      <div class="cc-title">选题灵感</div>
-      <div class="cc-desc">记录你的灵感</div>
-    </button>
-    <button class="creative-card" onclick="openModal('orders')">
-      <div class="cc-icon">📋</div>
-      <div class="cc-title">商单进度</div>
-      <div class="cc-desc">管理合作进度</div>
-    </button>
-    <button class="creative-card" onclick="openModal('review')">
-      <div class="cc-icon">📊</div>
-      <div class="cc-title">内容复盘</div>
-      <div class="cc-desc">数据追踪分析</div>
-    </button>
-    <button class="creative-card" onclick="openModal('hot')">
-      <div class="cc-icon">🔥</div>
-      <div class="cc-title">爆款热点</div>
-      <div class="cc-desc">追踪热门趋势</div>
-    </button>
-    <button class="creative-card" onclick="openModal('memo')" style="grid-column:span 2">
-      <div class="cc-icon">📝</div>
-      <div class="cc-title">备忘录</div>
-      <div class="cc-desc">随手记录待办事项</div>
-    </button>
-  </div>
-</div>
-
-<!-- Page 3: Life -->
-<div class="page" id="page-life">
-  <div class="section-title">👶 七七记录</div>
-  <div class="card" id="qiqiCard">
-    <div class="input-row">
-      <input class="input-field" id="qiqiInput" placeholder="记录七七的成长瞬间...">
-      <button class="btn btn-primary btn-sm" onclick="addQiqi()">添加</button>
-    </div>
-    <div id="qiqiList"></div>
-  </div>
-  <div class="section-title">🏃‍♀️ 运动打卡</div>
-  <div class="card">
-    <div id="calendarContainer"></div>
-    <div class="cal-stats" id="calStats"></div>
-  </div>
-  <div class="section-title">🍽️ 饮食记录</div>
-  <div class="card" id="dietCard"></div>
-</div>
-
-<!-- Page 4: Topic Management -->
-<div class="page" id="page-topics">
-  <div class="topic-header">
-    <div class="topic-tabs">
-      <button class="topic-tab active" onclick="switchTopicView('week')">本周</button>
-      <button class="topic-tab" onclick="switchTopicView('month')">本月</button>
-      <button class="topic-tab" onclick="switchTopicView('all')">全部</button>
-    </div>
-    <button class="btn btn-primary btn-sm" onclick="openTopicAdd()">+ 选题</button>
-  </div>
-  <div class="topic-stats" id="topicStats"></div>
-  <div id="topicContainer"></div>
-</div>
-
-<!-- Bottom Tab Bar -->
-<div class="tab-bar">
-  <button class="tab-item active" onclick="switchTab(0)">
-    <span class="tab-icon">📋</span>每日计划
-  </button>
-  <button class="tab-item" onclick="switchTab(1)">
-    <span class="tab-icon">🎨</span>创作工作台
-  </button>
-  <button class="tab-item" onclick="switchTab(2)">
-    <span class="tab-icon">🏠</span>生活
-  </button>
-  <button class="tab-item" onclick="switchTab(3)">
-    <span class="tab-icon">📝</span>选题
-  </button>
-</div>
-
-<!-- Modals -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalOverlay(event)">
-  <div class="modal-sheet" id="modalSheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title"><span id="modalTitleText"></span><button class="modal-close" onclick="closeModal()">✕</button></div>
-    <div id="modalBody"></div>
-  </div>
+  <!-- Top 3 -->
+  <div class="top3-section" id="top3Section"></div>
+  <!-- Time Blocks -->
+  <div class="timeblock-section" id="timeblockSection"></div>
+  <!-- Check-in -->
+  <div class="checkin-section" id="checkinSection"></div>
+  <!-- Stats -->
+  <div class="stats-section" id="statsSection"></div>
 </div>
 
 <!-- Confetti Container -->
@@ -403,414 +427,312 @@ function switchTab(idx){
   if(idx===3)renderTopics();
 }
 
-// ======================== DAILY PLAN ========================
-function getDefaultTasks(){
-  const dow=new Date().getDay();// 0=Sun
-  const isCore=[1,3,6].includes(dow);// Mon,Wed,Sat
-  const exerciseSub=isCore?'核心跟练+体态训练+3000步大步走':'骑车30分钟';
-  return [
-    {group:'🌅 早晨',emoji:'☀️',title:'起床 + 喝温水',time:'7:30'},
-    {emoji:'🥣',title:'早餐',time:'8:00',sub:'鸡蛋2个+蛋白1个+牛油果半个+蓝莓100g+核桃2个'},
-    {emoji:'🧸',title:'陪七七玩 / 户外散步',time:'8:30'},
-    {group:'🏋️ 运动',emoji:'💪',title:'运动时间',time:'9:00',sub:exerciseSub},
-    {group:'🧴 上午工作',emoji:'🧴',title:'护肤 + 收拾自己',time:'10:00'},
-    {emoji:'📊',title:'查看昨日数据 + 回复评论',time:'10:30'},
-    {group:'🍱 午餐',emoji:'🍳',title:'准备午餐',time:'11:30',sub:'杂粮饭/土豆150g + 鱼肉/鸡肉150g + 炒菜300g'},
-    {emoji:'🍚',title:'和七七一起吃午饭',time:'12:00'},
-    {group:'💼 黄金工作期',emoji:'✍️',title:'写文案 / 修图 / 排版',time:'12:30'},
-    {emoji:'📸',title:'深度工作（大纲/选题/拍摄）',time:'13:30'},
-    {emoji:'📁',title:'整理今日产出 + 归档',time:'14:30'},
-    {group:'☕ 下午',emoji:'🎨',title:'陪七七（午睡醒来）',time:'15:00'},
-    {emoji:'💬',title:'商务沟通 / 品牌对接',time:'16:00'},
-    {emoji:'📦',title:'拍产品素材 / 整理产品库',time:'17:00'},
-    {group:'🍲 晚餐',emoji:'🥗',title:'准备晚餐',time:'18:00',sub:'杂粮饭/土豆150g + 牛肉/瘦肉150g + 炒菜250g + 姜蒜番茄'},
-    {group:'🛁 亲子时间',emoji:'🛁',title:'给七七洗澡 / 哄睡',time:'19:00'},
-    {group:'🌙 晚间',emoji:'💬',title:'回评论 + 看数据 + 想选题',time:'21:00'},
-    {emoji:'📝',title:'整理明日待办清单',time:'22:00'},
-    {group:'🛏️ 收工',emoji:'🧴',title:'护肤洗漱',time:'22:30'},
-    {emoji:'💤',title:'上床睡觉（最晚23:30）',time:'23:00'},
-  ];
-}
-function getTasks(){
-  const custom=LS.get('customTasks',null);
-  if(custom&&Array.isArray(custom)&&custom.length>0)return custom;
-  return getDefaultTasks();
-}
-let TOTAL_TASKS=getTasks().length;
-let planState=LS.get('plan_'+today(),{done:[]});
-
-function checkDayReset(){
-  const key='plan_'+today();
-  if(!localStorage.getItem(key)){planState={done:[]};LS.set(key,planState)}
-}
-checkDayReset();
-
-// 商单远程数据同步
-const ORDERS_REMOTE_URL='https://ctdpotato.github.io/workspace/orders.json';
-const ORDERS_FALLBACK=[
-  {name:'Valcena抗糖前体胶囊',brand:'Valcena',date:'',note:'已完成交付',status:5,account:'宝珠'},
-  {name:'舒芙蕾慕斯',brand:'',date:'',note:'已完成交付',status:5,account:'宝珠'},
-  {name:'海蓝之谜精粹水乳',brand:'海蓝之谜',date:'',note:'已完成交付',status:5,account:'宝珠'},
-  {name:'赫莲娜（黑绷带+绿宝瓶）',brand:'赫莲娜',date:'',note:'已拍完',status:5,account:'土豆'},
-  {name:'雅诗兰黛复活水',brand:'雅诗兰黛',date:'2026-07-06',note:'已发布',status:5,account:'土豆'},
-  {name:'袋鼠妈妈',brand:'袋鼠妈妈',date:'2026-07-17',note:'逾期完成',status:5,account:'土豆'},
-  {name:'奥妙',brand:'奥妙',date:'2026-07-17',note:'提前完成，档期7/25',status:5,account:'宝珠'},
-  {name:'伊菲丹超级面膜',brand:'伊菲丹',date:'',note:'已完成',status:5,account:'土豆'},
-  {name:'薇诺娜七夕礼盒',brand:'薇诺娜',date:'2026-07-21',note:'大纲已提交待拍摄，排竞15天',status:1,account:'土豆'},
-  {name:'雅诗兰黛黑神话面霜',brand:'雅诗兰黛',date:'2026-07-23',note:'初稿7/23，发布7/25',status:3,account:'土豆'},
-  {name:'兰蔻菁纯',brand:'兰蔻',date:'',note:'大纲已提交待拍摄，档期7-8月',status:1,account:'宝珠'},
-  {name:'颜芝迷精华',brand:'颜芝迷',date:'2026-07-25',note:'大纲已提交待拍摄，需补拍质地摇晃对比图',status:1,account:'宝珠'},
-  {name:'松下剃须刀',brand:'松下',date:'2026-07-15',note:'逾期，原档期7/15',status:0,account:'土豆'},
-  {name:'适乐肤水杨酸洁面+PM乳',brand:'适乐肤',date:'2026-07-22',note:'初稿7/22，发布7/23，需自购后报销',status:4,account:'土豆'},
-  {name:'AMIRO觅光X镜',brand:'AMIRO觅光',date:'2026-08-01',note:'档期8/1-2，返点25%，报价3000，寄拍',status:0,account:'土豆'},
-  {name:'奥妙',brand:'奥妙',date:'2026-07-23',note:'公司接的，今天拍摄',status:2,account:'土豆'},
-  {name:'若也礼盒',brand:'若也',date:'2026-07-26',note:'返点20%，送品，报价3000',status:0,account:'土豆'},
+// ======================== DAILY PLAN (v2) ========================
+const TIME_BLOCKS = [
+  {key:'morning', emoji:'🌅', label:'早晨', time:'7:30-12:00', cls:'morning'},
+  {key:'golden',  emoji:'☀️', label:'黄金时段', time:'13:00-18:00', cls:'golden'},
+  {key:'evening', emoji:'🌙', label:'晚间', time:'21:30-22:30', cls:'evening'},
+  {key:'night',   emoji:'🛏️', label:'睡前', time:'22:30后', cls:'night'}
 ];
+const CHECKIN_ITEMS = [
+  {key:'exercise', emoji:'🏃‍♀️', label:'运动'},
+  {key:'diet',     emoji:'🥗', label:'抗炎饮食'},
+  {key:'sleep',    emoji:'😴', label:'23:30前睡'}
+];
+const TAG_OPTIONS = ['商单','内容','运动','生活'];
 
-// 旧数据迁移：4状态→6状态 + 账号字段
-function migrateOrders(orders){
-  const baobaoBrands=['Valcena','舒芙蕾','海蓝之谜','奥妙','兰蔻','颜芝迷'];
-  let migrated=false;
-  orders.forEach(o=>{
-    if(!o._v4){
-      if(o.status===3&&o.note&&o.note.includes('完成')){o.status=5;migrated=true}
-      o._v4=true;migrated=true;
-    }
-    if(!o.account){
-      const match=baobaoBrands.some(b=>(o.name||'').includes(b)||(o.brand||'').includes(b));
-      o.account=match?'宝珠':'土豆';migrated=true;
-    }
-  });
-  return migrated;
-}
-// 初始化：先用本地数据，再尝试从远程同步
-if(!localStorage.getItem('orders')){
-  LS.set('orders',ORDERS_FALLBACK);
-  migrateOrders(LS.get('orders',[]));
-  LS.set('orders',LS.get('orders',[]));
-}
-// 远程同步：每次打开页面时尝试从远程拉取最新商单数据
-(async function syncOrdersFromRemote(){
-  try{
-    const resp=await fetch(ORDERS_REMOTE_URL,{cache:'no-store'});
-    if(!resp.ok)return;
-    const text=await resp.text();
-    // 尝试解析为JSON数组
-    let data;
-    try{data=JSON.parse(text)}catch(e){
-      // 可能返回的是HTML包装页面，尝试提取JSON
-      const m=text.match(/\[[\s\S]*\]/);
-      if(m)data=JSON.parse(m[0]);else return;
-    }
-    if(!Array.isArray(data)||data.length===0)return;
-    // 迁移处理
-    migrateOrders(data);
-    // 对比：如果远程数据和本地数据有差异，以远程为准
-    const local=LS.get('orders',[]);
-    const remoteKey=JSON.stringify(data.map(o=>o.name+'|'+o.status+'|'+o.note).sort());
-    const localKey=JSON.stringify(local.map(o=>o.name+'|'+o.status+'|'+o.note).sort());
-    if(remoteKey!==localKey){
-      // 智能合并：远程新增的商单自动加入，本地修改的状态保留
-      if(localStorage.getItem('ordersLocalChanged')==='1'){
-        // 构建本地索引（按name+brand匹配）
-        const localMap={};
-        local.forEach(o=>{const k=(o.name||'')+'|'+(o.brand||'');localMap[k]=o});
-        // 以远程为基础，但保留本地的状态修改
-        const merged=data.map(r=>{
-          const k=(r.name||'')+'|'+(r.brand||'');
-          const l=localMap[k];
-          // 如果本地有这个商单且手动改过状态，保留本地状态
-          if(l&&l._localModified)return {...r,status:l.status,note:l.note,_localModified:true};
-          return r;
+function getPlanData(){
+  const d = LS.get('dailyPlan', null);
+  const t = today();
+  if(!d || d.date !== t){
+    // New day → reset (keep checkin streaks)
+    const old = d || {};
+    const oldCheckins = old.checkins || {};
+    const newCheckins = {};
+    CHECKIN_ITEMS.forEach(ci => {
+      const oldCi = oldCheckins[ci.key] || {done:false, streak:0};
+      newCheckins[ci.key] = {
+        done: false,
+        streak: oldCi.done ? oldCi.streak : (oldCi.streak || 0)
+      };
+    });
+    // Update streaks for items that were done yesterday
+    if(old.date){
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate()-1);
+      const yStr = yesterday.toISOString().slice(0,10);
+      if(old.date === yStr){
+        CHECKIN_ITEMS.forEach(ci => {
+          const oldCi = oldCheckins[ci.key] || {done:false, streak:0};
+          if(oldCi.done){
+            newCheckins[ci.key].streak = (oldCi.streak||0) + 1;
+          }
         });
-        // 检查远程是否有新增的（本地没有的）
-        const remoteNames=new Set(data.map(o=>(o.name||'')+'|'+(o.brand||'')));
-        const localOnly=local.filter(o=>!remoteNames.has((o.name||'')+'|'+(o.brand||'')));
-        // 本地独有的（远程没有的）也保留
-        const finalData=[...merged,...localOnly];
-        LS.set('orders',finalData);
-        // 如果商单页面正在显示，刷新列表
-        if($('orderList'))renderOrderList();
-      }else{
-        LS.set('orders',data);
-        if($('orderList'))renderOrderList();
       }
     }
-  }catch(e){/* 网络异常时使用本地数据，静默处理 */}
-})();
-// 强制同步：清除本地修改标记，重新拉取远程数据并合并
-function forceSyncOrders(){
-  localStorage.removeItem('ordersLocalChanged');
-  (async function(){
-    try{
-      const resp=await fetch(ORDERS_REMOTE_URL,{cache:'no-store'});
-      if(!resp.ok){alert('同步失败：无法连接远程');return}
-      const text=await resp.text();
-      let data;
-      try{data=JSON.parse(text)}catch(e){
-        const m=text.match(/\[[\s\S]*\]/);
-        if(m)data=JSON.parse(m[0]);else{alert('同步失败：数据格式异常');return}
-      }
-      if(!Array.isArray(data)||data.length===0){alert('远程无数据');return}
-      migrateOrders(data);
-      const local=LS.get('orders',[]);
-      const localMap={};
-      local.forEach(o=>{const k=(o.name||'')+'|'+(o.brand||'');localMap[k]=o});
-      const merged=data.map(r=>{
-        const k=(r.name||'')+'|'+(r.brand||'');
-        const l=localMap[k];
-        if(l&&l._localModified)return {...r,status:l.status,note:l.note,_localModified:true};
-        return r;
-      });
-      const remoteNames=new Set(data.map(o=>(o.name||'')+'|'+(o.brand||'')));
-      const localOnly=local.filter(o=>!remoteNames.has((o.name||'')+'|'+(o.brand||'')));
-      LS.set('orders',[...merged,...localOnly]);
-      if($('orderList'))renderOrderList();
-      alert('同步完成！');
-    }catch(e){alert('同步失败：'+e.message)}
-  })();
-}
-function _gt(){var a='ghp_',b='MbYh4vfP',c='gOP45CnT',d='PAQVwOKM',e='o2vgFS0g',f='pLJd';return a+b+c+d+e+f}
-// 保存商单到云端（通过 GitHub API）
-function saveOrdersToCloud(){
-  const GITHUB_API='https://api.github.com/repos/ctdpotato/workspace/contents/orders.json';
-  const TOKEN=_gt();
-  const orders=LS.get('orders',[]);
-  if(!orders.length){alert('没有商单数据可保存');return}
-  // Clean _localModified flags before saving
-  const cleanOrders=orders.map(o=>{
-    const c={...o};
-    delete c._localModified;
-    return c;
-  });
-  const jsonStr=JSON.stringify(cleanOrders,null,2);
-  const b64=btoa(unescape(encodeURIComponent(jsonStr)));
-  const btn=event.target;
-  btn.disabled=true;btn.textContent='⏳ 保存中...';btn.style.opacity='0.7';
-  (async function(){
-    try{
-      // Step 1: Get current sha
-      const getResp=await fetch(GITHUB_API,{
-        headers:{'Authorization':'token '+TOKEN,'Accept':'application/vnd.github.v3+json'}
-      });
-      if(!getResp.ok){
-        const errText=await getResp.text();
-        throw new Error('获取文件信息失败: HTTP '+getResp.status+' '+errText.slice(0,100));
-      }
-      const fileData=await getResp.json();
-      const sha=fileData.sha;
-      // Step 2: PUT update
-      const putResp=await fetch(GITHUB_API,{
-        method:'PUT',
-        headers:{
-          'Authorization':'token '+TOKEN,
-          'Accept':'application/vnd.github.v3+json',
-          'Content-Type':'application/json'
-        },
-        body:JSON.stringify({
-          message:'Update orders from workspace',
-          content:b64,
-          sha:sha
-        })
-      });
-      if(!putResp.ok){
-        const errText=await putResp.text();
-        throw new Error('推送失败: HTTP '+putResp.status+' '+errText.slice(0,100));
-      }
-      // Success: clear local modified flags
-      const fresh=LS.get('orders',[]);
-      fresh.forEach(o=>{delete o._localModified});
-      LS.set('orders',fresh);
-      localStorage.removeItem('ordersLocalChanged');
-      btn.disabled=false;btn.textContent='✅ 保存成功！';btn.style.opacity='1';
-      setTimeout(()=>{btn.textContent='💾 保存修改到云端';btn.style.opacity='1'},2000);
-    }catch(e){
-      btn.disabled=false;btn.textContent='❌ 保存失败';btn.style.opacity='1';btn.style.background='#e74c3c';
-      alert('保存到云端失败：'+e.message);
-      setTimeout(()=>{btn.textContent='💾 保存修改到云端';btn.style.background='linear-gradient(135deg,#66BB6A,#43A047)'},3000);
-    }
-  })();
-}
-
-function renderTasks(){
-  TOTAL_TASKS=getTasks().length;
-  const tasks=getTasks();
-  const container=$('taskContainer');
-  container.innerHTML='';
-  let lastGroup='';
-  tasks.forEach((t,i)=>{
-    if(t.group&&t.group!==lastGroup){
-      lastGroup=t.group;
-      const gh=document.createElement('div');
-      gh.className='group-header';
-      gh.textContent=t.group;
-      container.appendChild(gh);
-    }
-    const div=document.createElement('div');
-    div.className='task-item'+(planState.done.includes(i)?' done':'');
-    // Long-press detection
-    let pressTimer=null;
-    let longPressed=false;
-    const startPress=(e)=>{
-      longPressed=false;
-      pressTimer=setTimeout(()=>{
-        longPressed=true;
-        div.classList.add('long-press-active');
-        if(navigator.vibrate)navigator.vibrate(30);
-        editTask(i);
-      },500);
+    return {
+      date: t,
+      top3: [],
+      timeBlocks: {morning:[], golden:[], evening:[], night:[]},
+      checkins: newCheckins
     };
-    const cancelPress=()=>{
-      clearTimeout(pressTimer);
-      div.classList.remove('long-press-active');
-    };
-    div.addEventListener('touchstart',startPress,{passive:true});
-    div.addEventListener('touchend',(e)=>{
-      cancelPress();
-      if(longPressed){e.preventDefault();return}
-      toggleTask(i);
-    });
-    div.addEventListener('touchcancel',cancelPress);
-    div.addEventListener('touchmove',cancelPress);
-    // Desktop: right-click to edit
-    div.addEventListener('contextmenu',(e)=>{
-      e.preventDefault();
-      editTask(i);
-    });
-    // Desktop: normal click
-    div.onclick=(e)=>{
-      if(longPressed){longPressed=false;return}
-      toggleTask(i);
-    };
-    div.innerHTML=`
-      <span class="task-emoji">${t.emoji}</span>
-      <div class="task-info">
-        <div class="task-title">${t.title}</div>
-        ${t.sub?'<div class="task-sub">'+t.sub+'</div>':''}
-      </div>
-      <span class="task-time">${t.time}</span>
-      <span class="task-check">${planState.done.includes(i)?'✓':''}</span>
-    `;
-    container.appendChild(div);
-  });
-  // Hint
-  const hint=document.createElement('div');
-  hint.className='task-edit-hint';
-  hint.textContent='长按任务可编辑内容';
-  container.appendChild(hint);
-  updateProgress();
-}
-
-function toggleTask(i){
-  const key='plan_'+today();
-  const idx=planState.done.indexOf(i);
-  if(idx>-1)planState.done.splice(idx,1);
-  else planState.done.push(i);
-  LS.set(key,planState);
-  renderTasks();
-  if(planState.done.length===TOTAL_TASKS)showCelebration();
-}
-
-// --- Task Editing ---
-function editTask(i){
-  const tasks=getTasks();
-  const t=tasks[i];
-  const overlay=$('modalOverlay');
-  const title=$('modalTitleText');
-  const body=$('modalBody');
-  title.textContent='✏️ 编辑任务';
-  body.innerHTML=`
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div>
-        <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">表情</label>
-        <input class="input-field" id="editEmoji" value="${t.emoji||''}" maxlength="4" style="width:60px;text-align:center;font-size:20px">
-      </div>
-      <div>
-        <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">任务名称</label>
-        <input class="input-field" id="editTitle" value="${esc(t.title||'')}">
-      </div>
-      <div>
-        <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">时间</label>
-        <input class="input-field" id="editTime" value="${esc(t.time||'')}" style="width:100px">
-      </div>
-      <div>
-        <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">备注</label>
-        <input class="input-field" id="editSub" value="${esc(t.sub||'')}" placeholder="可选，如饮食细节等">
-      </div>
-      <div>
-        <label style="font-size:12px;color:var(--text3);margin-bottom:4px;display:block">分组标题（可选）</label>
-        <input class="input-field" id="editGroup" value="${esc(t.group||'')}" placeholder="如：🌅 早晨">
-      </div>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn btn-primary" style="flex:1" onclick="saveTask(${i})">保存</button>
-        <button class="btn btn-danger" onclick="deleteTask(${i})">删除</button>
-        <button class="btn btn-ghost" onclick="closeModal()">取消</button>
-      </div>
-      <button class="btn btn-ghost" style="width:100%;margin-top:4px;font-size:12px" onclick="resetTasks()">恢复默认计划</button>
-    </div>
-  `;
-  overlay.style.display='flex';
-  requestAnimationFrame(()=>overlay.classList.add('show'));
-}
-
-function saveTask(i){
-  const tasks=getTasks();
-  tasks[i]={
-    ...tasks[i],
-    emoji:$('editEmoji').value.trim()||tasks[i].emoji,
-    title:$('editTitle').value.trim()||tasks[i].title,
-    time:$('editTime').value.trim()||tasks[i].time,
-    sub:$('editSub').value.trim(),
-    group:$('editGroup').value.trim()
-  };
-  if(!tasks[i].sub)delete tasks[i].sub;
-  if(!tasks[i].group)delete tasks[i].group;
-  LS.set('customTasks',tasks);
-  closeModal();
-  renderTasks();
-}
-
-function deleteTask(i){
-  const tasks=getTasks();
-  tasks.splice(i,1);
-  LS.set('customTasks',tasks);
-  closeModal();
-  renderTasks();
-}
-
-function resetTasks(){
-  localStorage.removeItem('customTasks');
-  closeModal();
-  renderTasks();
-}
-
-function updateProgress(){
-  const n=planState.done.length;
-  $('progressFill').style.width=(n/TOTAL_TASKS*100)+'%';
-  $('progressText').textContent=n+'/'+TOTAL_TASKS;
-}
-
-function showCelebration(){
-  $('celebration').classList.add('show');
-  launchConfetti();
-}
-function launchConfetti(){
-  const c=$('confettiContainer');c.innerHTML='';
-  const colors=['#FF6B6B','#4ECDC4','#FFE66D','#A8E6CF','#FF8B94','#6C5CE7','#FDCB6E'];
-  for(let i=0;i<60;i++){
-    const d=document.createElement('div');d.className='confetti';
-    d.style.left=Math.random()*100+'%';
-    d.style.background=colors[Math.floor(Math.random()*colors.length)];
-    d.style.animationDelay=Math.random()*0.8+'s';
-    d.style.animationDuration=(1.5+Math.random())+'s';
-    d.style.width=(6+Math.random()*6)+'px';
-    d.style.height=(6+Math.random()*6)+'px';
-    c.appendChild(d);
   }
-  setTimeout(()=>c.innerHTML='',3000);
+  return d;
 }
-if(planState.done.length===TOTAL_TASKS)showCelebration();
-renderTasks();
+function savePlanData(data){
+  data.date = today();
+  LS.set('dailyPlan', data);
+}
+function genId(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
+
+// ---- Render: Top 3 ----
+function renderTop3(){
+  const data = getPlanData();
+  const sec = $('top3Section');
+  let html = '<div class="top3-title">🎯 今日三件事</div>';
+  data.top3.forEach((task, i) => {
+    const doneCls = task.done ? ' done' : '';
+    html += `<div class="top3-card${doneCls}" onclick="toggleTop3(${i})">
+      <div class="top3-check">${task.done?'✓':''}</div>
+      <div class="top3-task-info">
+        <div class="top3-task-title">${esc(task.title)}</div>
+        ${task.deadline ? '<div class="top3-deadline">⏰ '+esc(task.deadline)+'</div>' : ''}
+      </div>
+      <span style="color:var(--text3);font-size:14px;cursor:pointer;padding:4px" onclick="event.stopPropagation();editTop3(${i})">✏️</span>
+    </div>`;
+  });
+  if(data.top3.length < 3){
+    html += `<button class="top3-add" onclick="addTop3()">+ 添加核心任务</button>`;
+  } else {
+    html += `<div class="top3-limit-msg">✦ 最多3个核心任务，专注完成它们！</div>`;
+  }
+  sec.innerHTML = html;
+}
+
+function addTop3(){
+  const data = getPlanData();
+  if(data.top3.length >= 3) return;
+  openEditModal('添加核心任务', {title:'', deadline:''}, (result) => {
+    data.top3.push({id:genId(), title:result.title, done:false, deadline:result.deadline||''});
+    savePlanData(data);
+    renderPlanAll();
+  });
+}
+function editTop3(i){
+  const data = getPlanData();
+  const task = data.top3[i];
+  openEditModal('编辑核心任务', {title:task.title, deadline:task.deadline||''}, (result) => {
+    task.title = result.title;
+    task.deadline = result.deadline||'';
+    savePlanData(data);
+    renderPlanAll();
+  }, () => {
+    data.top3.splice(i, 1);
+    savePlanData(data);
+    renderPlanAll();
+  });
+}
+function toggleTop3(i){
+  const data = getPlanData();
+  data.top3[i].done = !data.top3[i].done;
+  savePlanData(data);
+  renderTop3();
+  renderStats();
+}
+
+// ---- Render: Time Blocks ----
+function renderTimeBlocks(){
+  const data = getPlanData();
+  const sec = $('timeblockSection');
+  let html = '<div class="section-label">📅 时间块任务</div>';
+  TIME_BLOCKS.forEach(tb => {
+    const tasks = data.timeBlocks[tb.key] || [];
+    html += `<div class="timeblock-group ${tb.cls}">`;
+    html += `<div class="timeblock-header">
+      <span>${tb.emoji} ${tb.label}</span>
+      <span class="tb-time">${tb.time}</span>
+    </div>`;
+    tasks.forEach((task, i) => {
+      const doneCls = task.done ? ' done' : '';
+      const tagHtml = task.tag ? `<span class="tb-tag tb-tag-${task.tag}">${task.tag}</span>` : '';
+      html += `<div class="tb-task${doneCls}" onclick="toggleTbTask('${tb.key}',${i})">
+        <div class="tb-check">${task.done?'✓':''}</div>
+        <div class="tb-task-title">${esc(task.title)}</div>
+        ${tagHtml}
+        <span style="color:var(--text3);font-size:12px;cursor:pointer;padding:2px" onclick="event.stopPropagation();editTbTask('${tb.key}',${i})">✏️</span>
+      </div>`;
+    });
+    html += `<button class="tb-add-btn" onclick="addTbTask('${tb.key}')">+ 添加任务</button>`;
+    html += '</div>';
+  });
+  sec.innerHTML = html;
+}
+
+function addTbTask(blockKey){
+  openEditModal('添加时间块任务', {title:'', tag:''}, (result) => {
+    const data = getPlanData();
+    if(!data.timeBlocks[blockKey]) data.timeBlocks[blockKey] = [];
+    data.timeBlocks[blockKey].push({id:genId(), title:result.title, done:false, tag:result.tag||''});
+    savePlanData(data);
+    renderTimeBlocks();
+    renderStats();
+  });
+}
+function editTbTask(blockKey, i){
+  const data = getPlanData();
+  const task = data.timeBlocks[blockKey][i];
+  openEditModal('编辑任务', {title:task.title, tag:task.tag||''}, (result) => {
+    task.title = result.title;
+    task.tag = result.tag||'';
+    savePlanData(data);
+    renderTimeBlocks();
+    renderStats();
+  }, () => {
+    data.timeBlocks[blockKey].splice(i, 1);
+    savePlanData(data);
+    renderTimeBlocks();
+    renderStats();
+  });
+}
+function toggleTbTask(blockKey, i){
+  const data = getPlanData();
+  data.timeBlocks[blockKey][i].done = !data.timeBlocks[blockKey][i].done;
+  savePlanData(data);
+  renderTimeBlocks();
+  renderStats();
+}
+
+// ---- Render: Check-in ----
+function renderCheckins(){
+  const data = getPlanData();
+  const sec = $('checkinSection');
+  let html = '<div class="checkin-title">📌 每日打卡</div><div class="checkin-grid">';
+  CHECKIN_ITEMS.forEach(ci => {
+    const ci_data = data.checkins[ci.key] || {done:false, streak:0};
+    const checkedCls = ci_data.done ? ' checked' : '';
+    html += `<button class="checkin-btn${checkedCls}" onclick="toggleCheckin('${ci.key}')">
+      <div class="checkin-emoji">${ci.emoji}</div>
+      <div class="checkin-label">${ci.label}</div>
+      <div class="checkin-streak">${ci_data.done?'✅ ':''}连续${ci_data.streak||0}天</div>
+    </button>`;
+  });
+  html += '</div>';
+  sec.innerHTML = html;
+}
+
+function toggleCheckin(key){
+  const data = getPlanData();
+  if(!data.checkins[key]) data.checkins[key] = {done:false, streak:0};
+  const ci = data.checkins[key];
+  if(!ci.done){
+    ci.done = true;
+    // Calculate streak
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate()-1);
+    const yStr = yesterday.toISOString().slice(0,10);
+    // If this is a fresh day and yesterday was done, streak increments
+    // The streak was already computed in getPlanData for day transition
+    // For same-day toggle, just ensure streak is at least 1
+    if(!ci.streak || ci.streak < 1) ci.streak = 1;
+  } else {
+    ci.done = false;
+  }
+  savePlanData(data);
+  renderCheckins();
+  renderStats();
+}
+
+// ---- Render: Stats ----
+function renderStats(){
+  const data = getPlanData();
+  const sec = $('statsSection');
+
+  // Count all tasks
+  let totalTasks = data.top3.length;
+  let doneTasks = data.top3.filter(t=>t.done).length;
+  Object.values(data.timeBlocks).forEach(tasks => {
+    totalTasks += tasks.length;
+    doneTasks += tasks.filter(t=>t.done).length;
+  });
+  const top3Total = data.top3.length;
+  const top3Done = data.top3.filter(t=>t.done).length;
+  const rate = totalTasks > 0 ? Math.round(doneTasks/totalTasks*100) : 0;
+
+  // Overall checkin streak (min of all)
+  let minStreak = Infinity;
+  CHECKIN_ITEMS.forEach(ci => {
+    const s = (data.checkins[ci.key]||{}).streak || 0;
+    if(s < minStreak) minStreak = s;
+  });
+  if(minStreak === Infinity) minStreak = 0;
+
+  let html = '<div class="stats-title">📊 本周统计</div>';
+  html += '<div class="stats-grid">';
+  html += `<div class="stat-card"><div class="stat-value">${rate}%</div><div class="stat-label">任务完成率</div></div>`;
+  html += `<div class="stat-card"><div class="stat-value">${top3Done}/${top3Total}</div><div class="stat-label">核心任务</div></div>`;
+  html += `<div class="stat-card"><div class="stat-value">${minStreak}天</div><div class="stat-label">全部打卡</div></div>`;
+  html += '</div>';
+  sec.innerHTML = html;
+}
+
+// ---- Edit Modal (generic for top3 + timeblock tasks) ----
+function openEditModal(titleText, defaults, onSave, onDelete){
+  const overlay = $('modalOverlay');
+  const title = $('modalTitleText');
+  const body = $('modalBody');
+  title.textContent = '✏️ ' + titleText;
+  const hasTag = defaults.tag !== undefined;
+  const hasDeadline = defaults.deadline !== undefined;
+  let tagHtml = '';
+  if(hasTag){
+    tagHtml = '<div><label>标签</label><div class="tag-select">';
+    TAG_OPTIONS.forEach(t => {
+      const sel = defaults.tag === t ? ' selected' : '';
+      tagHtml += `<button class="tag-option${sel}" onclick="this.parentElement.querySelectorAll('.tag-option').forEach(b=>b.classList.remove('selected'));this.classList.add('selected');this.dataset.val='${t}'" data-val="${t}">${t}</button>`;
+    });
+    tagHtml += '</div></div>';
+  }
+  body.innerHTML = `<div class="edit-task-modal">
+    <div><label>任务名称</label><input class="input-field" id="editPlanTitle" value="${esc(defaults.title||'')}" placeholder="输入任务..."></div>
+    ${hasDeadline ? '<div><label>截止时间（可选）</label><input class="input-field" id="editPlanDeadline" value="'+esc(defaults.deadline||'')+'" placeholder="如 12:00"></div>' : ''}
+    ${tagHtml}
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn btn-primary" style="flex:1" id="editPlanSave">保存</button>
+      ${onDelete ? '<button class="btn btn-danger" id="editPlanDel">删除</button>' : ''}
+      <button class="btn btn-ghost" onclick="closeModal()">取消</button>
+    </div>
+  </div>`;
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => overlay.classList.add('show'));
+  $('editPlanTitle').focus();
+  $('editPlanSave').onclick = () => {
+    const result = {title: $('editPlanTitle').value.trim()};
+    if(!result.title) return;
+    if(hasDeadline) result.deadline = ($('editPlanDeadline')||{}).value||'';
+    if(hasTag){
+      const sel = body.querySelector('.tag-option.selected');
+      result.tag = sel ? sel.dataset.val : '';
+    }
+    closeModal();
+    onSave(result);
+  };
+  if(onDelete){
+    $('editPlanDel').onclick = () => {
+      closeModal();
+      onDelete();
+    };
+  }
+}
+
+// ---- Master render ----
+function renderPlanAll(){
+  renderTop3();
+  renderTimeBlocks();
+  renderCheckins();
+  renderStats();
+}
+renderPlanAll();
+
 
 // ======================== MODALS ========================
 function openModal(type){
