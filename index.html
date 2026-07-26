@@ -953,7 +953,8 @@ function renderWeeklyExercise(){
 }
 
 function cycleExercise(ds){
-  const monday=getMonday(new Date(ds+'T00:00:00'));
+  const parts=ds.split('-').map(Number);
+  const monday=getMonday(new Date(Date.UTC(parts[0],parts[1]-1,parts[2])));
   const weekKey=monday.toISOString().slice(0,10);
   const weData=LS.get('weeklyExercise',{});
   if(!weData.weeks)weData.weeks={};
@@ -973,7 +974,8 @@ function cycleExercise(ds){
 }
 
 function toggleComplete(ds){
-  const monday=getMonday(new Date(ds+'T00:00:00'));
+  const parts=ds.split('-').map(Number);
+  const monday=getMonday(new Date(Date.UTC(parts[0],parts[1]-1,parts[2])));
   const weekKey=monday.toISOString().slice(0,10);
   const weData=LS.get('weeklyExercise',{});
   if(!weData.done)weData.done={};
