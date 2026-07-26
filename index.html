@@ -44,26 +44,18 @@ body{
 /* Bottom Tab */
 .tab-bar{
   position:fixed;bottom:0;left:50%;transform:translateX(-50%);
-  width:100%;max-width:420px;
-  background:rgba(255,255,255,0.82);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  display:flex;justify-content:space-around;align-items:center;z-index:100;
-  padding:10px 0 env(safe-area-inset-bottom,10px);
-  box-shadow:0 -1px 12px rgba(0,0,0,0.06);
+  width:100%;max-width:420px;background:var(--card);
+  border-top:1px solid var(--border);display:flex;z-index:100;
+  padding:6px 0 env(safe-area-inset-bottom,8px);
 }
 .tab-item{
-  position:relative;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:6px 0;cursor:pointer;transition:all .25s ease;
-  border:none;background:none;color:var(--text3);
-  font-family:inherit;
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:8px 0;cursor:pointer;transition:all .3s ease;
+  min-height:44px;border:none;background:none;color:var(--text3);
+  font-size:11px;font-family:inherit;
 }
-.tab-item .tab-icon{font-size:24px;transition:transform .25s ease;opacity:.55}
-.tab-item.active .tab-icon{opacity:1;transform:scale(1.08)}
-.tab-item.active::after{
-  content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
-  width:5px;height:5px;border-radius:50%;background:var(--green);
-}
+.tab-item.active{color:var(--green)}
+.tab-item .tab-icon{font-size:22px;margin-bottom:2px}
 /* Pages */
 .page{display:none;padding:12px 14px;animation:fadeIn .3s ease}
 .page.active{display:block}
@@ -386,13 +378,13 @@ textarea.input-field{resize:vertical;min-height:80px}
 <!-- Bottom Tab Bar -->
 <div class="tab-bar">
   <button class="tab-item active" onclick="switchTab(0)">
-    <span class="tab-icon">📋</span>
+    <span class="tab-icon">📋</span>每日计划
   </button>
   <button class="tab-item" onclick="switchTab(1)">
-    <span class="tab-icon">🎨</span>
+    <span class="tab-icon">🎨</span>创作
   </button>
   <button class="tab-item" onclick="switchTab(2)">
-    <span class="tab-icon">🏃</span>
+    <span class="tab-icon">🏃</span>运动
   </button>
 </div>
 
