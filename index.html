@@ -538,6 +538,38 @@ if(!localStorage.getItem('orders')){
     }
   }catch(e){/* 网络异常时使用本地数据，静默处理 */}
 })();
+// 强制同步：清除本地修改标记，重新拉取远程数据并合并
+function forceSyncOrders(){
+  localStorage.removeItem('ordersLocalChanged');
+  (async function(){
+    try{
+      const resp=await fetch(ORDERS_REMOTE_URL,{cache:'no-store'});
+      if(!resp.ok){alert('同步失败：无法连接远程');return}
+      const text=await resp.text();
+      let data;
+      try{data=JSON.parse(text)}catch(e){
+        const m=text.match(/\[[\s\S]*\]/);
+        if(m)data=JSON.parse(m[0]);else{alert('同步失败：数据格式异常');return}
+      }
+      if(!Array.isArray(data)||data.length===0){alert('远程无数据');return}
+      migrateOrders(data);
+      const local=LS.get('orders',[]);
+      const localMap={};
+      local.forEach(o=>{const k=(o.name||'')+'|'+(o.brand||'');localMap[k]=o});
+      const merged=data.map(r=>{
+        const k=(r.name||'')+'|'+(r.brand||'');
+        const l=localMap[k];
+        if(l&&l._localModified)return {...r,status:l.status,note:l.note,_localModified:true};
+        return r;
+      });
+      const remoteNames=new Set(data.map(o=>(o.name||'')+'|'+(o.brand||'')));
+      const localOnly=local.filter(o=>!remoteNames.has((o.name||'')+'|'+(o.brand||'')));
+      LS.set('orders',[...merged,...localOnly]);
+      if($('orderList'))renderOrderList();
+      alert('同步完成！');
+    }catch(e){alert('同步失败：'+e.message)}
+  })();
+}
 
 function renderTasks(){
   TOTAL_TASKS=getTasks().length;
@@ -1061,7 +1093,7 @@ function renderOrderList(){
     return(a.date||'z').localeCompare(b.date||'z');
   });
   LS.set('orders',orders);
-  let html='';
+  let html=`<button onclick="forceSyncOrders()" style="width:100%;padding:10px;margin-bottom:8px;border:none;border-radius:8px;background:#4a90d9;color:#fff;font-size:14px;font-weight:600;cursor:pointer">🔄 同步远程商单数据</button>`;
   let lastStatus=-1;
   orders.forEach((o,i)=>{
     if(o.status!==lastStatus){
