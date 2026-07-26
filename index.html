@@ -235,12 +235,12 @@ textarea.input-field{resize:vertical;min-height:80px}
 .we-day-name{font-size:14px;font-weight:700;color:var(--text);display:block;line-height:1.2}
 .we-day-date{font-size:10px;color:var(--text3);display:block}
 .we-day-row.is-today .we-day-name{color:var(--green)}
-.we-cycle-btn{width:46px;height:46px;border-radius:14px;border:1.5px solid var(--border);background:var(--bg);font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;flex-shrink:0;position:relative;padding:0;margin:0 auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
-.we-cycle-btn:active{transform:scale(0.88)}
-.we-cycle-btn.has-value{border-color:var(--green);background:var(--green-light);box-shadow:0 2px 8px rgba(76,175,80,0.15)}
-.we-cycle-btn.is-rest{border-color:#FF9800;background:#FFF3E0;box-shadow:0 2px 8px rgba(255,152,0,0.15)}
-.we-cycle-label{font-size:10px;color:var(--text3);text-align:center;margin-top:2px;line-height:1}
-.we-cycle-wrapper{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.we-select-wrap{flex:1;position:relative}
+.we-select{width:100%;height:40px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-size:14px;color:var(--text);padding:0 30px 0 12px;appearance:none;-webkit-appearance:none;cursor:pointer;font-family:inherit;transition:border-color .2s}
+.we-select:focus{outline:none;border-color:var(--green)}
+.we-select.has-value{border-color:var(--green);background:var(--green-light)}
+.we-select.is-rest{border-color:#FF9800;background:#FFF3E0}
+.we-select-arrow{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text3);pointer-events:none}
 .we-check-btn{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0;position:relative;padding:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
 .we-check-btn:active{transform:scale(0.9)}
 .we-check-btn.checked{border-color:var(--green);background:var(--green);animation:checkBounce .4s ease}
@@ -931,20 +931,22 @@ function renderWeeklyExercise(){
     if(isToday)rowCls+=' is-today';
     if(isDone)rowCls+=' is-done';
     const curOpt=opts.find(o=>o.id===selected);
-    const emoji=curOpt?curOpt.emoji:'➕';
-    const label=curOpt?curOpt.id:'未选';
-    let btnCls='we-cycle-btn';
-    if(curOpt){
-      btnCls+=curOpt.id==='休息'?' is-rest':' has-value';
-    }
+    let selCls='we-select';
+    if(curOpt) selCls+=curOpt.id==='休息'?' is-rest':' has-value';
     html+=`<div class="${rowCls}">
       <div class="we-day-label">
         <span class="we-day-name">${dayNames[i]}</span>
         <span class="we-day-date">${d.getMonth()+1}/${d.getDate()}</span>
       </div>
-      <div class="we-cycle-wrapper">
-        <button class="${btnCls}" data-action="cycle" data-date="${ds}">${emoji}</button>
-        <span class="we-cycle-label">${label}</span>
+      <div class="we-select-wrap">
+        <select class="${selCls}" data-date="${ds}" onchange="onExerciseChange(this)">
+          <option value=""${!selected?' selected':''}>➕ 未选</option>
+          <option value="骑车"${selected==='骑车'?' selected':''}>🚴 骑车</option>
+          <option value="游泳"${selected==='游泳'?' selected':''}>🏊 游泳</option>
+          <option value="健身"${selected==='健身'?' selected':''}>💪 健身</option>
+          <option value="休息"${selected==='休息'?' selected':''}>😴 休息</option>
+        </select>
+        <span class="we-select-arrow">▼</span>
       </div>
       <button class="we-check-btn${isDone?' checked':''}" data-action="complete" data-date="${ds}"></button>
     </div>`;
@@ -954,12 +956,28 @@ function renderWeeklyExercise(){
   list.onclick=function(e){
     const btn=e.target.closest('[data-action]');
     if(!btn)return;
-    const action=btn.dataset.action;
     const ds=btn.dataset.date;
     if(!ds)return;
-    if(action==='cycle')cycleExercise(ds);
-    else if(action==='complete')toggleComplete(ds);
+    toggleComplete(ds);
   };
+}
+
+function onExerciseChange(sel){
+  const ds=sel.dataset.date;
+  const val=sel.value;
+  const parts=ds.split('-').map(Number);
+  const monday=getMonday(new Date(Date.UTC(parts[0],parts[1]-1,parts[2])));
+  const weekKey=monday.toISOString().slice(0,10);
+  const weData=LS.get('weeklyExercise',{});
+  if(!weData.weeks)weData.weeks={};
+  if(!weData.weeks[weekKey])weData.weeks[weekKey]={};
+  if(val){
+    weData.weeks[weekKey][ds]=val;
+  }else{
+    delete weData.weeks[weekKey][ds];
+  }
+  LS.set('weeklyExercise',weData);
+  renderWeeklyExercise();
 }
 
 function cycleExercise(ds){
