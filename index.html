@@ -241,6 +241,21 @@ textarea.input-field{resize:vertical;min-height:80px}
 .we-opt.rest-opt.active{border-color:#FF9800;background:#FFF3E0}
 .we-opt.rest-opt.active .we-opt-label{color:#E65100;font-weight:600}
 .we-empty{text-align:center;padding:20px;color:var(--text3);font-size:13px}
+
+/* Topics Plan */
+.topics-header{margin-bottom:12px}
+.topics-account-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.topics-acc-tab{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500;color:var(--text2)}
+.topics-acc-tab:active{transform:scale(0.95)}
+.topics-acc-tab.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary);font-weight:600}
+.topics-add-row{display:flex;gap:8px;align-items:center}
+.topic-section{margin-bottom:16px}
+.topic-section-title{font-size:12px;font-weight:600;padding:6px 0 4px;margin-bottom:4px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.topic-status-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.topic-status-badge:active{transform:scale(0.95)}
+.topic-status-0{background:#f0f0f0;color:#999}
+.topic-status-1{background:#FFF3E0;color:#E65100}
+.topic-status-2{background:#E8F5E9;color:#2E7D32}
 </style>
 </head>
 <body>
@@ -332,6 +347,18 @@ textarea.input-field{resize:vertical;min-height:80px}
   </div>
 </div>
 
+<!-- Page 4: Topics Plan -->
+<div class="page" id="page-topics">
+  <div class="topics-header">
+    <div class="topics-account-tabs" id="topicsAccountTabs"></div>
+    <div class="topics-add-row">
+      <input class="input-field" id="topicInput" placeholder="输入新选题..." style="flex:1">
+      <button class="btn btn-primary btn-sm" onclick="addTopic()">添加</button>
+    </div>
+  </div>
+  <div id="topicsList"></div>
+</div>
+
 <!-- Bottom Tab Bar -->
 <div class="tab-bar">
   <button class="tab-item active" onclick="switchTab(0)">
@@ -342,6 +369,9 @@ textarea.input-field{resize:vertical;min-height:80px}
   </button>
   <button class="tab-item" onclick="switchTab(2)">
     <span class="tab-icon">🏠</span>生活
+  </button>
+  <button class="tab-item" onclick="switchTab(3)">
+    <span class="tab-icon">💡</span>选题计划
   </button>
 </div>
 
@@ -384,6 +414,7 @@ function switchTab(idx){
   document.querySelectorAll('.tab-item').forEach((t,i)=>{t.classList.toggle('active',i===idx)});
   document.querySelectorAll('.page').forEach((p,i)=>{p.classList.toggle('active',i===idx)});
   if(idx===2)renderLife();
+  if(idx===3)renderTopics();
 }
 
 // ======================== DAILY PLAN ========================
@@ -972,6 +1003,103 @@ function delDietItem(mi,ii){
   data.meals[mi].items.splice(ii,1);
   LS.set('diet_'+d,data);renderDiet();
 }
+
+// ======================== TOPICS PLAN ========================
+const TOPIC_ACCOUNTS=['土豆','宝珠'];
+let currentTopicAccount=TOPIC_ACCOUNTS[0];
+
+function renderTopics(){
+  // Render account tabs
+  const tabsHtml=TOPIC_ACCOUNTS.map(acc=>{
+    const isActive=acc===currentTopicAccount?'active':'';
+    return`<button class="topics-acc-tab ${isActive}" onclick="switchTopicAccount('${acc}')">${acc}</button>`;
+  }).join('');
+  $('topicsAccountTabs').innerHTML=tabsHtml;
+  
+  // Render topics for current account
+  const topics=LS.get('topics_'+currentTopicAccount,[]);
+  const statusNames=['未执行','正在拍摄','已完成'];
+  const statusColors=['topic-status-0','topic-status-1','topic-status-2'];
+  
+  let html='';
+  if(topics.length===0){
+    html='<div class="we-empty">暂无选题，点击上方添加按钮创建</div>';
+  }else{
+    // Group by status
+    const grouped={0:[],1:[],2:[]};
+    topics.forEach((t,i)=>{
+      if(grouped[t.status]!==undefined)grouped[t.status].push({...t,index:i});
+    });
+    
+    // Render each status group
+    [0,1,2].forEach(status=>{
+      if(grouped[status].length>0){
+        html+=`<div class="topic-section">
+          <div class="topic-section-title">
+            <span>${statusNames[status]}</span>
+            <span style="color:var(--text3);font-weight:normal">(${grouped[status].length})</span>
+          </div>`;
+        grouped[status].forEach(t=>{
+          html+=`<div class="list-item" style="flex-wrap:wrap">
+            <div style="flex:1;min-width:0">
+              <div class="list-item-text">${esc(t.title)}</div>
+              <div class="list-item-sub">${t.time}</div>
+            </div>
+            <button class="${statusColors[t.status]} topic-status-badge" onclick="cycleTopicStatus(${t.index})">${statusNames[t.status]}</button>
+            <button class="delete-btn" onclick="delTopic(${t.index})">×</button>
+          </div>`;
+        });
+        html+=`</div>`;
+      }
+    });
+  }
+  $('topicsList').innerHTML=html;
+}
+
+function switchTopicAccount(account){
+  currentTopicAccount=account;
+  renderTopics();
+}
+
+function addTopic(){
+  const inp=$('topicInput');
+  const v=inp.value.trim();
+  if(!v)return;
+  
+  const topics=LS.get('topics_'+currentTopicAccount,[]);
+  topics.unshift({
+    title:v,
+    status:0,
+    time:new Date().toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})
+  });
+  LS.set('topics_'+currentTopicAccount,topics);
+  inp.value='';
+  renderTopics();
+}
+
+function cycleTopicStatus(index){
+  const topics=LS.get('topics_'+currentTopicAccount,[]);
+  topics[index].status=(topics[index].status+1)%3;
+  LS.set('topics_'+currentTopicAccount,topics);
+  renderTopics();
+}
+
+function delTopic(index){
+  const topics=LS.get('topics_'+currentTopicAccount,[]);
+  topics.splice(index,1);
+  LS.set('topics_'+currentTopicAccount,topics);
+  renderTopics();
+}
+
+// Add Enter key support for topic input
+document.addEventListener('DOMContentLoaded',function(){
+  const topicInp=$('topicInput');
+  if(topicInp){
+    topicInp.addEventListener('keydown',function(e){
+      if(e.key==='Enter')addTopic();
+    });
+  }
+});
 
 // ======================== HELPERS ========================
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
