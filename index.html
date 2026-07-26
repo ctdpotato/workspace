@@ -82,6 +82,9 @@ body{
 .must-add-btn:active{background:var(--green);color:#fff}
 .must-del-btn{width:20px;height:20px;border-radius:50%;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:14px;line-height:1;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0}
 .must-del-btn:active{background:var(--bg)}
+.task-action-btn{width:24px;height:24px;border-radius:6px;border:none;background:transparent;color:var(--text3);font-size:13px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:all .2s}
+.task-action-btn:active{background:var(--bg);transform:scale(0.9)}
+.task-actions{display:flex;gap:2px;flex-shrink:0;margin-left:4px}
 .hint-item{opacity:0.6;cursor:default!important}
 .hint-item:active{background:transparent!important}
 /* Task Item */
@@ -446,35 +449,48 @@ function getTasks(){
     tasks.push({group:'🔴 必完成事件',emoji:'💡',title:'点击下方「+必完成」添加今日重点',time:'',cat:'must',hint:true});
   }
   // === 💼 工作 ===
-  tasks.push({group:'💼 工作',emoji:'🧴',title:'护肤 + 收拾自己',time:'10:00',cat:'work'});
-  tasks.push({emoji:'📊',title:'查看昨日数据 + 回复评论',time:'10:30',cat:'work'});
-  tasks.push({emoji:'✍️',title:'写文案 / 修图 / 排版',time:'12:30',cat:'work'});
-  tasks.push({emoji:'📸',title:'深度工作（大纲/选题/拍摄）',time:'13:30',cat:'work'});
-  tasks.push({emoji:'📁',title:'整理今日产出 + 归档',time:'14:30',cat:'work'});
-  tasks.push({emoji:'💬',title:'商务沟通 / 品牌对接',time:'16:00',cat:'work'});
-  tasks.push({emoji:'📦',title:'拍产品素材 / 整理产品库',time:'17:00',cat:'work'});
-  tasks.push({emoji:'💬',title:'回评论 + 看数据 + 想选题',time:'21:00',cat:'work'});
-  tasks.push({emoji:'📝',title:'整理明日待办清单',time:'22:00',cat:'work'});
+  tasks.push({group:'💼 工作',emoji:'🧴',title:'护肤 + 收拾自己',time:'10:00',cat:'work',taskKey:'work-0'});
+  tasks.push({emoji:'📊',title:'查看昨日数据 + 回复评论',time:'10:30',cat:'work',taskKey:'work-1'});
+  tasks.push({emoji:'✍️',title:'写文案 / 修图 / 排版',time:'12:30',cat:'work',taskKey:'work-2'});
+  tasks.push({emoji:'📸',title:'深度工作（大纲/选题/拍摄）',time:'13:30',cat:'work',taskKey:'work-3'});
+  tasks.push({emoji:'📁',title:'整理今日产出 + 归档',time:'14:30',cat:'work',taskKey:'work-4'});
+  tasks.push({emoji:'💬',title:'商务沟通 / 品牌对接',time:'16:00',cat:'work',taskKey:'work-5'});
+  tasks.push({emoji:'📦',title:'拍产品素材 / 整理产品库',time:'17:00',cat:'work',taskKey:'work-6'});
+  tasks.push({emoji:'💬',title:'回评论 + 看数据 + 想选题',time:'21:00',cat:'work',taskKey:'work-7'});
+  tasks.push({emoji:'📝',title:'整理明日待办清单',time:'22:00',cat:'work',taskKey:'work-8'});
   // === 🧒 孩子 ===
-  tasks.push({group:'🧒 孩子',emoji:'🧸',title:'陪七七玩 / 户外散步',time:'8:30',cat:'kid'});
-  tasks.push({emoji:'🍚',title:'和七七一起吃午饭',time:'12:00',cat:'kid'});
-  tasks.push({emoji:'🎨',title:'陪七七（午睡醒来）',time:'15:00',cat:'kid'});
-  tasks.push({emoji:'🛁',title:'给七七洗澡 / 哄睡',time:'19:00',cat:'kid'});
+  tasks.push({group:'🧒 孩子',emoji:'🧸',title:'陪七七玩 / 户外散步',time:'8:30',cat:'kid',taskKey:'kid-0'});
+  tasks.push({emoji:'🍚',title:'和七七一起吃午饭',time:'12:00',cat:'kid',taskKey:'kid-1'});
+  tasks.push({emoji:'🎨',title:'陪七七（午睡醒来）',time:'15:00',cat:'kid',taskKey:'kid-2'});
+  tasks.push({emoji:'🛁',title:'给七七洗澡 / 哄睡',time:'19:00',cat:'kid',taskKey:'kid-3'});
   // === 🏠 生活日常 ===
-  tasks.push({group:'🏠 生活日常',emoji:'☀️',title:'起床 + 喝温水',time:'7:30',cat:'life'});
-  tasks.push({emoji:'🥣',title:'早餐',time:'8:00',sub:'鸡蛋2个+蛋白1个+牛油果半个+蓝莓100g+核桃2个',cat:'life'});
-  tasks.push({emoji:'💪',title:'运动时间',time:'9:00',sub:exerciseSub,cat:'life'});
-  tasks.push({emoji:'🍳',title:'准备午餐',time:'11:30',sub:'杂粮饭/土豆150g + 鱼肉/鸡肉150g + 炒菜300g',cat:'life'});
-  tasks.push({emoji:'🥗',title:'准备晚餐',time:'18:00',sub:'杂粮饭/土豆150g + 牛肉/瘦肉150g + 炒菜250g + 姜蒜番茄',cat:'life'});
-  tasks.push({emoji:'🧴',title:'护肤洗漱',time:'22:30',cat:'life'});
-  tasks.push({emoji:'💤',title:'上床睡觉（最晚23:30）',time:'23:00',cat:'life'});
-  return tasks;
+  tasks.push({group:'🏠 生活日常',emoji:'☀️',title:'起床 + 喝温水',time:'7:30',cat:'life',taskKey:'life-0'});
+  tasks.push({emoji:'🥣',title:'早餐',time:'8:00',sub:'鸡蛋2个+蛋白1个+牛油果半个+蓝莓100g+核桃2个',cat:'life',taskKey:'life-1'});
+  tasks.push({emoji:'💪',title:'运动时间',time:'9:00',sub:exerciseSub,cat:'life',taskKey:'life-2'});
+  tasks.push({emoji:'🍳',title:'准备午餐',time:'11:30',sub:'杂粮饭/土豆150g + 鱼肉/鸡肉150g + 炒菜300g',cat:'life',taskKey:'life-3'});
+  tasks.push({emoji:'🥗',title:'准备晚餐',time:'18:00',sub:'杂粮饭/土豆150g + 牛肉/瘦肉150g + 炒菜250g + 姜蒜番茄',cat:'life',taskKey:'life-4'});
+  tasks.push({emoji:'🧴',title:'护肤洗漱',time:'22:30',cat:'life',taskKey:'life-5'});
+  tasks.push({emoji:'💤',title:'上床睡觉（最晚23:30）',time:'23:00',cat:'life',taskKey:'life-6'});
+  // 应用当日编辑/删除修改
+  const mods=LS.get('taskMods_'+today(),{deleted:[],edited:{}});
+  const filtered=tasks.filter(t=>{
+    if(!t.taskKey)return true;
+    return !mods.deleted.includes(t.taskKey);
+  });
+  filtered.forEach(t=>{
+    if(t.taskKey&&mods.edited[t.taskKey]){
+      t.title=mods.edited[t.taskKey];
+      t._edited=true;
+    }
+  });
+  return filtered;
 }
 // TOTAL_TASKS 动态计算
 function getTotalTasks(){
   const mustDoKey='mustDo_'+today();
   const mustDoItems=LS.get(mustDoKey,[]);
-  return mustDoItems.length+9+4+7; // must + work(9) + kid(4) + life(7)
+  const mods=LS.get('taskMods_'+today(),{deleted:[],edited:{}});
+  return mustDoItems.length+9+4+7-mods.deleted.length; // must + work(9) + kid(4) + life(7) - deleted
 }
 let planState=LS.get('plan_'+today(),{done:[]});
 
@@ -618,19 +634,30 @@ function renderTasks(){
     const div=document.createElement('div');
     div.className='task-item'+(planState.done.includes(i)?' done':'');
     div.setAttribute('data-task-index',i);
-    // 必完成事件的删除按钮
-    let mustDel='';
+    // 操作按钮
+    let actionBtns='';
+    if(t.taskKey){
+      // 工作/孩子/生活类任务：编辑+删除
+      actionBtns=`<div class="task-actions">
+        <button class="task-action-btn" data-action="edit-task" data-task-key="${t.taskKey}" title="编辑">✏️</button>
+        <button class="task-action-btn" data-action="delete-task" data-task-key="${t.taskKey}" title="删除">🗑️</button>
+      </div>`;
+    }
+    // 必完成事件：编辑+原有×删除
+    let mustDel='';let mustEdit='';
     if(t.cat==='must'&&t.mustIdx!==undefined){
       mustDel=`<button class="must-del-btn" data-action="remove-mustdo" data-must-idx="${t.mustIdx}">×</button>`;
+      mustEdit=`<button class="task-action-btn" data-action="edit-mustdo" data-must-idx="${t.mustIdx}" title="编辑">✏️</button>`;
     }
+    const editedStyle=t._edited?'style="color:var(--green)"':'';
     div.innerHTML=`
       <span class="task-emoji">${t.emoji}</span>
       <div class="task-info">
-        <div class="task-title">${t.title}</div>
+        <div class="task-title" ${editedStyle}>${t.title}</div>
         ${t.sub?'<div class="task-sub">'+t.sub+'</div>':''}
       </div>
       <span class="task-time">${t.time}</span>
-      ${mustDel}
+      ${mustEdit}${actionBtns}${mustDel}
       <span class="task-check">${planState.done.includes(i)?'✓':''}</span>
     `;
     target.appendChild(div);
@@ -680,7 +707,95 @@ function removeMustDo(idx){
   planState={done:[]};LS.set('plan_'+today(),planState);
   renderTasks();
 }
+// 编辑/删除固定任务
+function deleteTask(taskKey){
+  const mods=LS.get('taskMods_'+today(),{deleted:[],edited:{}});
+  if(!mods.deleted.includes(taskKey))mods.deleted.push(taskKey);
+  LS.set('taskMods_'+today(),mods);
+  planState={done:[]};LS.set('plan_'+today(),planState);
+  renderTasks();
+}
+function editTask(taskKey){
+  // 找到当前标题
+  const tasks=getTasks();
+  const task=tasks.find(t=>t.taskKey===taskKey);
+  const currentTitle=task?task.title:'';
+  openEditTaskModal(taskKey,currentTitle);
+}
+function editMustDo(mustIdx){
+  const key='mustDo_'+today();
+  const items=LS.get(key,[]);
+  if(!items[mustIdx])return;
+  openEditMustDoModal(mustIdx,items[mustIdx].text,items[mustIdx].time||'');
+}
+function saveEditTask(taskKey,newTitle){
+  if(!newTitle.trim())return;
+  const mods=LS.get('taskMods_'+today(),{deleted:[],edited:{}});
+  mods.edited[taskKey]=newTitle.trim();
+  LS.set('taskMods_'+today(),mods);
+  planState={done:[]};LS.set('plan_'+today(),planState);
+  renderTasks();
+  closeModal();
+}
+function saveEditMustDo(mustIdx,newText,newTime){
+  if(!newText.trim())return;
+  const key='mustDo_'+today();
+  const items=LS.get(key,[]);
+  if(items[mustIdx]){
+    items[mustIdx].text=newText.trim();
+    items[mustIdx].time=newTime||'';
+    LS.set(key,items);
+    planState={done:[]};LS.set('plan_'+today(),planState);
+    renderTasks();
+  }
+  closeModal();
+}
 
+function openEditTaskModal(taskKey,currentTitle){
+  const overlay=$('modalOverlay');
+  const title=$('modalTitleText');
+  const body=$('modalBody');
+  title.textContent='✏️ 编辑任务';
+  body.innerHTML=`
+    <div class="input-row" style="flex-direction:column;gap:10px">
+      <input class="input-field" id="editTaskInput" value="${esc(currentTitle)}" placeholder="输入新的任务名称">
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button class="btn btn-sm" style="background:var(--bg);color:var(--text2)" onclick="closeModal()">取消</button>
+        <button class="btn btn-primary btn-sm" id="editTaskSaveBtn">保存</button>
+      </div>
+    </div>
+  `;
+  overlay.style.display='flex';
+  requestAnimationFrame(()=>overlay.classList.add('show'));
+  const inp=$('editTaskInput');
+  inp.focus();inp.select();
+  const saveBtn=$('editTaskSaveBtn');
+  saveBtn.addEventListener('click',()=>{saveEditTask(taskKey,inp.value)});
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')saveEditTask(taskKey,inp.value)});
+}
+function openEditMustDoModal(mustIdx,currentText,currentTime){
+  const overlay=$('modalOverlay');
+  const title=$('modalTitleText');
+  const body=$('modalBody');
+  title.textContent='✏️ 编辑必完成';
+  body.innerHTML=`
+    <div class="input-row" style="flex-direction:column;gap:10px">
+      <input class="input-field" id="editMustDoInput" value="${esc(currentText)}" placeholder="任务内容">
+      <input class="input-field" id="editMustDoTime" type="time" value="${currentTime||''}">
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button class="btn btn-sm" style="background:var(--bg);color:var(--text2)" onclick="closeModal()">取消</button>
+        <button class="btn btn-primary btn-sm" id="editMustDoSaveBtn">保存</button>
+      </div>
+    </div>
+  `;
+  overlay.style.display='flex';
+  requestAnimationFrame(()=>overlay.classList.add('show'));
+  const inp=$('editMustDoInput');
+  inp.focus();inp.select();
+  const saveBtn=$('editMustDoSaveBtn');
+  saveBtn.addEventListener('click',()=>{saveEditMustDo(mustIdx,inp.value,$('editMustDoTime').value)});
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')saveEditMustDo(mustIdx,inp.value,$('editMustDoTime').value)});
+}
 function showCelebration(){
   $('celebration').classList.add('show');
   launchConfetti();
@@ -720,6 +835,30 @@ renderTasks();
       e.stopPropagation();
       const mustIdx=parseInt(delBtn.getAttribute('data-must-idx'));
       removeMustDo(mustIdx);
+      return;
+    }
+    // 点击编辑任务按钮
+    const editBtn=target.closest('[data-action="edit-task"]');
+    if(editBtn){
+      e.stopPropagation();
+      const taskKey=editBtn.getAttribute('data-task-key');
+      editTask(taskKey);
+      return;
+    }
+    // 点击删除任务按钮
+    const delTaskBtn=target.closest('[data-action="delete-task"]');
+    if(delTaskBtn){
+      e.stopPropagation();
+      const taskKey=delTaskBtn.getAttribute('data-task-key');
+      if(confirm('确定删除这个任务吗？'))deleteTask(taskKey);
+      return;
+    }
+    // 点击编辑必完成按钮
+    const editMustBtn=target.closest('[data-action="edit-mustdo"]');
+    if(editMustBtn){
+      e.stopPropagation();
+      const mustIdx=parseInt(editMustBtn.getAttribute('data-must-idx'));
+      editMustDo(mustIdx);
       return;
     }
     // 点击分组标题（展开/收起）
