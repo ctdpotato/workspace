@@ -237,11 +237,11 @@ textarea.input-field{resize:vertical;min-height:80px}
 .we-day-row.is-today .we-day-name{color:var(--green)}
 .we-today-tag{display:inline-block;font-size:9px;font-weight:700;color:#fff;background:var(--green);border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle;line-height:1.4}
 .we-select-wrap{flex:1;position:relative}
-.we-select{width:100%;height:40px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-size:14px;color:var(--text);padding:0 30px 0 12px;appearance:none;-webkit-appearance:none;cursor:pointer;font-family:inherit;transition:border-color .2s}
+.we-select{width:100%;height:40px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-size:14px;color:var(--text);padding:0 32px 0 12px;cursor:pointer;font-family:inherit;transition:border-color .2s}
 .we-select:focus{outline:none;border-color:var(--green)}
 .we-select.has-value{border-color:var(--green);background:var(--green-light)}
 .we-select.is-rest{border-color:#FF9800;background:#FFF3E0}
-.we-select-arrow{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text3);pointer-events:none}
+
 .we-check-btn{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0;position:relative;padding:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
 .we-check-btn:active{transform:scale(0.9)}
 .we-check-btn.checked{border-color:var(--green);background:var(--green);animation:checkBounce .4s ease}
@@ -947,7 +947,6 @@ function renderWeeklyExercise(){
           <option value="健身"${selected==='健身'?' selected':''}>💪 健身</option>
           <option value="休息"${selected==='休息'?' selected':''}>😴 休息</option>
         </select>
-        <span class="we-select-arrow">▼</span>
       </div>
       <button class="we-check-btn${isDone?' checked':''}" data-action="complete" data-date="${ds}"></button>
     </div>`;
