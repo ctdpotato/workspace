@@ -232,11 +232,12 @@ textarea.input-field{resize:vertical;min-height:80px}
 .we-day-name{font-size:14px;font-weight:700;color:var(--text);display:block;line-height:1.2}
 .we-day-date{font-size:10px;color:var(--text3);display:block}
 .we-day-row.is-today .we-day-name{color:var(--green)}
-.we-emoji-group{display:flex;gap:4px;flex:1}
-.we-emoji-btn{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;padding:0;flex-shrink:0}
-.we-emoji-btn:active{transform:scale(0.9)}
-.we-emoji-btn.active{border-color:var(--green);background:var(--green-light);box-shadow:0 2px 6px rgba(76,175,80,0.18)}
-.we-emoji-btn.rest-btn.active{border-color:#FF9800;background:#FFF3E0;box-shadow:0 2px 6px rgba(255,152,0,0.18)}
+.we-cycle-btn{width:46px;height:46px;border-radius:14px;border:1.5px solid var(--border);background:var(--bg);font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;flex-shrink:0;position:relative;padding:0;margin:0 auto}
+.we-cycle-btn:active{transform:scale(0.88)}
+.we-cycle-btn.has-value{border-color:var(--green);background:var(--green-light);box-shadow:0 2px 8px rgba(76,175,80,0.15)}
+.we-cycle-btn.is-rest{border-color:#FF9800;background:#FFF3E0;box-shadow:0 2px 8px rgba(255,152,0,0.15)}
+.we-cycle-label{font-size:10px;color:var(--text3);text-align:center;margin-top:2px;line-height:1}
+.we-cycle-wrapper{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .we-check-btn{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0;position:relative;padding:0}
 .we-check-btn:active{transform:scale(0.9)}
 .we-check-btn.checked{border-color:var(--green);background:var(--green);animation:checkBounce .4s ease}
@@ -926,17 +927,21 @@ function renderWeeklyExercise(){
     let rowCls='we-day-row';
     if(isToday)rowCls+=' is-today';
     if(isDone)rowCls+=' is-done';
+    const curOpt=opts.find(o=>o.id===selected);
+    const emoji=curOpt?curOpt.emoji:'➕';
+    const label=curOpt?curOpt.id:'未选';
+    let btnCls='we-cycle-btn';
+    if(curOpt){
+      btnCls+=curOpt.id==='休息'?' is-rest':' has-value';
+    }
     html+=`<div class="${rowCls}">
       <div class="we-day-label">
         <span class="we-day-name">${dayNames[i]}</span>
         <span class="we-day-date">${d.getMonth()+1}/${d.getDate()}</span>
       </div>
-      <div class="we-emoji-group">
-        ${opts.map(o=>{
-          const isActive=selected===o.id;
-          const isRest=o.id==='休息';
-          return`<button class="we-emoji-btn${isActive?' active':''}${isRest?' rest-btn':''}" onclick="setExercise('${ds}','${o.id}')">${o.emoji}</button>`;
-        }).join('')}
+      <div class="we-cycle-wrapper">
+        <button class="${btnCls}" onclick="cycleExercise('${ds}')">${emoji}</button>
+        <span class="we-cycle-label">${label}</span>
       </div>
       <button class="we-check-btn${isDone?' checked':''}" onclick="toggleComplete('${ds}')"></button>
     </div>`;
@@ -944,16 +949,21 @@ function renderWeeklyExercise(){
   $('weDayList').innerHTML=html;
 }
 
-function setExercise(ds,exercise){
+function cycleExercise(ds){
   const monday=getMonday(new Date(ds+'T00:00:00'));
   const weekKey=monday.toISOString().slice(0,10);
   const weData=LS.get('weeklyExercise',{});
   if(!weData.weeks)weData.weeks={};
   if(!weData.weeks[weekKey])weData.weeks[weekKey]={};
-  if(weData.weeks[weekKey][ds]===exercise){
-    delete weData.weeks[weekKey][ds];
+  const order=['骑车','游泳','健身','休息'];
+  const cur=weData.weeks[weekKey][ds]||'';
+  const idx=order.indexOf(cur);
+  if(idx===-1||idx===order.length-1){
+    // 当前无或最后是休息→回到无（未选）
+    if(idx===order.length-1){delete weData.weeks[weekKey][ds]}
+    else{weData.weeks[weekKey][ds]=order[0]}
   }else{
-    weData.weeks[weekKey][ds]=exercise;
+    weData.weeks[weekKey][ds]=order[idx+1];
   }
   LS.set('weeklyExercise',weData);
   renderWeeklyExercise();
