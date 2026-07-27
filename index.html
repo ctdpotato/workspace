@@ -337,8 +337,16 @@ textarea.input-field{resize:vertical;min-height:80px}
 
 <!-- Top Navigation -->
 <div class="top-nav">
-  <div class="date" id="topDate"></div>
-  <div class="greeting" id="topGreeting"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div style="flex:1">
+      <div class="date" id="topDate"></div>
+      <div class="greeting" id="topGreeting"></div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:11px;color:var(--text3)" id="syncAllInfo">点击全量同步</div>
+      <button id="syncAllBtn" onclick="syncAllToAgent()" style="font-size:11px;padding:4px 10px;border-radius:14px;border:1px solid var(--blue);background:var(--blue-light);color:var(--blue);cursor:pointer;white-space:nowrap;transition:all .2s;margin-top:2px">🔄 全量同步</button>
+    </div>
+  </div>
 </div>
 
 <!-- Page 1: Daily Plan -->
@@ -659,6 +667,95 @@ function syncOrdersToAgent(){
     btn.style.color='#c62828';
     setTimeout(()=>{
       btn.textContent='🔄 同步到小薯';
+      btn.disabled=false;
+      btn.style.opacity='1';
+      btn.style.background='';
+      btn.style.color='';
+    },2500);
+  });
+}
+
+// === 全量同步到 GitHub ===
+async function pushAllToGitHub(){
+  const cfg=_ghCfg();
+  const tok=cfg.tok;
+  const h={'Authorization':`token ${tok}`,'Accept':'application/vnd.github.v3+json'};
+  
+  // 收集所有数据模块
+  const modules={
+    orders:LS.get('orders',[]),
+    memos:LS.get('memos',[]),
+    inspiration:{
+      images:LS.get('inspiration_images',[]),
+      texts:LS.get('inspiration_texts',[]),
+      videos:LS.get('inspiration_videos',[])
+    },
+    reviews:LS.get('reviews',[]),
+    weeklyExercise:LS.get('weeklyExercise',null)
+  };
+  
+  // 收集动态 key 的数据（plan_*, taskMods_*, topics_*）
+  const plans={},taskMods={},topics={};
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    if(key.startsWith('plan_')){plans[key]=LS.get(key,null);}
+    else if(key.startsWith('taskMods_')){taskMods[key]=LS.get(key,null);}
+    else if(key.startsWith('topics_')){topics[key]=LS.get(key,null);}
+  }
+  modules.plans=plans;
+  modules.taskMods=taskMods;
+  modules.topics=topics;
+  
+  // 推送到 GitHub
+  const path='sync/all_data.json';
+  const content=JSON.stringify(modules,null,2);
+  const encoded=btoa(unescape(encodeURIComponent(content)));
+  const url=`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`;
+  
+  let sha='';
+  try{
+    const gr=await fetch(url,{headers:h});
+    if(gr.ok){const gd=await gr.json();sha=gd.sha||'';}
+  }catch(e){}
+  
+  const body={message:'sync: all data update from workstation',content:encoded,branch:cfg.branch};
+  if(sha)body.sha=sha;
+  
+  const resp=await fetch(url,{method:'PUT',headers:{...h,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!resp.ok)throw new Error('Sync failed: '+resp.status);
+  return resp.json();
+}
+
+function syncAllToAgent(){
+  const btn=$('syncAllBtn');
+  if(!btn)return;
+  btn.textContent='同步中...';
+  btn.disabled=true;
+  btn.style.opacity='0.6';
+  pushAllToGitHub().then(()=>{
+    btn.textContent='✅ 已同步';
+    btn.style.background='#e8f5e9';
+    btn.style.color='#2e7d32';
+    btn.style.borderColor='#4caf50';
+    const now=new Date();
+    const ts=`${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    localStorage.setItem('allLastSync',ts);
+    const info=$('syncAllInfo');
+    if(info)info.textContent='上次同步: '+ts;
+    setTimeout(()=>{
+      btn.textContent='🔄 全量同步';
+      btn.disabled=false;
+      btn.style.opacity='1';
+      btn.style.background='';
+      btn.style.color='';
+      btn.style.borderColor='';
+    },2000);
+  }).catch(err=>{
+    btn.textContent='❌ 同步失败';
+    btn.style.background='#ffebee';
+    btn.style.color='#c62828';
+    setTimeout(()=>{
+      btn.textContent='🔄 全量同步';
       btn.disabled=false;
       btn.style.opacity='1';
       btn.style.background='';
