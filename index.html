@@ -435,6 +435,24 @@ textarea.input-field{resize:vertical;min-height:80px}
   </div>
 </div>
 
+<!-- Page 3: Life -->
+<div class="page" id="page-life">
+  <div class="card weekly-exercise">
+    <div class="we-header">
+      <button class="we-nav" onclick="changeWeek(-1)">◀</button>
+      <div style="text-align:center">
+        <span class="we-week-label" id="weWeekLabel"></span>
+        <span class="we-today-badge" id="weTodayBadge"></span>
+      </div>
+      <button class="we-nav" onclick="changeWeek(1)">▶</button>
+    </div>
+    <div class="we-stats" id="weStats"></div>
+    <div id="weDayList"></div>
+  </div>
+</div>
+
+
+
 <!-- Bottom Tab Bar -->
 <div class="tab-bar">
   <button class="tab-item active" onclick="switchTab(0)">
