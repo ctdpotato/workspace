@@ -267,8 +267,8 @@ textarea.input-field{resize:vertical;min-height:80px}
 
 /* Topics Plan */
 .topics-header{margin-bottom:12px}
-.topics-account-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.topics-acc-tab{padding:6px 0;border-radius:16px;border:1.5px solid var(--border);background:var(--card);font-size:12px;cursor:pointer;transition:all .2s;font-weight:500;color:var(--text2);flex:1;text-align:center;white-space:nowrap;min-width:0}
+.topics-account-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.topics-acc-tab{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500;color:var(--text2)}
 .topics-acc-tab:active{transform:scale(0.95)}
 .topics-acc-tab.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary);font-weight:600}
 .topics-add-row{display:flex;gap:8px;align-items:center}
@@ -279,8 +279,8 @@ textarea.input-field{resize:vertical;min-height:80px}
 .topic-status-0{background:#f0f0f0;color:#999}
 .topic-status-1{background:#FFF3E0;color:#E65100}
 .topic-status-2{background:#E8F5E9;color:#2E7D32}
-.hot-account-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.hot-acc-tab{padding:6px 0;border-radius:16px;border:1.5px solid var(--border);background:var(--card);font-size:12px;cursor:pointer;transition:all .2s;font-weight:500;color:var(--text2);flex:1;text-align:center;white-space:nowrap;min-width:0}
+.hot-account-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.hot-acc-tab{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500;color:var(--text2)}
 .hot-acc-tab:active{transform:scale(0.95)}
 .hot-acc-tab.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary);font-weight:600}
 .hot-topic-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:10px;background:var(--card);margin-bottom:8px;border:1px solid var(--border)}
