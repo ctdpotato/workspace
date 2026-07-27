@@ -291,6 +291,46 @@ textarea.input-field{resize:vertical;min-height:80px}
 .hot-topic-date{font-size:11px;color:var(--text3);margin-top:4px}
 .hot-add-bar{display:flex;gap:8px;margin-top:12px;align-items:center}
 .hot-update-info{font-size:11px;color:var(--text3);margin-bottom:8px}
+
+/* Inspiration Library */
+.idea-tabs{display:flex;gap:6px;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:0}
+.idea-tab{padding:8px 16px;border-radius:12px 12px 0 0;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text2);background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;position:relative}
+.idea-tab:active{transform:scale(0.96)}
+.idea-tab.active{color:var(--primary);border-bottom-color:var(--primary);background:var(--primary-light)}
+.idea-tab-icon{font-size:16px;margin-right:4px;vertical-align:middle}
+.idea-panel{display:none}
+.idea-panel.active{display:block}
+.idea-upload-area{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;border:2px dashed var(--border);border-radius:12px;cursor:pointer;transition:all .2s;margin-bottom:16px;background:var(--bg)}
+.idea-upload-area:active{border-color:var(--primary);background:var(--primary-light)}
+.idea-upload-area svg{width:40px;height:40px;margin-bottom:8px;opacity:0.4}
+.idea-upload-text{font-size:13px;color:var(--text2);font-weight:500}
+.idea-upload-hint{font-size:11px;color:var(--text3);margin-top:4px}
+.idea-img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.idea-img-card{position:relative;border-radius:10px;overflow:hidden;background:var(--bg);border:1px solid var(--border)}
+.idea-img-card img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.idea-img-card .idea-img-desc{font-size:11px;color:var(--text2);padding:6px 8px;line-height:1.4;word-break:break-all}
+.idea-img-card .idea-img-del{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.5);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;line-height:1}
+.idea-img-card .idea-img-time{font-size:10px;color:var(--text3);padding:0 8px 6px}
+.idea-text-input-row{display:flex;gap:8px;margin-bottom:8px}
+.idea-text-input-row input{flex:1}
+.idea-textarea{width:100%;min-height:80px;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;resize:vertical;font-family:inherit;background:var(--card);color:var(--text);outline:none;transition:border-color .2s}
+.idea-textarea:focus{border-color:var(--primary)}
+.idea-text-card{padding:12px;border-radius:10px;background:var(--card);border:1px solid var(--border);margin-bottom:8px;position:relative}
+.idea-text-card-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.idea-text-card-content{font-size:13px;color:var(--text2);line-height:1.6;white-space:pre-wrap;word-break:break-all}
+.idea-text-card-meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.idea-text-card-time{font-size:11px;color:var(--text3)}
+.idea-text-card-del{background:none;border:none;font-size:18px;color:var(--text3);cursor:pointer;padding:0 4px}
+.idea-video-input-group{margin-bottom:10px}
+.idea-video-input-group label{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:4px;display:block}
+.idea-video-card{padding:12px;border-radius:10px;background:var(--card);border:1px solid var(--border);margin-bottom:8px;position:relative}
+.idea-video-card-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.idea-video-card-link{font-size:12px;color:var(--primary);word-break:break-all;text-decoration:none;display:inline-block;margin-bottom:4px}
+.idea-video-card-note{font-size:12px;color:var(--text2);line-height:1.5;margin-top:4px;white-space:pre-wrap;word-break:break-all}
+.idea-video-card-meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.idea-video-card-time{font-size:11px;color:var(--text3)}
+.idea-video-card-del{background:none;border:none;font-size:18px;color:var(--text3);cursor:pointer;padding:0 4px}
+.idea-empty{padding:32px 0;text-align:center;color:var(--text3);font-size:13px}
 </style>
 </head>
 <body>
@@ -900,37 +940,182 @@ function closeModal(){
 }
 function closeModalOverlay(e){if(e.target===$('modalOverlay'))closeModal()}
 
-// --- Ideas ---
+// --- Ideas (Inspiration Library) ---
 function renderIdeas(title,body){
   title.textContent='💡 选题灵感';
-  const ideas=LS.get('ideas',[]);
+  // migrate old ideas data to text tab
+  const oldIdeas=LS.get('ideas',[]);
+  if(oldIdeas.length>0){
+    const texts=LS.get('inspiration_texts',[]);
+    const migrated=oldIdeas.map(it=>({id:Date.now()+Math.random(),title:'',content:it.text,time:it.time}));
+    LS.set('inspiration_texts',[...migrated,...texts]);
+    LS.set('ideas',[]);
+  }
+  const tab=LS.get('idea_active_tab','text');
   body.innerHTML=`
-    <div class="input-row">
-      <input class="input-field" id="ideaInput" placeholder="输入灵感...">
-      <button class="btn btn-primary btn-sm" onclick="addIdea()">添加</button>
+    <div class="idea-tabs">
+      <button class="idea-tab ${tab==='image'?'active':''}" data-idea-tab="image"><span class="idea-tab-icon">📷</span>图片</button>
+      <button class="idea-tab ${tab==='text'?'active':''}" data-idea-tab="text"><span class="idea-tab-icon">✏️</span>文字</button>
+      <button class="idea-tab ${tab==='video'?'active':''}" data-idea-tab="video"><span class="idea-tab-icon">🎬</span>视频</button>
     </div>
-    <div id="ideaList"></div>
+    <div class="idea-panel ${tab==='image'?'active':''}" id="ideaPanelImage"></div>
+    <div class="idea-panel ${tab==='text'?'active':''}" id="ideaPanelText"></div>
+    <div class="idea-panel ${tab==='video'?'active':''}" id="ideaPanelVideo"></div>
+    <input type="file" id="ideaFileInput" accept="image/*" style="display:none">
   `;
-  renderIdeaList();
-  $('ideaInput').addEventListener('keydown',e=>{if(e.key==='Enter')addIdea()});
+  renderIdeaImagePanel();
+  renderIdeaTextPanel();
+  renderIdeaVideoPanel();
+  // event delegation for tabs
+  body.querySelector('.idea-tabs').addEventListener('click',function(e){
+    const btn=e.target.closest('[data-idea-tab]');if(!btn)return;
+    const t=btn.dataset.ideaTab;LS.set('idea_active_tab',t);
+    body.querySelectorAll('.idea-tab').forEach(b=>b.classList.toggle('active',b.dataset.ideaTab===t));
+    body.querySelectorAll('.idea-panel').forEach(p=>p.classList.remove('active'));
+    const panelId=t==='image'?'ideaPanelImage':t==='text'?'ideaPanelText':'ideaPanelVideo';
+    $(panelId).classList.add('active');
+  });
+  // file input handler
+  const fileInput=$('ideaFileInput');
+  fileInput.addEventListener('change',function(e){
+    const file=e.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=function(ev){
+      const img=new Image();
+      img.onload=function(){
+        const canvas=document.createElement('canvas');
+        const maxDim=800;let w=img.width,h=img.height;
+        if(w>maxDim||h>maxDim){if(w>h){h=Math.round(h*maxDim/w);w=maxDim}else{w=Math.round(w*maxDim/h);h=maxDim}}
+        canvas.width=w;canvas.height=h;
+        const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);
+        const dataUrl=canvas.toDataURL('image/jpeg',0.7);
+        const desc=prompt('给这张图写个描述（可选）：')||'';
+        const images=LS.get('inspiration_images',[]);
+        images.unshift({id:Date.now(),src:dataUrl,desc:desc,time:new Date().toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})});
+        LS.set('inspiration_images',images);
+        renderIdeaImagePanel();
+      };
+      img.src=ev.target.result;
+    };
+    reader.readAsDataURL(file);
+    fileInput.value='';
+  });
 }
-function addIdea(){
-  const inp=$('ideaInput');const v=inp.value.trim();if(!v)return;
-  const ideas=LS.get('ideas',[]);
-  ideas.unshift({text:v,time:new Date().toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})});
-  LS.set('ideas',ideas);inp.value='';renderIdeaList();
+function renderIdeaImagePanel(){
+  const images=LS.get('inspiration_images',[]);
+  const panel=$('ideaPanelImage');
+  let html=`<div class="idea-upload-area" id="ideaUploadBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+    <div class="idea-upload-text">点击上传图片</div>
+    <div class="idea-upload-hint">支持 JPG/PNG，自动压缩</div>
+  </div>`;
+  if(images.length===0){
+    html+=`<div class="idea-empty">还没有图片灵感，点击上方上传</div>`;
+  }else{
+    html+=`<div class="idea-img-grid">`;
+    images.forEach((img,i)=>{
+      html+=`<div class="idea-img-card">
+        <button class="idea-img-del" data-del-img="${i}">×</button>
+        <img src="${img.src}" loading="lazy">
+        ${img.desc?`<div class="idea-img-desc">${esc(img.desc)}</div>`:''}
+        <div class="idea-img-time">${img.time}</div>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+  panel.innerHTML=html;
+  // upload click
+  $('ideaUploadBtn').addEventListener('click',()=>$('ideaFileInput').click());
+  // delete delegation
+  panel.addEventListener('click',function handler(e){
+    const del=e.target.closest('[data-del-img]');if(!del)return;
+    const idx=parseInt(del.dataset.delImg);
+    const images=LS.get('inspiration_images',[]);images.splice(idx,1);LS.set('inspiration_images',images);
+    renderIdeaImagePanel();
+  });
 }
-function renderIdeaList(){
-  const ideas=LS.get('ideas',[]);
-  const list=$('ideaList');
-  list.innerHTML=ideas.map((it,i)=>`
-    <div class="list-item">
-      <div class="list-item-text">${esc(it.text)}<div class="list-item-sub">${it.time}</div></div>
-      <button class="delete-btn" onclick="delIdea(${i})">×</button>
-    </div>
-  `).join('');
+function renderIdeaTextPanel(){
+  const texts=LS.get('inspiration_texts',[]);
+  const panel=$('ideaPanelText');
+  let html=`<div class="idea-text-input-row">
+    <input class="input-field" id="ideaTextInput" placeholder="输入灵感/选题...">
+    <button class="btn btn-primary btn-sm" id="ideaTextAddBtn">添加</button>
+  </div>`;
+  if(texts.length===0){
+    html+=`<div class="idea-empty">还没有文字灵感，添加第一条吧</div>`;
+  }else{
+    texts.forEach((t,i)=>{
+      html+=`<div class="idea-text-card">
+        ${t.title?`<div class="idea-text-card-title">${esc(t.title)}</div>`:''}
+        <div class="idea-text-card-content">${esc(t.content)}</div>
+        <div class="idea-text-card-meta">
+          <span class="idea-text-card-time">${t.time}</span>
+          <button class="idea-text-card-del" data-del-text="${i}">×</button>
+        </div>
+      </div>`;
+    });
+  }
+  panel.innerHTML=html;
+  const inp=$('ideaTextInput');
+  $('ideaTextAddBtn').addEventListener('click',()=>addIdeaText());
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')addIdeaText()});
+  panel.addEventListener('click',function handler(e){
+    const del=e.target.closest('[data-del-text]');if(!del)return;
+    const idx=parseInt(del.dataset.delText);
+    const texts=LS.get('inspiration_texts',[]);texts.splice(idx,1);LS.set('inspiration_texts',texts);
+    renderIdeaTextPanel();
+  });
 }
-function delIdea(i){const a=LS.get('ideas',[]);a.splice(i,1);LS.set('ideas',a);renderIdeaList()}
+function addIdeaText(){
+  const inp=$('ideaTextInput');const v=inp.value.trim();if(!v)return;
+  const texts=LS.get('inspiration_texts',[]);
+  texts.unshift({id:Date.now(),title:'',content:v,time:new Date().toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})});
+  LS.set('inspiration_texts',texts);inp.value='';renderIdeaTextPanel();
+}
+function renderIdeaVideoPanel(){
+  const videos=LS.get('inspiration_videos',[]);
+  const panel=$('ideaPanelVideo');
+  let html=`<div style="margin-bottom:16px">
+    <div class="idea-video-input-group"><label>标题</label><input class="input-field" id="ideaVideoTitle" placeholder="例：XX博主的护肤routine"></div>
+    <div class="idea-video-input-group"><label>视频链接</label><input class="input-field" id="ideaVideoLink" placeholder="小红书/抖音/B站链接"></div>
+    <div class="idea-video-input-group"><label>备注（可选）</label><input class="input-field" id="ideaVideoNote" placeholder="记录亮点、可参考的点"></div>
+    <button class="btn btn-primary btn-sm" id="ideaVideoAddBtn" style="width:100%">添加视频灵感</button>
+  </div>`;
+  if(videos.length===0){
+    html+=`<div class="idea-empty">还没有视频灵感</div>`;
+  }else{
+    videos.forEach((v,i)=>{
+      html+=`<div class="idea-video-card">
+        <div class="idea-video-card-title">${esc(v.title)}</div>
+        ${v.link?`<a class="idea-video-card-link" href="${esc(v.link)}" target="_blank" rel="noopener">${esc(v.link)}</a>`:''}
+        ${v.note?`<div class="idea-video-card-note">💡 ${esc(v.note)}</div>`:''}
+        <div class="idea-video-card-meta">
+          <span class="idea-video-card-time">${v.time}</span>
+          <button class="idea-video-card-del" data-del-video="${i}">×</button>
+        </div>
+      </div>`;
+    });
+  }
+  panel.innerHTML=html;
+  $('ideaVideoAddBtn').addEventListener('click',()=>addIdeaVideo());
+  panel.addEventListener('click',function handler(e){
+    const del=e.target.closest('[data-del-video]');if(!del)return;
+    const idx=parseInt(del.dataset.delVideo);
+    const videos=LS.get('inspiration_videos',[]);videos.splice(idx,1);LS.set('inspiration_videos',videos);
+    renderIdeaVideoPanel();
+  });
+}
+function addIdeaVideo(){
+  const title=$('ideaVideoTitle').value.trim();
+  const link=$('ideaVideoLink').value.trim();
+  const note=$('ideaVideoNote').value.trim();
+  if(!title&&!link){alert('请填写标题或链接');return}
+  const videos=LS.get('inspiration_videos',[]);
+  videos.unshift({id:Date.now(),title:title||'未命名',link,note,time:new Date().toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})});
+  LS.set('inspiration_videos',videos);
+  $('ideaVideoTitle').value='';$('ideaVideoLink').value='';$('ideaVideoNote').value='';
+  renderIdeaVideoPanel();
+}
 
 // --- Orders ---
 function renderOrders(title,body){
