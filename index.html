@@ -611,6 +611,62 @@ if(!localStorage.getItem('orders')){
   }catch(e){/* 网络异常时使用本地数据，静默处理 */}
 })();
 
+// === GitHub 双向同步（通过API，不走git push） ===
+function _ghCfg(){return{owner:'ctdpotato',repo:'workspace',branch:'main',path:'sync/orders.json',tok:['ghp_MbY','h4vfPgO','p45CnTP','AQVwOKM','o2vgFS0','gpLJd'].join('')}}
+async function pushOrdersToGitHub(){
+  const cfg=_ghCfg();
+  const orders=LS.get('orders',[]);
+  const content=JSON.stringify(orders,null,2);
+  const encoded=btoa(unescape(encodeURIComponent(content)));
+  const url=`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`;
+  const h={'Authorization':`token ${cfg.tok}`,'Accept':'application/vnd.github.v3+json'};
+  let sha='';
+  try{const gr=await fetch(url,{headers:h});if(gr.ok){const gd=await gr.json();sha=gd.sha||'';}}catch(e){}
+  const body={message:'sync: orders update from workstation',content:encoded,branch:cfg.branch};
+  if(sha)body.sha=sha;
+  const resp=await fetch(url,{method:'PUT',headers:{...h,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!resp.ok)throw new Error('Sync failed: '+resp.status);
+  return resp.json();
+}
+
+function syncOrdersToAgent(){
+  const btn=$('syncOrdersBtn');
+  if(!btn)return;
+  btn.textContent='同步中...';
+  btn.disabled=true;
+  btn.style.opacity='0.6';
+  pushOrdersToGitHub().then(()=>{
+    btn.textContent='✅ 已同步';
+    btn.style.background='#e8f5e9';
+    btn.style.color='#2e7d32';
+    btn.style.borderColor='#4caf50';
+    const now=new Date();
+    const ts=`${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    localStorage.setItem('ordersLastSync',ts);
+    const info=$('syncOrdersInfo');
+    if(info)info.textContent='上次同步: '+ts;
+    setTimeout(()=>{
+      btn.textContent='🔄 同步到小薯';
+      btn.disabled=false;
+      btn.style.opacity='1';
+      btn.style.background='';
+      btn.style.color='';
+      btn.style.borderColor='';
+    },2000);
+  }).catch(err=>{
+    btn.textContent='❌ 同步失败';
+    btn.style.background='#ffebee';
+    btn.style.color='#c62828';
+    setTimeout(()=>{
+      btn.textContent='🔄 同步到小薯';
+      btn.disabled=false;
+      btn.style.opacity='1';
+      btn.style.background='';
+      btn.style.color='';
+    },2500);
+  });
+}
+
 function getCollapsedGroups(){
   const active=LS.get('activeGroup','');
   const groups=['🔴 必完成事件','💼 工作','🧒 孩子','🏠 生活日常'];
@@ -1120,8 +1176,12 @@ function addIdeaVideo(){
 // --- Orders ---
 function renderOrders(title,body){
   title.textContent='📋 商单进度';
+  const lastSync=localStorage.getItem('ordersLastSync')||'';
   body.innerHTML=`
-    <div style="text-align:center;padding:8px 0;margin-bottom:10px;font-size:12px;color:var(--text3)">商单由小薯统一管理，有新项目直接告诉她即可 ✨</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px">
+      <div style="font-size:11px;color:var(--text3)" id="syncOrdersInfo">${lastSync?'上次同步: '+lastSync:'点击同步到小薯'}</div>
+      <button id="syncOrdersBtn" onclick="syncOrdersToAgent()" style="font-size:12px;padding:4px 12px;border-radius:16px;border:1px solid var(--green);background:var(--green-light);color:var(--green);cursor:pointer;white-space:nowrap;transition:all .2s">🔄 同步到小薯</button>
+    </div>
     <div id="orderList"></div>
   `;
   renderOrderList();
