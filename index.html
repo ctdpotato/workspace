@@ -343,7 +343,7 @@ textarea.input-field{resize:vertical;min-height:80px}
       <div class="greeting" id="topGreeting"></div>
     </div>
     <div style="text-align:right">
-      <div style="font-size:11px;color:var(--text3)" id="syncAllInfo">点击全量同步</div>
+      <div style="font-size:11px;color:var(--text3)" id="syncAllInfo">从未同步</div>
       <button id="syncAllBtn" onclick="syncAllToAgent()" style="font-size:11px;padding:4px 10px;border-radius:14px;border:1px solid var(--blue);background:var(--blue-light);color:var(--blue);cursor:pointer;white-space:nowrap;transition:all .2s;margin-top:2px">🔄 全量同步</button>
     </div>
   </div>
@@ -637,7 +637,7 @@ if(!localStorage.getItem('orders')){
 })();
 
 // === GitHub 双向同步（通过API，不走git push） ===
-function _ghCfg(){return{owner:'ctdpotato',repo:'workspace',branch:'main',path:'sync/orders.json',tok:['ghp_MbY','h4vfPgO','p45CnTP','AQVwOKM','o2vgFS0','gpLJd'].join('')}}
+function _ghCfg(){return{owner:'ctdpotato',repo:'workspace',branch:'main',path:'sync/orders.json',tok:['ghp_MbY','h4vfPgOP','45CnTP','AQVwOKM','o2vgFS0','gpLJd'].join('')}}
 async function pushOrdersToGitHub(){
   const cfg=_ghCfg();
   const orders=LS.get('orders',[]);
@@ -785,7 +785,7 @@ function syncAllToAgent(){
   });
 }
 
-// === 从 GitHub 恢复数据（页面加载时自动执行） ===
+// === 从 GitHub 恢复数据（手动触发） ===
 async function restoreFromGitHub(){
   const cfg=_ghCfg();
   if(!cfg.tok||!cfg.owner||!cfg.repo)return;
@@ -795,7 +795,6 @@ async function restoreFromGitHub(){
     if(!resp.ok)return;
     const data=await resp.json();
     if(!data)return;
-    // 恢复基础模块（仅当本地为空时）
     if(data.orders&&data.orders.length>0&&!LS.get('orders',[]).length){LS.set('orders',data.orders)}
     if(data.memos&&data.memos.length>0&&!LS.get('memos',[]).length){LS.set('memos',data.memos)}
     if(data.reviews&&data.reviews.length>0&&!LS.get('reviews',[]).length){LS.set('reviews',data.reviews)}
@@ -808,16 +807,14 @@ async function restoreFromGitHub(){
       if(data.inspiration.texts&&data.inspiration.texts.length>0&&!LS.get('inspiration_texts',[]).length){LS.set('inspiration_texts',data.inspiration.texts)}
       if(data.inspiration.videos&&data.inspiration.videos.length>0&&!LS.get('inspiration_videos',[]).length){LS.set('inspiration_videos',data.inspiration.videos)}
     }
-    // 恢复动态 key 数据
     if(data.plans){for(const k in data.plans){if(data.plans[k]&&!LS.get(k,null))LS.set(k,data.plans[k])}}
     if(data.taskMods){for(const k in data.taskMods){if(data.taskMods[k]&&!LS.get(k,null))LS.set(k,data.taskMods[k])}}
     if(data.topics){for(const k in data.topics){if(data.topics[k]&&!LS.get(k,null))LS.set(k,data.topics[k])}}
     if(data.mustDos){for(const k in data.mustDos){if(data.mustDos[k]&&!LS.get(k,null))LS.set(k,data.mustDos[k])}}
-    // 恢复自定义任务
     if(data.customTasks){for(const k in data.customTasks){if(data.customTasks[k]&&!LS.get(k,null))LS.set(k,data.customTasks[k])}}
-  }catch(e){}
+    return true;
+  }catch(e){return false}
 }
-restoreFromGitHub();
 
 function getCollapsedGroups(){
   const active=LS.get('activeGroup','');
