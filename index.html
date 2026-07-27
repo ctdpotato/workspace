@@ -453,6 +453,7 @@ textarea.input-field{resize:vertical;min-height:80px}
 const $=id=>document.getElementById(id);
 const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
 const today=()=>new Date().toISOString().slice(0,10);
+const formatLocal=(d)=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const dayNames=['日','一','二','三','四','五','六'];
 
 // ======================== TOP NAV ========================
@@ -1666,7 +1667,7 @@ function renderWeeklyExercise(){
     const ds=dateStr(d);
     const selectedArr=getExerciseArr(weekData[ds]);
     const isDone=doneData[ds];
-    const isToday=ds===todayStr;
+    const isToday=formatLocal(d)===todayStr;
     let rowCls='we-day-row';
     if(isToday)rowCls+=' is-today';
     if(isDone)rowCls+=' is-done';
