@@ -1446,7 +1446,7 @@ function delReview(i){const a=LS.get('reviews',[]);a.splice(i,1);LS.set('reviews
 let currentHotAccount='土豆';
 let hotTopicsData={土豆:[],宝珠:[]};
 let selectedHotTopics=new Set();
-const HOT_ACCOUNTS=['土豆','宝珠'];
+const HOT_ACCOUNTS=['土豆','宝珠','kiki','番茄','夏安','Leah'];
 const HOT_TOPICS_URL='https://raw.githubusercontent.com/ctdpotato/workspace/main/hot_topics.json';
 
 function renderHot(title,body){
@@ -1724,7 +1724,7 @@ function renderLife(){
 }
 
 // ======================== TOPICS PLAN ========================
-const TOPIC_ACCOUNTS=['土豆','宝珠'];
+const TOPIC_ACCOUNTS=['土豆','宝珠','kiki','番茄','夏安','Leah'];
 let currentTopicAccount=TOPIC_ACCOUNTS[0];
 
 function renderTopics(){
