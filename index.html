@@ -711,17 +711,21 @@ async function pushAllToGitHub(){
     weeklyExercise:LS.get('weeklyExercise',null)
   };
   
-  // 收集动态 key 的数据（plan_*, taskMods_*, topics_*）
-  const plans={},taskMods={},topics={};
+  // 收集动态 key 的数据（plan_*, taskMods_*, topics_*, mustDo_*, customTasks_*）
+  const plans={},taskMods={},topics={},mustDos={},customTasks={};
   for(let i=0;i<localStorage.length;i++){
     const key=localStorage.key(i);
     if(key.startsWith('plan_')){plans[key]=LS.get(key,null);}
     else if(key.startsWith('taskMods_')){taskMods[key]=LS.get(key,null);}
     else if(key.startsWith('topics_')){topics[key]=LS.get(key,null);}
+    else if(key.startsWith('mustDo_')){mustDos[key]=LS.get(key,null);}
+    else if(key.startsWith('customTasks_')){customTasks[key]=LS.get(key,null);}
   }
   modules.plans=plans;
   modules.taskMods=taskMods;
   modules.topics=topics;
+  modules.mustDos=mustDos;
+  modules.customTasks=customTasks;
   
   // 推送到 GitHub
   const path='sync/all_data.json';
@@ -780,6 +784,40 @@ function syncAllToAgent(){
     },2500);
   });
 }
+
+// === 从 GitHub 恢复数据（页面加载时自动执行） ===
+async function restoreFromGitHub(){
+  const cfg=_ghCfg();
+  if(!cfg.tok||!cfg.owner||!cfg.repo)return;
+  const url=`https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/${cfg.branch}/sync/all_data.json?t=${Date.now()}`;
+  try{
+    const resp=await fetch(url,{cache:'no-store'});
+    if(!resp.ok)return;
+    const data=await resp.json();
+    if(!data)return;
+    // 恢复基础模块（仅当本地为空时）
+    if(data.orders&&data.orders.length>0&&!LS.get('orders',[]).length){LS.set('orders',data.orders)}
+    if(data.memos&&data.memos.length>0&&!LS.get('memos',[]).length){LS.set('memos',data.memos)}
+    if(data.reviews&&data.reviews.length>0&&!LS.get('reviews',[]).length){LS.set('reviews',data.reviews)}
+    if(data.weeklyExercise){
+      const local=LS.get('weeklyExercise',null);
+      if(!local||(!local.weeks||Object.keys(local.weeks).length===0)){LS.set('weeklyExercise',data.weeklyExercise)}
+    }
+    if(data.inspiration){
+      if(data.inspiration.images&&data.inspiration.images.length>0&&!LS.get('inspiration_images',[]).length){LS.set('inspiration_images',data.inspiration.images)}
+      if(data.inspiration.texts&&data.inspiration.texts.length>0&&!LS.get('inspiration_texts',[]).length){LS.set('inspiration_texts',data.inspiration.texts)}
+      if(data.inspiration.videos&&data.inspiration.videos.length>0&&!LS.get('inspiration_videos',[]).length){LS.set('inspiration_videos',data.inspiration.videos)}
+    }
+    // 恢复动态 key 数据
+    if(data.plans){for(const k in data.plans){if(data.plans[k]&&!LS.get(k,null))LS.set(k,data.plans[k])}}
+    if(data.taskMods){for(const k in data.taskMods){if(data.taskMods[k]&&!LS.get(k,null))LS.set(k,data.taskMods[k])}}
+    if(data.topics){for(const k in data.topics){if(data.topics[k]&&!LS.get(k,null))LS.set(k,data.topics[k])}}
+    if(data.mustDos){for(const k in data.mustDos){if(data.mustDos[k]&&!LS.get(k,null))LS.set(k,data.mustDos[k])}}
+    // 恢复自定义任务
+    if(data.customTasks){for(const k in data.customTasks){if(data.customTasks[k]&&!LS.get(k,null))LS.set(k,data.customTasks[k])}}
+  }catch(e){}
+}
+restoreFromGitHub();
 
 function getCollapsedGroups(){
   const active=LS.get('activeGroup','');
