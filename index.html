@@ -265,6 +265,22 @@ textarea.input-field{resize:vertical;min-height:80px}
 .we-check-btn:not(.checked)::after{content:'';display:block;width:10px;height:10px;border-radius:50%;background:var(--border);opacity:0.4}
 @keyframes checkBounce{0%{transform:scale(0.8)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
 
+/* Exercise Day Selector */
+.we-day-selector{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.we-day-selector .we-week-nav{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--card);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);flex-shrink:0;padding:0;min-height:28px}
+.we-day-selector .we-week-nav:active{background:var(--green-light);border-color:var(--green)}
+.we-day-btns{flex:1;display:flex;justify-content:space-between;gap:4px}
+.we-day-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border-radius:10px;border:1.5px solid transparent;background:transparent;cursor:pointer;transition:all .2s;min-width:0}
+.we-day-btn .wdn{font-size:10px;color:var(--text3);font-weight:600}
+.we-day-btn .wdd{font-size:13px;font-weight:700;color:var(--text);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.we-day-btn.is-today .wdd{background:var(--green);color:#fff}
+.we-day-btn.active{border-color:var(--green);background:var(--green-light)}
+.we-day-btn.active .wdd{color:var(--green)}
+.we-day-btn.active.is-today .wdd{background:var(--green);color:#fff}
+.we-day-btn.has-exercise .wdd::after{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--green);position:absolute;bottom:-2px}
+.we-day-btn .wdd{position:relative}
+.ex-section-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+
 /* Topics Plan */
 .topics-header{margin-bottom:12px}
 .topics-account-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -351,6 +367,20 @@ textarea.input-field{resize:vertical;min-height:80px}
 
 <!-- Page 1: Daily Plan -->
 <div class="page active" id="page-plan">
+  <!-- 运动安排 -->
+  <div class="card weekly-exercise">
+    <div class="we-header">
+      <button class="we-nav" onclick="changeWeek(-1)">◀</button>
+      <div style="text-align:center">
+        <span class="we-week-label" id="weWeekLabel"></span>
+        <span class="we-today-badge" id="weTodayBadge"></span>
+      </div>
+      <button class="we-nav" onclick="changeWeek(1)">▶</button>
+    </div>
+    <div class="we-stats" id="weStats"></div>
+    <div class="we-day-selector" id="weDaySelector"></div>
+    <div id="weDayList"></div>
+  </div>
   <div class="progress-wrap">
     <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
     <div class="progress-text" id="progressText">0/20</div>
@@ -431,9 +461,6 @@ textarea.input-field{resize:vertical;min-height:80px}
   <button class="tab-item" onclick="switchTab(1)">
     <span class="tab-icon">🎨</span>创作
   </button>
-  <button class="tab-item" onclick="switchTab(2)">
-    <span class="tab-icon">🏃</span>运动
-  </button>
 </div>
 
 <!-- Modals -->
@@ -476,7 +503,6 @@ function switchTab(idx){
   document.querySelectorAll('.tab-item').forEach((t,i)=>{t.classList.toggle('active',i===idx)});
   document.querySelectorAll('.page').forEach((p,i)=>{p.classList.toggle('active',i===idx)});
   if(idx===1)renderTopics();
-  if(idx===2)renderLife();
 }
 
 // ======================== DAILY PLAN ========================
@@ -830,6 +856,7 @@ function toggleGroupCollapse(groupName){
   renderTasks();
 }
 function renderTasks(){
+  renderWeeklyExercise();
   const tasks=getTasks();
   const total=getTotalTasks();
   const container=$('taskContainer');
@@ -1627,9 +1654,19 @@ function renderMustDoModal(title,body){
 
 // ======================== LIFE TAB ========================
 let _weekOffset=0;
+let _exerciseDayOffset=0;
 function getMonday(d){d=new Date(d);const day=d.getDay()||7;d.setDate(d.getDate()-(day-1));d.setHours(0,0,0,0);return d}
 function dateStr(d){return d.toISOString().slice(0,10)}
-function changeWeek(offset){_weekOffset+=offset;renderWeeklyExercise()}
+function changeWeek(offset){
+  _weekOffset+=offset;
+  if(_exerciseDayOffset<0){_exerciseDayOffset=0;_weekOffset--;}
+  if(_exerciseDayOffset>6){_exerciseDayOffset=6;_weekOffset++;}
+  renderWeeklyExercise();
+}
+function changeExerciseDay(newOffset){
+  _exerciseDayOffset=newOffset;
+  renderWeeklyExercise();
+}
 
 function renderWeeklyExercise(){
   const now=new Date();
@@ -1660,35 +1697,49 @@ function renderWeeklyExercise(){
   const doneCount=days.filter(d=>doneData[dateStr(d)]).length;
   const exerciseCount=days.filter(d=>{const arr=getExerciseArr(weekData[dateStr(d)]);return arr.some(v=>v!=='休息')}).length;
   $('weStats').textContent=`运动 ${exerciseCount} 天 · 已完成 ${doneCount}/7 天`;
-  // Day rows
-  let html='';
-  const dayNames=['周一','周二','周三','周四','周五','周六','周日'];
+  // Day selector
+  const dayNames=['一','二','三','四','五','六','日'];
+  let selectorHtml='<button class="we-week-nav" onclick="changeWeek(-1)">◀</button><div class="we-day-btns">';
   days.forEach((d,i)=>{
     const ds=dateStr(d);
-    const selectedArr=getExerciseArr(weekData[ds]);
-    const isDone=doneData[ds];
     const isToday=formatLocal(d)===todayStr;
-    let rowCls='we-day-row';
-    if(isToday)rowCls+=' is-today';
-    if(isDone)rowCls+=' is-done';
-    // Build tags
-    let tagsHtml=opts.map(o=>{
-      const isActive=selectedArr.includes(o.id)?'active':'';
-      const isRest=o.id==='休息'?' is-rest':'';
-      return `<button class="we-tag${isActive}${isRest}" data-action="toggle-tag" data-date="${ds}" data-tag="${o.id}">${o.emoji} ${o.id}</button>`;
-    }).join('');
-    html+=`<div class="${rowCls}">
-      <div class="we-day-label">
-        <span class="we-day-name">${dayNames[i]}${isToday?'<span class="we-today-tag">今天</span>':''}</span>
-        <span class="we-day-date">${d.getMonth()+1}/${d.getDate()}</span>
-      </div>
-      <div class="we-tags-wrap">
-        ${tagsHtml}
-      </div>
-      <button class="we-check-btn${isDone?' checked':''}" data-action="complete" data-date="${ds}"></button>
-    </div>`;
+    const isActive=i===_exerciseDayOffset;
+    const hasExercise=getExerciseArr(weekData[ds]).length>0;
+    let cls='we-day-btn';
+    if(isToday)cls+=' is-today';
+    if(isActive)cls+=' active';
+    if(hasExercise)cls+=' has-exercise';
+    selectorHtml+=`<button class="${cls}" onclick="changeExerciseDay(${i})">
+      <span class="wdn">${dayNames[i]}</span>
+      <span class="wdd">${d.getDate()}</span>
+    </button>`;
   });
-  $('weDayList').innerHTML=html;
+  selectorHtml+='</div><button class="we-week-nav" onclick="changeWeek(1)">▶</button>';
+  $('weDaySelector').innerHTML=selectorHtml;
+  // Render only selected day
+  const selDay=days[_exerciseDayOffset];
+  const ds=dateStr(selDay);
+  const selectedArr=getExerciseArr(weekData[ds]);
+  const isDone=doneData[ds];
+  const isToday=formatLocal(selDay)===todayStr;
+  let rowCls='we-day-row';
+  if(isToday)rowCls+=' is-today';
+  if(isDone)rowCls+=' is-done';
+  let tagsHtml=opts.map(o=>{
+    const isActive=selectedArr.includes(o.id)?'active':'';
+    const isRest=o.id==='休息'?' is-rest':'';
+    return `<button class="we-tag${isActive}${isRest}" data-action="toggle-tag" data-date="${ds}" data-tag="${o.id}">${o.emoji} ${o.id}</button>`;
+  }).join('');
+  $('weDayList').innerHTML=`<div class="${rowCls}">
+    <div class="we-day-label">
+      <span class="we-day-name">周${dayNames[_exerciseDayOffset]}${isToday?'<span class="we-today-tag">今天</span>':''}</span>
+      <span class="we-day-date">${selDay.getMonth()+1}/${selDay.getDate()}</span>
+    </div>
+    <div class="we-tags-wrap">
+      ${tagsHtml}
+    </div>
+    <button class="we-check-btn${isDone?' checked':''}" data-action="complete" data-date="${ds}"></button>
+  </div>`;
 }
 
 // 兼容旧数据：字符串转数组
@@ -1853,6 +1904,10 @@ document.addEventListener('DOMContentLoaded',function(){
     topicInp.addEventListener('keydown',function(e){
       if(e.key==='Enter')addTopic();
     });
+  }
+  // 自动恢复：localStorage为空时从GitHub恢复数据
+  if(!LS.get('orders',[]).length){
+    restoreFromGitHub().then(()=>{renderTasks()});
   }
 });
 
