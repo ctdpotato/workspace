@@ -1,242 +1,71 @@
 {
-  "orders": [
+  "dailyTasks": [
     {
-      "name": "松下剃须刀",
-      "brand": "松下",
-      "date": "2026-07-15",
-      "note": "逾期，原档期7/15",
-      "status": 0,
-      "account": "土豆",
-      "_v4": true
+      "id": 1,
+      "title": "护肤步骤",
+      "category": "护肤",
+      "date": "2024-01-15",
+      "completed": false,
+      "created_at": "2026-07-27T23:21:46.263523+08:00"
     },
     {
-      "name": "若也礼盒",
-      "brand": "若也",
-      "date": "2026-07-26",
-      "note": "返点20%，送品，报价3000",
-      "status": 0,
-      "account": "土豆",
-      "_v4": true
-    },
-    {
-      "name": "AMIRO觅光X镜",
-      "brand": "AMIRO觅光",
-      "date": "2026-08-01",
-      "note": "档期8/1-2，返点25%，报价3000，寄拍",
-      "status": 0,
-      "account": "土豆",
-      "_v4": true
-    },
-    {
-      "name": "雅诗兰黛黑神话面霜",
-      "brand": "雅诗兰黛",
-      "date": "2026-07-23",
-      "note": "初稿7/23，发布7/25",
-      "status": 2,
-      "account": "土豆",
-      "_v4": true
-    },
-    {
-      "name": "薇诺娜七夕礼盒",
-      "brand": "薇诺娜",
-      "date": "2026-07-21",
-      "note": "大纲已提交待拍摄，排竞15天",
-      "status": 4,
-      "account": "土豆",
-      "_v4": true
-    },
-    {
-      "name": "兰蔻菁纯",
-      "brand": "兰蔻",
-      "date": "",
-      "note": "大纲已提交待拍摄，档期7-8月",
-      "status": 4,
-      "account": "宝珠",
-      "_v4": true
-    },
-    {
-      "name": "雅诗兰黛复活水",
-      "brand": "雅诗兰黛",
-      "date": "2026-07-06",
-      "note": "已发布",
-      "status": 5,
-      "account": "土豆",
-      "_v4": true
-    },
-    {
-      "name": "袋鼠妈妈",
-      "brand": "袋鼠妈妈",
-      "date": "2026-07-17",
-      "note": "逾期完成",
-      "status": 5,
-      "account": "土豆",
-      "_v4": true
-    },
-    {
-      "name": "奥妙",
-      "brand": "奥妙",
-      "date": "2026-07-17",
-      "note": "提前完成，档期7/25",
-      "status": 5,
-      "account": "宝珠",
-      "_v4": true
-    },
-    {
-      "name": "适乐肤水杨酸洁面+PM乳",
-      "brand": "适乐肤",
-      "date": "2026-07-22",
-      "note": "初稿7/22，发布7/23，需自购后报销",
-      "status": 5,
-      "account": "土豆",
-      "_v4": true
-    },
-    {
-      "name": "奥妙",
-      "brand": "奥妙",
-      "date": "2026-07-23",
-      "note": "公司接的，今天拍摄",
-      "status": 5,
-      "account": "土豆",
-      "_v4": true
-    },
-    {
-      "name": "颜芝迷精华",
-      "brand": "颜芝迷",
-      "date": "2026-07-25",
-      "note": "已完成",
-      "status": 5,
-      "account": "宝珠",
-      "_v4": true
-    },
-    {
-      "name": "Valcena抗糖前体胶囊",
-      "brand": "Valcena",
-      "date": "",
-      "note": "已完成交付",
-      "status": 5,
-      "account": "宝珠",
-      "_v4": true
-    },
-    {
-      "name": "舒芙蕾慕斯",
-      "brand": "",
-      "date": "",
-      "note": "已完成交付",
-      "status": 5,
-      "account": "宝珠",
-      "_v4": true
-    },
-    {
-      "name": "海蓝之谜精粹水乳",
-      "brand": "海蓝之谜",
-      "date": "",
-      "note": "已完成交付",
-      "status": 5,
-      "account": "宝珠",
-      "_v4": true
-    },
-    {
-      "name": "赫莲娜（黑绷带+绿宝瓶）",
-      "brand": "赫莲娜",
-      "date": "",
-      "note": "已拍完",
-      "status": 5,
-      "account": "土豆",
-      "_v4": true
-    },
-    {
-      "name": "伊菲丹超级面膜",
-      "brand": "伊菲丹",
-      "date": "",
-      "note": "已完成",
-      "status": 5,
-      "account": "土豆",
-      "_v4": true
+      "id": 2,
+      "title": "护肤步骤",
+      "category": "护肤",
+      "date": "2024-01-15",
+      "completed": false,
+      "created_at": "2026-07-27T23:30:25.707305+08:00"
     }
   ],
-  "memos": [],
-  "inspiration": {
-    "images": [],
-    "texts": [],
-    "videos": []
-  },
-  "reviews": [],
-  "weeklyExercise": {
-    "weeks": {
-      "2026-07-12": {
-        "2026-07-19": "骑车"
-      },
-      "2026-07-19": {
-        "2026-07-26": [
-          "健身"
-        ]
-      },
-      "2026-07-26": {
-        "2026-07-27": [
-          "健身"
-        ]
-      }
-    },
-    "done": {
-      "2026-07-12": {
-        "2026-07-19": false
-      },
-      "2026-07-19": {
-        "2026-07-20": false,
-        "2026-07-21": false,
-        "2026-07-22": false,
-        "2026-07-23": false,
-        "2026-07-26": true
-      }
+  "mustDos": [
+    {
+      "id": 1,
+      "title": "写日记",
+      "time": "20:00",
+      "date": "2024-01-15",
+      "completed": false,
+      "created_at": "2026-07-27T23:30:25.749559+08:00"
     }
-  },
-  "plans": {
-    "plan_2026-07-26": {
-      "done": [
-        11
-      ]
+  ],
+  "memos": [
+    {
+      "id": 1,
+      "content": "测试备忘录",
+      "created_at": "2026-07-27T23:21:46.29671+08:00"
     },
-    "plan_2026-07-27": {
-      "done": [
-        1
-      ]
+    {
+      "id": 2,
+      "content": "记得买牛奶",
+      "created_at": "2026-07-27T23:30:25.782273+08:00"
     }
-  },
-  "taskMods": {},
-  "topics": {
-    "topics_土豆": [
-      {
-        "title": "熬夜急救护肤流程",
-        "status": 0,
-        "time": "7/26 22:04"
-      },
-      {
-        "title": "成分党必看：烟酰胺的正确打开方式",
-        "status": 0,
-        "time": "7/26 22:04"
-      },
-      {
-        "title": "防晒不止看SPF：教你看懂防晒参数",
-        "status": 0,
-        "time": "7/26 22:04"
-      }
-    ]
-  },
-  "mustDos": {
-    "mustDo_2026-07-27": [
-      {
-        "text": "剃须刀拍摄",
-        "time": ""
-      },
-      {
-        "text": "el黑面霜文案修改",
-        "time": ""
-      },
-      {
-        "text": "若也拍摄",
-        "time": ""
-      }
-    ]
-  },
-  "customTasks": {}
+  ],
+  "topics": [
+    {
+      "id": 1,
+      "title": "春季穿搭分享",
+      "account": "土豆",
+      "status": 0,
+      "created_at": "2026-07-27T23:21:46.32056+08:00"
+    },
+    {
+      "id": 2,
+      "title": "春季穿搭分享",
+      "account": "土豆",
+      "status": 0,
+      "created_at": "2026-07-27T23:30:25.813288+08:00"
+    }
+  ],
+  "orders": [],
+  "contentReviews": [],
+  "inspirations": [],
+  "weeklyExercises": [
+    {
+      "id": 1,
+      "date": "2024-01-15",
+      "activities": "",
+      "completed": false,
+      "created_at": "2026-07-27T23:30:25.844818+08:00"
+    }
+  ],
+  "syncedAt": "2026-07-27T15:49:22.007Z"
 }
