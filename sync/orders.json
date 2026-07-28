@@ -1,13 +1,5 @@
 [
   {
-    "name": "松下剃须刀",
-    "brand": "松下",
-    "date": "2026-07-15",
-    "note": "逾期，原档期7/15",
-    "status": 0,
-    "account": "土豆"
-  },
-  {
     "name": "AMIRO觅光X镜",
     "brand": "AMIRO觅光",
     "date": "2026-08-01",
@@ -16,11 +8,19 @@
     "account": "土豆"
   },
   {
+    "name": "松下剃须刀",
+    "brand": "松下",
+    "date": "2026-07-15",
+    "note": "逾期，原档期7/15",
+    "status": 1,
+    "account": "土豆"
+  },
+  {
     "name": "兰蔻菁纯",
     "brand": "兰蔻",
     "date": "",
     "note": "大纲已提交待拍摄，档期7-8月",
-    "status": 1,
+    "status": 2,
     "account": "宝珠"
   },
   {
