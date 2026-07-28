@@ -1515,13 +1515,18 @@ function switchHotAccount(account){
   renderHotTopicsList();
 }
 
+const ACC_NAME_MAP={'土豆':'陈土豆呀','宝珠':'宝珠爱买买','kiki':'洗漱台富婆kiki','番茄':'橙番茄','夏安':'夏安Shan','Leah':'鎏金小懒猫Leah'};
 async function loadHotTopics(){
   try{
     const resp=await fetch(HOT_TOPICS_URL+'?t='+Date.now(),{cache:'no-store'});
     if(resp.ok){
       const data=await resp.json();
       if(data&&data.topics){
-        hotTopicsData=data.topics;
+        const mapped={};
+        for(const[short,full] of Object.entries(ACC_NAME_MAP)){
+          if(data.topics[full])mapped[short]=data.topics[full];
+        }
+        hotTopicsData=mapped;
         if(data.updateDate){
           $('hotUpdateInfo').textContent='最近更新：'+data.updateDate;
         }
