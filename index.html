@@ -698,9 +698,11 @@ async function pushAllToGitHub(){
   const cfg=_ghCfg();
   const tok=cfg.tok;
   const h={'Authorization':`token ${tok}`,'Accept':'application/vnd.github.v3+json'};
+  const path='sync/all_data.json';
+  const url=`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`;
   
-  // 收集所有数据模块
-  const modules={
+  // 1. 收集本地数据
+  const localModules={
     orders:LS.get('orders',[]),
     memos:LS.get('memos',[]),
     inspiration:{
@@ -711,8 +713,6 @@ async function pushAllToGitHub(){
     reviews:LS.get('reviews',[]),
     weeklyExercise:LS.get('weeklyExercise',null)
   };
-  
-  // 收集动态 key 的数据（plan_*, taskMods_*, topics_*, mustDo_*, customTasks_*）
   const plans={},taskMods={},topics={},mustDos={},customTasks={};
   for(let i=0;i<localStorage.length;i++){
     const key=localStorage.key(i);
@@ -722,23 +722,52 @@ async function pushAllToGitHub(){
     else if(key.startsWith('mustDo_')){mustDos[key]=LS.get(key,null);}
     else if(key.startsWith('customTasks_')){customTasks[key]=LS.get(key,null);}
   }
-  modules.plans=plans;
-  modules.taskMods=taskMods;
-  modules.topics=topics;
-  modules.mustDos=mustDos;
-  modules.customTasks=customTasks;
+  localModules.plans=plans;
+  localModules.taskMods=taskMods;
+  localModules.topics=topics;
+  localModules.mustDos=mustDos;
+  localModules.customTasks=customTasks;
   
-  // 推送到 GitHub
-  const path='sync/all_data.json';
-  const content=JSON.stringify(modules,null,2);
-  const encoded=btoa(unescape(encodeURIComponent(content)));
-  const url=`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`;
-  
+  // 2. 获取远程现有数据，用于合并
+  let remoteData=null;
   let sha='';
   try{
     const gr=await fetch(url,{headers:h});
-    if(gr.ok){const gd=await gr.json();sha=gd.sha||'';}
+    if(gr.ok){
+      const gd=await gr.json();
+      sha=gd.sha||'';
+      const remoteContent=JSON.parse(atob(gd.content));
+      remoteData=remoteContent;
+    }
   }catch(e){}
+  
+  // 3. 合并逻辑：本地有数据就更新，本地为空就保留远程的
+  function isLocalEmpty(key){
+    const val=localModules[key];
+    if(val===null||val===undefined) return true;
+    if(Array.isArray(val)&&val.length===0) return true;
+    if(typeof val==='object'&&!Array.isArray(val)&&Object.keys(val).length===0) return true;
+    return false;
+  }
+  const modules={};
+  if(remoteData){
+    for(const key of Object.keys(remoteData)){
+      if(isLocalEmpty(key)){
+        modules[key]=remoteData[key];
+      }else{
+        modules[key]=localModules[key];
+      }
+    }
+    for(const key of Object.keys(localModules)){
+      if(!(key in modules)) modules[key]=localModules[key];
+    }
+  }else{
+    Object.assign(modules,localModules);
+  }
+  
+  // 4. 推送到 GitHub
+  const content=JSON.stringify(modules,null,2);
+  const encoded=btoa(unescape(encodeURIComponent(content)));
   
   const body={message:'sync: all data update from workstation',content:encoded,branch:cfg.branch};
   if(sha)body.sha=sha;
