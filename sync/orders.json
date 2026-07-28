@@ -1,113 +1,113 @@
 [
   {
-    "name": "AMIRO觅光X镜",
-    "brand": "AMIRO觅光",
-    "date": "2026-08-01",
-    "note": "档期8/1-2，返点25%，报价3000，寄拍",
-    "status": 0,
-    "account": "土豆"
-  },
-  {
     "name": "松下剃须刀",
     "brand": "松下",
     "date": "2026-07-15",
     "note": "逾期，原档期7/15",
-    "status": 1,
+    "status": 0,
     "account": "土豆"
-  },
-  {
-    "name": "雅诗兰黛黑神话面霜",
-    "brand": "雅诗兰黛",
-    "date": "2026-07-23",
-    "note": "初稿7/23，发布7/25",
-    "status": 2,
-    "account": "土豆"
-  },
-  {
-    "name": "雅诗兰黛复活水",
-    "brand": "雅诗兰黛",
-    "date": "2026-07-06",
-    "note": "已发布",
-    "status": 5,
-    "account": "土豆"
-  },
-  {
-    "name": "袋鼠妈妈",
-    "brand": "袋鼠妈妈",
-    "date": "2026-07-17",
-    "note": "逾期完成",
-    "status": 5,
-    "account": "土豆"
-  },
-  {
-    "name": "奥妙",
-    "brand": "奥妙",
-    "date": "2026-07-17",
-    "note": "提前完成，档期7/25",
-    "status": 5,
-    "account": "宝珠"
-  },
-  {
-    "name": "薇诺娜七夕礼盒",
-    "brand": "薇诺娜",
-    "date": "2026-07-21",
-    "note": "大纲已提交待拍摄，排竞15天",
-    "status": 5,
-    "account": "土豆"
-  },
-  {
-    "name": "适乐肤水杨酸洁面+PM乳",
-    "brand": "适乐肤",
-    "date": "2026-07-22",
-    "note": "初稿7/22，发布7/23，需自购后报销",
-    "status": 5,
-    "account": "土豆"
-  },
-  {
-    "name": "奥妙",
-    "brand": "奥妙",
-    "date": "2026-07-23",
-    "note": "公司接的，今天拍摄",
-    "status": 5,
-    "account": "土豆"
-  },
-  {
-    "name": "颜芝迷精华",
-    "brand": "颜芝迷",
-    "date": "2026-07-25",
-    "note": "大纲已提交待拍摄，需补拍质地摇晃对比图",
-    "status": 5,
-    "account": "宝珠"
   },
   {
     "name": "兰蔻菁纯",
     "brand": "兰蔻",
     "date": "",
-    "note": "大纲已提交待拍摄，档期7-8月",
+    "note": "",
     "status": 5,
-    "account": "宝珠"
+    "account": "土豆"
+  },
+  {
+    "name": "雅诗兰黛黑神话面霜",
+    "brand": "雅诗兰黛",
+    "date": "",
+    "note": "已完成",
+    "status": 5,
+    "account": "土豆"
+  },
+  {
+    "name": "雅诗兰黛复活水",
+    "brand": "雅诗兰黛",
+    "date": "2026-07-24",
+    "note": "已拍完",
+    "status": 5,
+    "account": "kiki"
+  },
+  {
+    "name": "袋鼠妈妈",
+    "brand": "袋鼠妈妈",
+    "date": "",
+    "note": "",
+    "status": 5,
+    "account": "番茄"
+  },
+  {
+    "name": "奥妙",
+    "brand": "奥妙",
+    "date": "",
+    "note": "",
+    "status": 5,
+    "account": "番茄"
+  },
+  {
+    "name": "薇诺娜七夕礼盒",
+    "brand": "薇诺娜",
+    "date": "2026-07-30",
+    "note": "大纲已提交待拍摄，排竞15天",
+    "status": 0,
+    "account": "土豆"
+  },
+  {
+    "name": "适乐肤水杨酸洁面+PM乳",
+    "brand": "适乐肤",
+    "date": "2026-07-28",
+    "note": "文案已完成",
+    "status": 5,
+    "account": "夏安"
+  },
+  {
+    "name": "奥妙",
+    "brand": "奥妙",
+    "date": "",
+    "note": "",
+    "status": 0,
+    "account": "夏安"
+  },
+  {
+    "name": "颜芝迷精华",
+    "brand": "颜芝迷",
+    "date": "",
+    "note": "",
+    "status": 0,
+    "account": "夏安"
+  },
+  {
+    "name": "AMIRO觅光X镜",
+    "brand": "AMIRO觅光",
+    "date": "2026-08-01",
+    "note": "返点25%，报价3000，寄拍",
+    "status": 0,
+    "account": "土豆"
   },
   {
     "name": "Valcena抗糖前体胶囊",
     "brand": "Valcena",
     "date": "",
-    "note": "已完成交付",
+    "note": "",
     "status": 5,
-    "account": "宝珠"
+    "account": "Leah"
   },
   {
     "name": "舒芙蕾慕斯",
-    "brand": "",
+    "brand": "舒芙蕾",
     "date": "",
-    "note": "已完成交付",
-    "status": 5,
-    "account": "宝珠"
+    "note": "",
+    "status": 0,
+    "account": "Leah"
   },
   {
     "name": "海蓝之谜精粹水乳",
     "brand": "海蓝之谜",
-    "date": "",
-    "note": "已完成交付",
+    "date": "2026-07-28",
+    "note": "已拍完",
     "status": 5,
     "account": "宝珠"
   },
