@@ -825,7 +825,10 @@ async function restoreFromGitHub(){
     if(!resp.ok)return;
     const data=await resp.json();
     if(!data)return;
-    if(data.orders&&data.orders.length>0&&!LS.get('orders',[]).length){LS.set('orders',data.orders)}
+    if(data.orders&&data.orders.length>0){
+      const localOrders=LS.get('orders',[]);
+      if(!localOrders.length||localOrders.length<data.orders.length){LS.set('orders',data.orders)}
+    }
     if(data.memos&&data.memos.length>0&&!LS.get('memos',[]).length){LS.set('memos',data.memos)}
     if(data.reviews&&data.reviews.length>0&&!LS.get('reviews',[]).length){LS.set('reviews',data.reviews)}
     if(data.weeklyExercise){
@@ -1914,4 +1917,4 @@ if ('serviceWorker' in navigator) {
 </body>
 </html>
 
-<!-- cache-bust 20260729-fix3 -->
+<!-- cache-bust 20260729-fix4 -->
