@@ -638,7 +638,7 @@ if(!localStorage.getItem('orders')){
 })();
 
 // === GitHub 双向同步（通过API，不走git push） ===
-function _ghCfg(){return{owner:'ctdpotato',repo:'workspace',branch:'main',path:'https://raw.githubusercontent.com/ctdpotato/workspace/main/sync/orders.json?_=1785256635',tok:['ghp_MbY','h4vfPgOP','45CnTP','AQVwOKM','o2vgFS0','gpLJd'].join('')}}
+function _ghCfg(){return{owner:'ctdpotato',repo:'workspace',branch:'main',path:'sync/orders.json',tok:['ghp_MbY','h4vfPgOP','45CnTP','AQVwOKM','o2vgFS0','gpLJd'].join('')}}
 async function pushOrdersToGitHub(){
   const cfg=_ghCfg();
   const orders=LS.get('orders',[]);
@@ -698,7 +698,7 @@ async function pushAllToGitHub(){
   const cfg=_ghCfg();
   const tok=cfg.tok;
   const h={'Authorization':`token ${tok}`,'Accept':'application/vnd.github.v3+json'};
-  const path='https://raw.githubusercontent.com/ctdpotato/workspace/main/sync/all_data.json?_=1785256635';
+  const path='sync/all_data.json';
   const url=`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`;
   
   // 1. 收集本地数据
@@ -1902,4 +1902,4 @@ if ('serviceWorker' in navigator) {
 </body>
 </html>
 
-<!-- cache-bust 20260729 -->
+<!-- cache-bust 20260729-fix2 -->
