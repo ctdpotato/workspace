@@ -1,60 +1,48 @@
-const CACHE_NAME = 'workstation-v2';
-const ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
-];
+const CACHE_NAME = 'workstation-v3';
+const ASSETS = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
-// 安装时缓存核心资源
+// 安装时只缓存必要资源
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS).catch(err => {
-        console.log('缓存部分资源失败:', err);
-      });
-    })
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS).catch(() => {}))
   );
   self.skipWaiting();
 });
 
-// 激活时清理旧缓存
+// 激活时清理所有旧缓存
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(names => {
-      return Promise.all(
-        names.filter(name => name !== CACHE_NAME).map(name => caches.delete(name))
-      );
+    caches.keys().then(names => Promise.all(
+      names.filter(name => name !== CACHE_NAME).map(name => caches.delete(name))
+    )).then(() => self.clients.matchAll()).then(clients => {
+      clients.forEach(c => c.navigate(c.url));
     })
   );
-  self.clients.claim();
 });
 
-// 网络优先策略：有网用网，没网用缓存
-// 但对 raw.githubusercontent.com 的数据请求永远走网络，不走缓存
+// 网络优先策略，数据文件永不缓存
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
-  
   const url = new URL(event.request.url);
   
-  // 数据文件永远走网络，不缓存（保证实时性）
+  // 数据文件永远走网络
   if (url.hostname === 'raw.githubusercontent.com') {
     event.respondWith(fetch(event.request));
     return;
   }
   
+  // 主页面永远走网络（不缓存 index.html），只缓存静态资源
+  if (url.pathname.endsWith('/') || url.pathname.endsWith('/index.html')) {
+    event.respondWith(fetch(event.request).catch(() => caches.match('./index.html')));
+    return;
+  }
+  
+  // 其他静态资源：网络优先
   event.respondWith(
-    fetch(event.request).then(response => {
-      const clone = response.clone();
-      caches.open(CACHE_NAME).then(cache => {
-        cache.put(event.request, clone);
-      });
-      return response;
-    }).catch(() => {
-      return caches.match(event.request).then(cached => {
-        return cached || caches.match('./index.html');
-      });
-    })
+    fetch(event.request).then(resp => {
+      const clone = resp.clone();
+      caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+      return resp;
+    }).catch(() => caches.match(event.request))
   );
 });
