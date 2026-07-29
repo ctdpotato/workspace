@@ -1,4 +1,4 @@
-const CACHE_NAME = 'workstation-v1';
+const CACHE_NAME = 'workstation-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -32,20 +32,26 @@ self.addEventListener('activate', event => {
 });
 
 // 网络优先策略：有网用网，没网用缓存
+// 但对 raw.githubusercontent.com 的数据请求永远走网络，不走缓存
 self.addEventListener('fetch', event => {
-  // 只缓存GET请求
   if (event.request.method !== 'GET') return;
+  
+  const url = new URL(event.request.url);
+  
+  // 数据文件永远走网络，不缓存（保证实时性）
+  if (url.hostname === 'raw.githubusercontent.com') {
+    event.respondWith(fetch(event.request));
+    return;
+  }
   
   event.respondWith(
     fetch(event.request).then(response => {
-      // 更新缓存
       const clone = response.clone();
       caches.open(CACHE_NAME).then(cache => {
         cache.put(event.request, clone);
       });
       return response;
     }).catch(() => {
-      // 网络失败时从缓存取
       return caches.match(event.request).then(cached => {
         return cached || caches.match('./index.html');
       });
