@@ -566,7 +566,7 @@ function checkDayReset(){
 checkDayReset();
 
 // 商单远程数据同步
-const ORDERS_REMOTE_URL='https://raw.githubusercontent.com/ctdpotato/workspace/main/sync/orders.json';
+const ORDERS_REMOTE_URL='https://ctdpotato.github.io/workspace/sync/orders.json';
 const ORDERS_FALLBACK=[
   {name:'Valcena抗糖前体胶囊',brand:'Valcena',date:'',note:'已完成交付',status:5,account:'宝珠'},
   {name:'舒芙蕾慕斯',brand:'',date:'',note:'已完成交付',status:5,account:'宝珠'},
@@ -819,7 +819,7 @@ function syncAllToAgent(){
 async function restoreFromGitHub(){
   const cfg=_ghCfg();
   if(!cfg.tok||!cfg.owner||!cfg.repo)return;
-  const url=`https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/${cfg.branch}/sync/all_data.json?t=${Date.now()}`;
+  const url=`https://ctdpotato.github.io/workspace/sync/all_data.json?t=${Date.now()}`;
   try{
     const resp=await fetch(url,{cache:'no-store'});
     if(!resp.ok)return;
@@ -1530,7 +1530,7 @@ let currentHotAccount='土豆';
 let hotTopicsData={土豆:[],宝珠:[]};
 let selectedHotTopics=new Set();
 const HOT_ACCOUNTS=['土豆','宝珠','kiki','番茄','夏安','Leah'];
-const HOT_TOPICS_URL='https://raw.githubusercontent.com/ctdpotato/workspace/main/hot_topics.json';
+const HOT_TOPICS_URL='https://ctdpotato.github.io/workspace/hot_topics.json';
 
 function renderHot(title,body){
   title.textContent='🔥 爆款热点';
@@ -1932,4 +1932,4 @@ if ('serviceWorker' in navigator) {
 </body>
 </html>
 
-<!-- cache-bust 20260729-fix4 -->
+<!-- cache-bust 20260729-fix5 -->
