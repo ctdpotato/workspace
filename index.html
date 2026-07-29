@@ -1134,6 +1134,21 @@ function launchConfetti(){
 if(planState.done.length===getTotalTasks())showCelebration();
 renderTasks();
 
+// === 自动从 GitHub 恢复数据 ===
+(async function autoRestore(){
+  try{
+    const ok=await restoreFromGitHub();
+    if(ok){
+      renderTasks();
+      if($('orderList'))renderOrderList();
+      if($('topicsList'))renderTopics();
+      if($('hotTopicsList'))loadHotTopics();
+      if($('memoList'))renderMemoList();
+      if($('reviewList'))renderReviewList();
+    }
+  }catch(e){console.log('autoRestore error:',e)}
+})();
+
 // 每日计划事件委托（一次性初始化）
 (function(){
   const tc=$('taskContainer');
