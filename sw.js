@@ -1,7 +1,7 @@
-const CACHE_NAME = 'workstation-v4';
+const CACHE_NAME = 'workstation-v5';
 const ASSETS = ['./manifest.json', './icon-192.png', './icon-512.png'];
 
-// 安装时只缓存静态资源，不缓存 index.html
+// 安装时只缓存静态资源，不缓存 index.html 和数据文件
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS).catch(() => {}))
@@ -20,24 +20,31 @@ self.addEventListener('activate', event => {
   );
 });
 
-// 网络优先策略，数据文件永不缓存
+// 网络优先策略
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
+  const path = url.pathname;
   
-  // 数据文件永远走网络
+  // 数据文件永远走网络，绝不缓存
+  if (path.endsWith('.json') || path.includes('/sync/')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+  
+  // raw.githubusercontent.com 永远走网络
   if (url.hostname === 'raw.githubusercontent.com') {
     event.respondWith(fetch(event.request));
     return;
   }
   
   // 主页面永远走网络（不缓存 index.html）
-  if (url.pathname.endsWith('/') || url.pathname.endsWith('/index.html')) {
-    event.respondWith(fetch(event.request).catch(() => caches.match('./index.html')));
+  if (path.endsWith('/') || path.endsWith('/index.html')) {
+    event.respondWith(fetch(event.request).catch(() => new Response('Offline', {status: 503})));
     return;
   }
   
-  // 其他静态资源：网络优先
+  // 其他静态资源（PNG等）：网络优先
   event.respondWith(
     fetch(event.request).then(resp => {
       const clone = resp.clone();
