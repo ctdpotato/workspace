@@ -1891,15 +1891,27 @@ function esc(s){const d=document.createElement('div');d.textContent=s;return d.i
 
 <script>
 if ('serviceWorker' in navigator) {
+  const SW_VERSION = 'workstation-v3';
   navigator.serviceWorker.register('./sw.js').then(reg => {
-    console.log('SW注册成功:', reg.scope);
-  }).catch(err => {
-    console.log('SW注册失败:', err);
-  });
+    const sw = reg.installing || reg.waiting || reg.active;
+    if (sw) {
+      sw.postMessage({type: 'CHECK_VERSION', version: SW_VERSION});
+    }
+    reg.addEventListener('updatefound', () => {
+      const newWorker = reg.installing;
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'activated') {
+          window.location.reload();
+        }
+      });
+    });
+  }).catch(err => console.log('SW注册失败:', err));
+  // 强制检查SW更新
+  navigator.serviceWorker.ready.then(reg => reg.update());
 }
 </script>
 
 </body>
 </html>
 
-<!-- cache-bust 20260729-fix2 -->
+<!-- cache-bust 20260729-fix3 -->
