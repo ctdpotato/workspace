@@ -169,5 +169,23 @@
     "status": 0,
     "account": "土豆",
     "_v4": true
+  },
+  {
+    "name": "馥郁满铺面霜",
+    "brand": "馥郁满铺",
+    "date": "2026-08-14",
+    "note": "Timeline: 8/14 | 公司单 | 返点20%",
+    "status": 0,
+    "account": "宝珠",
+    "_v4": true
+  },
+  {
+    "name": "溪木源洗面奶",
+    "brand": "溪木源",
+    "date": "2026-08-10",
+    "note": "Timeline: 8/10 | 公司单 | 返点25%",
+    "status": 0,
+    "account": "宝珠",
+    "_v4": true
   }
 ]
