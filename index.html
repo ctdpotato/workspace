@@ -568,22 +568,27 @@ checkDayReset();
 // 商单远程数据同步
 const ORDERS_REMOTE_URL='https://ctdpotato.github.io/workspace/sync/orders.json';
 const ORDERS_FALLBACK=[
-  {name:'Valcena抗糖前体胶囊',brand:'Valcena',date:'',note:'已完成交付',status:5,account:'宝珠'},
-  {name:'舒芙蕾慕斯',brand:'',date:'',note:'已完成交付',status:5,account:'宝珠'},
-  {name:'海蓝之谜精粹水乳',brand:'海蓝之谜',date:'',note:'已完成交付',status:5,account:'宝珠'},
-  {name:'赫莲娜（黑绷带+绿宝瓶）',brand:'赫莲娜',date:'',note:'已拍完',status:5,account:'土豆'},
-  {name:'雅诗兰黛复活水',brand:'雅诗兰黛',date:'2026-07-06',note:'已发布',status:5,account:'土豆'},
-  {name:'袋鼠妈妈',brand:'袋鼠妈妈',date:'2026-07-17',note:'逾期完成',status:5,account:'土豆'},
-  {name:'奥妙',brand:'奥妙',date:'2026-07-17',note:'提前完成，档期7/25',status:5,account:'宝珠'},
-  {name:'伊菲丹超级面膜',brand:'伊菲丹',date:'',note:'已完成',status:5,account:'土豆'},
-  {name:'薇诺娜七夕礼盒',brand:'薇诺娜',date:'2026-07-21',note:'大纲已提交待拍摄，排竞15天',status:1,account:'土豆'},
-  {name:'雅诗兰黛黑神话面霜',brand:'雅诗兰黛',date:'2026-07-23',note:'初稿7/23，发布7/25',status:3,account:'土豆'},
-  {name:'兰蔻菁纯',brand:'兰蔻',date:'',note:'大纲已提交待拍摄，档期7-8月',status:1,account:'宝珠'},
-  {name:'颜芝迷精华',brand:'颜芝迷',date:'2026-07-25',note:'大纲已提交待拍摄，需补拍质地摇晃对比图',status:1,account:'宝珠'},
-  {name:'松下剃须刀',brand:'松下',date:'2026-07-15',note:'逾期，原档期7/15',status:0,account:'土豆'},
-  {name:'适乐肤水杨酸洁面+PM乳',brand:'适乐肤',date:'2026-07-22',note:'初稿7/22，发布7/23，需自购后报销',status:4,account:'土豆'},
-  {name:'AMIRO觅光X镜',brand:'AMIRO觅光',date:'2026-08-01',note:'档期8/1-2，返点25%，报价3000，寄拍',status:0,account:'土豆'},
-  {name:'奥妙',brand:'奥妙',date:'2026-07-23',note:'公司接的，今天拍摄',status:2,account:'土豆'},
+  {name:'植物医生石斛精华油',brand:'植物医生',date:'2026-07-28',note:'Timeline: 7/28-8/3 | 公司单 | 返点30%',status:0,account:'宝珠',_v4:true},
+  {name:'若也礼盒',brand:'若也',date:'2026-07-29',note:'Timeline: 7/29 | 自己单 | 返点20%',status:0,account:'土豆',_v4:true},
+  {name:'AMIRO觅光X镜',brand:'AMIRO觅光',date:'2026-08-01',note:'Timeline: 8/1-8/2 | 公司单 | 返点25%',status:0,account:'土豆',_v4:true},
+  {name:'松下剃须刀',brand:'松下',date:'2026-07-15',note:'Timeline: 7/15 | 公司单 | 返点45%',status:1,account:'土豆',_v4:true},
+  {name:'雅诗兰黛黑神话面霜',brand:'雅诗兰黛',date:'2026-07-23',note:'Timeline: 初稿7/23→发布7/25 | 公司单 | 返点45%',status:4,account:'土豆',_v4:true},
+  {name:'雅诗兰黛复活水',brand:'雅诗兰黛',date:'2026-07-06',note:'Timeline: 7/6 | 公司单 | 返点45%',status:5,account:'土豆',_v4:true},
+  {name:'袋鼠妈妈',brand:'袋鼠妈妈',date:'2026-07-17',note:'Timeline: 7/17 | 公司单 | 返点45%',status:5,account:'土豆',_v4:true},
+  {name:'奥妙',brand:'奥妙',date:'2026-07-17',note:'Timeline: 7/17→7/25 | 公司单 | 返点45%',status:5,account:'宝珠',_v4:true},
+  {name:'适乐肤水杨酸洁面+PM乳',brand:'适乐肤',date:'2026-07-22',note:'Timeline: 初稿7/22→发布7/23 | 公司单 | 返点45%',status:4,account:'土豆',_v4:true},
+  {name:'奥妙',brand:'奥妙',date:'2026-07-23',note:'Timeline: 7/23拍摄 | 公司单 | 返点45%',status:5,account:'土豆',_v4:true},
+  {name:'颜芝迷精华',brand:'颜芝迷',date:'2026-07-25',note:'Timeline: 7/25 | 公司单 | 返点45%',status:5,account:'宝珠',_v4:true},
+  {name:'海蓝之谜精粹水乳',brand:'海蓝之谜',date:'2026-07-28',note:'Timeline: 7/28 | 公司单 | 返点45%',status:5,account:'宝珠',_v4:true},
+  {name:'薇诺娜七夕礼盒',brand:'薇诺娜',date:'2026-07-30',note:'Timeline: 7/30 | 公司单 | 返点45%',status:5,account:'土豆',_v4:true},
+  {name:'兰蔻菁纯',brand:'兰蔻',date:'',note:'Timeline: 7-8月 | 公司单 | 返点45%',status:5,account:'宝珠',_v4:true},
+  {name:'Valcena抗糖前体胶囊',brand:'Valcena',date:'',note:'已完成 | 公司单 | 返点45%',status:5,account:'宝珠',_v4:true},
+  {name:'舒芙蕾慕斯',brand:'',date:'',note:'已完成 | 公司单 | 返点45%',status:5,account:'宝珠',_v4:true},
+  {name:'赫莲娜（黑绷带+绿宝瓶）',brand:'赫莲娜',date:'',note:'已完成 | 公司单 | 返点45%',status:5,account:'土豆',_v4:true},
+  {name:'伊菲丹超级面膜',brand:'伊菲丹',date:'',note:'已完成 | 公司单 | 返点45%',status:5,account:'土豆',_v4:true},
+  {name:'雅诗兰黛白金逆龄面霜',brand:'雅诗兰黛',date:'2026-08-03',note:'Timeline: 大纲8/3→初稿8/5→发布8/7 | 公司单 | 返点45%',status:0,account:'土豆',_v4:true},
+  {name:'馥郁满铺面霜',brand:'馥郁满铺',date:'2026-08-14',note:'Timeline: 8/14 | 公司单 | 返点20%',status:0,account:'宝珠',_v4:true},
+  {name:'溪木源洗面奶',brand:'溪木源',date:'2026-08-10',note:'Timeline: 8/10 | 公司单 | 返点25%',status:0,account:'宝珠',_v4:true},
 ];
 // 旧数据迁移：4状态→6状态 + 账号字段
 function migrateOrders(orders){
@@ -812,6 +817,62 @@ function syncAllToAgent(){
       btn.style.background='';
       btn.style.color='';
     },2500);
+  });
+}
+
+// === 强制刷新：从云端拉取最新数据 ===
+function forceRefreshAll(){
+  const btn=$('refreshBtn');
+  if(!btn)return;
+  btn.textContent='⏳ 刷新中...';
+  btn.disabled=true;
+  btn.style.opacity='0.6';
+  // 清除本地标记，允许远程覆盖
+  localStorage.removeItem('ordersLocalChanged');
+  const ts=`${new Date().getMonth()+1}/${new Date().getDate()} ${new Date().getHours().toString().padStart(2,'0')}:${new Date().getMinutes().toString().padStart(2,'0')}`;
+  // 刷新商单
+  fetch(ORDERS_REMOTE_URL+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(data=>{
+    if(Array.isArray(data)&&data.length>0){
+      migrateOrders(data);
+      LS.set('orders',data);
+      localStorage.setItem('ordersLastSync',ts);
+      const info=$('syncOrdersInfo');
+      if(info)info.textContent='上次同步: '+ts;
+    }
+  }).catch(()=>{}).finally(()=>{
+    // 刷新全量数据
+    fetch('https://ctdpotato.github.io/workspace/sync/all_data.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(data=>{
+      if(!data)return;
+      if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',data.orders)}
+      if(data.memos!==undefined)LS.set('memos',data.memos||[]);
+      if(data.reviews!==undefined)LS.set('reviews',data.reviews||[]);
+      if(data.weeklyExercise)LS.set('weeklyExercise',data.weeklyExercise);
+      if(data.inspiration){
+        if(data.inspiration.images)LS.set('inspiration_images',data.inspiration.images);
+        if(data.inspiration.texts)LS.set('inspiration_texts',data.inspiration.texts);
+        if(data.inspiration.videos)LS.set('inspiration_videos',data.inspiration.videos);
+      }
+      if(data.plans)for(const k in data.plans)LS.set(k,data.plans[k]);
+      if(data.taskMods)for(const k in data.taskMods)LS.set(k,data.taskMods[k]);
+      if(data.topics)for(const k in data.topics)LS.set(k,data.topics[k]);
+      if(data.mustDos)for(const k in data.mustDos)LS.set(k,data.mustDos[k]);
+      if(data.customTasks)for(const k in data.customTasks)LS.set(k,data.customTasks[k]);
+    }).catch(()=>{}).finally(()=>{
+      // 重新渲染
+      if($('orderList'))renderOrderList();
+      if($('taskContainer'))renderTasks();
+      const info=$('syncAllInfo');
+      if(info)info.textContent='上次同步: '+ts;
+      localStorage.setItem('allLastSync',ts);
+      btn.textContent='✅ 已刷新';
+      btn.style.background='#e8f5e9';
+      setTimeout(()=>{
+        btn.textContent='🔄 刷新数据';
+        btn.disabled=false;
+        btn.style.opacity='1';
+        btn.style.background='';
+      },2000);
+    });
   });
 }
 
