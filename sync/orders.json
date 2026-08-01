@@ -18,13 +18,14 @@
     "_v4": true
   },
   {
-    "name": "植物医生石斛精华油",
-    "brand": "植物医生",
-    "date": "2026-07-28",
-    "note": "Timeline: 7/28-8/3 | 公司单 | 返点30%",
-    "status": 1,
+    "name": "兰蔻塑颜面霜",
     "account": "宝珠",
-    "_v4": true
+    "brand": "",
+    "date": "",
+    "type": "自己单",
+    "rebate": 30,
+    "note": "",
+    "status": 0
   },
   {
     "name": "AMIRO觅光X镜",
@@ -45,11 +46,20 @@
     "_v4": true
   },
   {
+    "name": "植物医生石斛精华油",
+    "brand": "植物医生",
+    "date": "2026-07-28",
+    "note": "Timeline: 7/28-8/3 | 公司单 | 返点30%",
+    "status": 2,
+    "account": "宝珠",
+    "_v4": true
+  },
+  {
     "name": "松下剃须刀",
     "brand": "松下",
     "date": "2026-07-15",
     "note": "Timeline: 7/15 | 公司单 | 返点45%",
-    "status": 3,
+    "status": 4,
     "account": "土豆",
     "_v4": true
   },
@@ -58,7 +68,7 @@
     "brand": "雅诗兰黛",
     "date": "2026-07-23",
     "note": "Timeline: 初稿7/23→发布7/25 | 公司单 | 返点45%",
-    "status": 3,
+    "status": 4,
     "account": "土豆",
     "_v4": true
   },
@@ -142,6 +152,16 @@
     "status": 5,
     "account": "土豆",
     "_v4": true
+  },
+  {
+    "name": "小棕瓶七夕礼盒",
+    "account": "土豆",
+    "brand": "雅诗兰黛",
+    "date": "",
+    "type": "公司单",
+    "rebate": 45,
+    "note": "",
+    "status": 5
   },
   {
     "name": "兰蔻菁纯",
