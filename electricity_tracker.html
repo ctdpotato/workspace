@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>电量记录工作台</title>
+<script src="https://cdn.jsdelivr.net/gh/ecommercecharts/echarts-cdn@master/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f0f2f5;color:#1a1a1a;min-height:100vh;padding-bottom:70px}
+.header{background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;padding:16px 20px 12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(59,130,246,.3)}
+.header h1{font-size:18px;font-weight:600;margin-bottom:8px}
+.tab-bar{display:flex;gap:0}
+.tab{flex:1;text-align:center;padding:8px 0;font-size:14px;color:rgba(255,255,255,.7);border-bottom:3px solid transparent;transition:.2s;cursor:pointer}
+.tab.active{color:#fff;border-bottom-color:#fff;font-weight:600}
+.page{display:none;padding:12px}
+.page.active{display:block}
+.card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card-title{font-size:15px;font-weight:600;margin-bottom:12px;color:#1a1a1a;display:flex;align-items:center;gap:6px}
+.form-row{margin-bottom:14px}
+.form-label{font-size:13px;color:#666;margin-bottom:5px;display:block}
+.form-input,.form-select{width:100%;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:15px;background:#fafafa;transition:.2s;outline:none;-webkit-appearance:none}
+.form-input:focus,.form-select:focus{border-color:#3B82F6;background:#fff;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.form-input::placeholder{color:#bbb}
+.custom-device-row{display:none;gap:8px;margin-top:8px}
+.custom-device-row.show{display:flex}
+.custom-device-row input{flex:1}
+.btn{padding:10px 20px;border:none;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;transition:.2s;width:100%}
+.btn-primary{background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;box-shadow:0 2px 6px rgba(59,130,246,.3)}
+.btn-primary:active{transform:scale(.98);box-shadow:0 1px 3px rgba(59,130,246,.3)}
+.btn-outline{background:#fff;color:#3B82F6;border:1.5px solid #3B82F6}
+.btn-danger{background:#fff;color:#ef4444;border:1.5px solid #ef4444}
+.btn-sm{padding:6px 12px;font-size:13px;width:auto;border-radius:6px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat-item{background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:10px;padding:12px 8px;text-align:center}
+.stat-value{font-size:20px;font-weight:700;color:#3B82F6}
+.stat-label{font-size:11px;color:#888;margin-top:4px}
+.chart-container{width:100%;height:260px}
+.record-list{list-style:none}
+.record-item{display:flex;align-items:center;padding:12px 0;border-bottom:1px solid #f0f0f0;position:relative;overflow:hidden;transition:.3s}
+.record-item:last-child{border-bottom:none}
+.record-info{flex:1}
+.record-device{font-size:14px;font-weight:500}
+.record-meta{font-size:12px;color:#999;margin-top:3px}
+.record-kwh{font-size:16px;font-weight:600;color:#3B82F6;text-align:right}
+.record-kwh small{font-size:11px;color:#999;font-weight:400}
+.delete-zone{position:absolute;right:0;top:0;bottom:0;width:80px;background:#ef4444;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;transform:translateX(100%);transition:.2s}
+.record-item.swiped .delete-zone{transform:translateX(0)}
+.record-item.swiped .record-info,.record-item.swiped .record-kwh{transform:translateX(-80px)}
+.record-info,.record-kwh{transition:transform .2s}
+.settings-btn{display:flex;align-items:center;gap:10px;padding:14px;background:#fff;border-radius:10px;margin-bottom:8px;cursor:pointer;border:1px solid #f0f0f0;font-size:14px;transition:.1s}
+.settings-btn:active{background:#f8f8f8}
+.settings-btn .icon{font-size:20px}
+.empty-state{text-align:center;padding:40px 20px;color:#bbb}
+.empty-state .emoji{font-size:48px;margin-bottom:12px}
+.empty-state p{font-size:14px}
+.calc-preview{background:#f0f7ff;border-radius:8px;padding:10px 12px;font-size:13px;color:#2563EB;margin-top:6px;display:none}
+.calc-preview.show{display:block}
+.price-row{display:flex;align-items:center;gap:8px}
+.price-row input{flex:1}
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:999;opacity:0;transition:.3s;pointer-events:none}
+.toast.show{opacity:1}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px 16px 0 0;padding:20px;width:100%;max-height:70vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:16px;text-align:center}
+.badge{display:inline-block;background:#EFF6FF;color:#3B82F6;font-size:11px;padding:2px 6px;border-radius:4px;margin-left:4px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚡ 电量记录工作台</h1>
+  <div class="tab-bar">
+    <div class="tab active" data-tab="record">📝 记录</div>
+    <div class="tab" data-tab="stats">📊 统计</div>
+    <div class="tab" data-tab="settings">⚙️ 设置</div>
+  </div>
+</div>
+
+<!-- 记录页 -->
+<div class="page active" id="page-record">
+  <div class="card">
+    <div class="card-title">📋 添加用电记录</div>
+    <div class="form-row">
+      <label class="form-label">日期</label>
+      <input type="date" class="form-input" id="inp-date">
+    </div>
+    <div class="form-row">
+      <label class="form-label">电器</label>
+      <select class="form-select" id="sel-device"></select>
+      <div class="custom-device-row" id="custom-row">
+        <input type="text" class="form-input" id="inp-custom-name" placeholder="电器名称">
+        <input type="number" class="form-input" id="inp-custom-power" placeholder="功率(W)" style="width:100px">
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">使用时长（小时）</label>
+      <input type="number" class="form-input" id="inp-hours" placeholder="如 2 或 0.5" step="0.1" min="0">
+    </div>
+    <div class="calc-preview" id="calc-preview"></div>
+    <div class="form-row" style="margin-top:10px">
+      <label class="form-label">电费单价（元/度）</label>
+      <div class="price-row">
+        <input type="number" class="form-input" id="inp-price" value="0.56" step="0.01" min="0">
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="addRecord()">✅ 添加记录</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📜 今日记录</div>
+    <div id="today-records"></div>
+  </div>
+</div>
+
+<!-- 统计页 -->
+<div class="page" id="page-stats">
+  <div class="card">
+    <div class="card-title">📈 今日总览</div>
+    <div class="stat-grid">
+      <div class="stat-item">
+        <div class="stat-value" id="stat-kwh">0</div>
+        <div class="stat-label">用电量(kWh)</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="stat-cost">0</div>
+        <div class="stat-label">预估电费(元)</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="stat-count">0</div>
+        <div class="stat-label">记录条数</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">🍩 用电排行</div>
+    <div class="chart-container" id="chart-pie"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📉 近7天趋势</div>
+    <div class="chart-container" id="chart-line"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📋 全部记录明细</div>
+    <ul class="record-list" id="all-records"></ul>
+  </div>
+</div>
+
+<!-- 设置页 -->
+<div class="page" id="page-settings">
+  <div class="card">
+    <div class="card-title">💾 数据管理</div>
+    <div class="settings-btn" onclick="exportData()">
+      <span class="icon">📤</span><span>导出数据（JSON备份）</span>
+    </div>
+    <div class="settings-btn" onclick="document.getElementById('import-file').click()">
+      <span class="icon">📥</span><span>导入数据（JSON恢复）</span>
+    </div>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+    <div class="settings-btn" onclick="clearAllData()">
+      <span class="icon">🗑️</span><span style="color:#ef4444">清空所有数据</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">🔧 电器管理</div>
+    <div id="device-manage-list"></div>
+  </div>
+  <div class="card" style="text-align:center;color:#bbb;font-size:12px;padding:20px">
+    电量记录工作台 v1.0<br>数据存储在本地浏览器中
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DEFAULT_DEVICES = [
+  {name:'空调',power:1500},{name:'冰箱',power:150},{name:'电热水器',power:2000},
+  {name:'洗衣机',power:500},{name:'电视机',power:150},{name:'电脑/笔记本',power:200},
+  {name:'微波炉',power:1000},{name:'电饭煲',power:800},{name:'吹风机',power:1800},
+  {name:'取暖器/暖风机',power:2000},{name:'电磁炉',power:2000},{name:'烤箱',power:1500},
+  {name:'加湿器',power:50},{name:'净水器',power:50},{name:'LED灯',power:15},
+  {name:'路由器',power:10},{name:'扫地机器人',power:30}
+];
+
+let records = JSON.parse(localStorage.getItem('elec_records')||'[]');
+let devices = JSON.parse(localStorage.getItem('elec_devices')||'null') || [...DEFAULT_DEVICES];
+let defaultPrice = parseFloat(localStorage.getItem('elec_price')||'0.56');
+
+function save(){
+  localStorage.setItem('elec_records',JSON.stringify(records));
+  localStorage.setItem('elec_devices',JSON.stringify(devices));
+  localStorage.setItem('elec_price',defaultPrice);
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+function today(){return new Date().toISOString().slice(0,10)}
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('page-'+tab.dataset.tab).classList.add('active');
+    if(tab.dataset.tab==='stats')renderStats();
+    if(tab.dataset.tab==='settings')renderDeviceManage();
+    if(tab.dataset.tab==='record')renderTodayRecords();
+  });
+});
+
+// Device select
+function populateDevices(){
+  const sel=document.getElementById('sel-device');
+  sel.innerHTML='';
+  devices.forEach((d,i)=>{
+    const opt=document.createElement('option');opt.value=i;opt.textContent=`${d.name} (${d.power}W)`;sel.appendChild(opt);
+  });
+  const opt=document.createElement('option');opt.value='custom';opt.textContent='➕ 自定义电器';sel.appendChild(opt);
+}
+
+document.getElementById('sel-device').addEventListener('change',function(){
+  const row=document.getElementById('custom-row');
+  row.classList.toggle('show',this.value==='custom');
+  updatePreview();
+});
+
+// Date default
+document.getElementById('inp-date').value=today();
+document.getElementById('inp-price').value=defaultPrice;
+
+// Calc preview
+['sel-device','inp-hours','inp-custom-power','inp-custom-name','inp-price'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',updatePreview);
+  document.getElementById(id).addEventListener('change',updatePreview);
+});
+
+function updatePreview(){
+  const sel=document.getElementById('sel-device');
+  const hours=parseFloat(document.getElementById('inp-hours').value)||0;
+  const price=parseFloat(document.getElementById('inp-price').value)||0.56;
+  let power=0,name='';
+  if(sel.value==='custom'){
+    power=parseFloat(document.getElementById('inp-custom-power').value)||0;
+    name=document.getElementById('inp-custom-name').value||'自定义';
+  }else{
+    const d=devices[parseInt(sel.value)];power=d.power;name=d.name;
+  }
+  const el=document.getElementById('calc-preview');
+  if(hours>0&&power>0){
+    const kwh=(power*hours/1000);const cost=(kwh*price).toFixed(2);
+    el.innerHTML=`⚡ ${name}：${power}W × ${hours}h = <b>${kwh.toFixed(3)} kWh</b>，电费约 <b>¥${cost}</b>`;
+    el.classList.add('show');
+  }else{el.classList.remove('show');}
+}
+
+function addRecord(){
+  const sel=document.getElementById('sel-device');
+  const date=document.getElementById('inp-date').value;
+  const hours=parseFloat(document.getElementById('inp-hours').value);
+  const price=parseFloat(document.getElementById('inp-price').value)||0.56;
+  if(!date){toast('请选择日期');return;}
+  if(!hours||hours<=0){toast('请输入使用时长');return;}
+
+  let name,power;
+  if(sel.value==='custom'){
+    name=document.getElementById('inp-custom-name').value.trim();
+    power=parseFloat(document.getElementById('inp-custom-power').value);
+    if(!name){toast('请输入电器名称');return;}
+    if(!power||power<=0){toast('请输入功率(W)');return;}
+    // Save to devices
+    if(!devices.find(d=>d.name===name)){
+      devices.push({name,power});save();populateDevices();
+    }
+    document.getElementById('custom-row').classList.remove('show');
+    document.getElementById('inp-custom-name').value='';
+    document.getElementById('inp-custom-power').value='';
+  }else{
+    const d=devices[parseInt(sel.value)];name=d.name;power=d.power;
+  }
+
+  defaultPrice=price;
+  records.push({date,device:name,power,hours,kwh:+(power*hours/1000).toFixed(4),price,ts:Date.now()});
+  save();
+  document.getElementById('inp-hours').value='';
+  updatePreview();
+  renderTodayRecords();
+  toast('✅ 记录已添加');
+}
+
+function renderTodayRecords(){
+  const el=document.getElementById('today-records');
+  const t=today();
+  const todayRecs=records.filter(r=>r.date===t).reverse();
+  if(!todayRecs.length){el.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>今天还没有记录</p></div>';return;}
+  el.innerHTML='<ul class="record-list">'+todayRecs.map((r,i)=>{
+    const idx=records.indexOf(r);
+    return `<li class="record-item" data-idx="${idx}">
+      <div class="record-info"><div class="record-device">${r.device}<span class="badge">${r.power}W</span></div><div class="record-meta">${r.hours}小时 · ¥${(r.kwh*r.price).toFixed(2)}</div></div>
+      <div class="record-kwh">${r.kwh.toFixed(2)}<small> kWh</small></div>
+      <div class="delete-zone" onclick="deleteRecord(${idx})">删除</div>
+    </li>`;
+  }).join('')+'</ul>';
+  initSwipe();
+}
+
+function deleteRecord(idx){
+  records.splice(idx,1);save();renderTodayRecords();renderStats();toast('已删除');
+}
+
+// Swipe to delete
+function initSwipe(){
+  document.querySelectorAll('.record-item').forEach(item=>{
+    let startX=0,moved=false;
+    item.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;moved=false;
+      document.querySelectorAll('.record-item.swiped').forEach(el=>{if(el!==item)el.classList.remove('swiped');});
+    });
+    item.addEventListener('touchmove',e=>{
+      const dx=e.touches[0].clientX-startX;
+      if(dx<-40)item.classList.add('swiped');
+      if(dx>40)item.classList.remove('swiped');
+    });
+  });
+}
+
+// Stats
+function renderStats(){
+  const t=today();
+  const todayRecs=records.filter(r=>r.date===t);
+  const totalKwh=todayRecs.reduce((s,r)=>s+r.kwh,0);
+  const totalCost=todayRecs.reduce((s,r)=>s+r.kwh*r.price,0);
+  document.getElementById('stat-kwh').textContent=totalKwh.toFixed(2);
+  document.getElementById('stat-cost').textContent=totalCost.toFixed(2);
+  document.getElementById('stat-count').textContent=todayRecs.length;
+
+  renderPie(todayRecs);
+  renderLine();
+  renderAllRecords();
+}
+
+function renderPie(recs){
+  const chart=echarts.init(document.getElementById('chart-pie'));
+  if(!recs.length){chart.clear();chart.setOption({title:{text:'暂无数据',left:'center',top:'center',textStyle:{color:'#bbb',fontSize:14}}});return;}
+  const map={};recs.forEach(r=>{map[r.device]=(map[r.device]||0)+r.kwh;});
+  const data=Object.entries(map).map(([n,v])=>({name:n,value:+v.toFixed(3)})).sort((a,b)=>b.value-a.value);
+  chart.setOption({
+    tooltip:{trigger:'item',formatter:'{b}: {c} kWh ({d}%)'},
+    color:['#3B82F6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#84CC16'],
+    series:[{type:'pie',radius:['35%','65%'],center:['50%','55%'],data,
+      label:{fontSize:11,formatter:'{b}\n{d}%'},
+      itemStyle:{borderRadius:4,borderColor:'#fff',borderWidth:2}
+    }]
+  });
+}
+
+function renderLine(){
+  const chart=echarts.init(document.getElementById('chart-line'));
+  const days=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d.toISOString().slice(0,10));}
+  const data=days.map(day=>+records.filter(r=>r.date===day).reduce((s,r)=>s+r.kwh,0).toFixed(2));
+  chart.setOption({
+    tooltip:{trigger:'axis',formatter:'{b}<br/>用电量: {c} kWh'},
+    grid:{left:45,right:15,top:20,bottom:30},
+    xAxis:{type:'category',data:days.map(d=>d.slice(5)),axisLabel:{fontSize:11}},
+    yAxis:{type:'value',axisLabel:{fontSize:11,formatter:'{value}'},splitLine:{lineStyle:{type:'dashed'}}},
+    series:[{type:'line',data,smooth:true,symbol:'circle',symbolSize:6,
+      lineStyle:{color:'#3B82F6',width:2.5},
+      areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(59,130,246,.25)'},{offset:1,color:'rgba(59,130,246,.02)'}]}},
+      itemStyle:{color:'#3B82F6'}
+    }]
+  });
+}
+
+function renderAllRecords(){
+  const el=document.getElementById('all-records');
+  const sorted=[...records].reverse();
+  if(!sorted.length){el.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>暂无记录</p></div>';return;}
+  el.innerHTML=sorted.map(r=>{
+    const idx=records.indexOf(r);
+    return `<li class="record-item" data-idx="${idx}">
+      <div class="record-info"><div class="record-device">${r.device}</div><div class="record-meta">${r.date} · ${r.hours}h · ¥${(r.kwh*r.price).toFixed(2)}</div></div>
+      <div class="record-kwh">${r.kwh.toFixed(2)}<small> kWh</small></div>
+      <div class="delete-zone" onclick="deleteRecord(${idx})">删除</div>
+    </li>`;
+  }).join('');
+  initSwipe();
+}
+
+// Settings
+function exportData(){
+  const data=JSON.stringify({records,devices,price:defaultPrice},null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`elec_backup_${today()}.json`;a.click();
+  toast('📤 已导出');
+}
+
+function importData(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(data.records){records=data.records;devices=data.devices||devices;defaultPrice=data.price||defaultPrice;save();
+        populateDevices();renderTodayRecords();toast('📥 导入成功，'+records.length+'条记录');
+      }else{toast('文件格式不正确');}
+    }catch(err){toast('解析失败');}
+  };
+  reader.readAsText(file);e.target.value='';
+}
+
+function clearAllData(){
+  if(confirm('确定清空所有用电记录？此操作不可恢复！')){
+    if(confirm('再次确认：清空全部数据？')){
+      records=[];save();renderTodayRecords();renderStats();toast('已清空');
+    }
+  }
+}
+
+function renderDeviceManage(){
+  const el=document.getElementById('device-manage-list');
+  el.innerHTML=devices.map((d,i)=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f5f5f5">
+    <span>${d.name} <span class="badge">${d.power}W</span></span>
+    ${i>=DEFAULT_DEVICES.length?`<button class="btn btn-sm btn-danger" onclick="removeDevice(${i})">移除</button>`:''}
+  </div>`).join('');
+}
+
+function removeDevice(i){devices.splice(i,1);save();populateDevices();renderDeviceManage();toast('已移除');}
+
+// Resize charts on orientation change
+window.addEventListener('resize',()=>{
+  document.querySelectorAll('.chart-container').forEach(el=>{
+    const c=echarts.getInstanceByDom(el);if(c)c.resize();
+  });
+});
+
+// Init
+populateDevices();
+renderTodayRecords();
+</script>
+</body>
+</html>
