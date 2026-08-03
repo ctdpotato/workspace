@@ -1036,7 +1036,7 @@ function addMustDo(){
   const items=LS.get(key,[]);
   items.push({text:text,time:time});
   LS.set(key,items);
-  planState={done:[]};LS.set('plan_'+today(),planState);
+  // 不再重置完成状态，保留已有的done数组
   renderTasks();
   closeModal();
 }
@@ -1045,7 +1045,7 @@ function removeMustDo(idx){
   const items=LS.get(key,[]);
   items.splice(idx,1);
   LS.set(key,items);
-  planState={done:[]};LS.set('plan_'+today(),planState);
+  // 不再重置完成状态，保留已有的done数组
   renderTasks();
 }
 // 编辑/删除固定任务
@@ -1053,7 +1053,7 @@ function deleteTask(taskKey){
   const mods=LS.get('taskMods_'+today(),{deleted:[],edited:{}});
   if(!mods.deleted.includes(taskKey))mods.deleted.push(taskKey);
   LS.set('taskMods_'+today(),mods);
-  planState={done:[]};LS.set('plan_'+today(),planState);
+  // 不再重置完成状态，保留已有的done数组
   renderTasks();
 }
 function editTask(taskKey){
@@ -1093,7 +1093,7 @@ function addCustomTask(cat){
     if(!data[cat])data[cat]=[];
     data[cat].push({title:text,time:time});
     LS.set(key,data);
-    planState={done:[]};LS.set('plan_'+today(),planState);
+    // 不再重置完成状态，保留已有的done数组
     renderTasks();
     closeModal();
   });
@@ -1110,7 +1110,7 @@ function saveEditTask(taskKey,newTitle){
   const mods=LS.get('taskMods_'+today(),{deleted:[],edited:{}});
   mods.edited[taskKey]=newTitle.trim();
   LS.set('taskMods_'+today(),mods);
-  planState={done:[]};LS.set('plan_'+today(),planState);
+  // 不再重置完成状态，保留已有的done数组
   renderTasks();
   closeModal();
 }
@@ -1122,7 +1122,7 @@ function saveEditMustDo(mustIdx,newText,newTime){
     items[mustIdx].text=newText.trim();
     items[mustIdx].time=newTime||'';
     LS.set(key,items);
-    planState={done:[]};LS.set('plan_'+today(),planState);
+    // 不再重置完成状态，保留已有的done数组
     renderTasks();
   }
   closeModal();
@@ -1497,6 +1497,10 @@ function renderOrders(title,body){
         <select class="input-field" id="newOrderAccount" style="flex:1;margin-bottom:0">
           <option value="土豆">土豆</option>
           <option value="宝珠">宝珠</option>
+          <option value="kiki">kiki</option>
+          <option value="番茄">番茄</option>
+          <option value="夏安">夏安</option>
+          <option value="Leah">Leah</option>
         </select>
         <input class="input-field" id="newOrderBrand" placeholder="品牌（选填）" style="flex:1;margin-bottom:0">
       </div>
