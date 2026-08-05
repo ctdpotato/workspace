@@ -485,54 +485,54 @@ function getTasks(){
   const isCore=[1,3,6].includes(dow);// Mon,Wed,Sat
   const exerciseSub=isCore?'核心跟练+体态训练+3000步大步走':'骑车30分钟';
   // 用户自定义必完成事件
-  const mustDoKey='mustDo_'+today();
+  const mustDoKey='mustDo';
   const mustDoItems=LS.get(mustDoKey,[]);
   // 构建任务列表，按分类分组
   const tasks=[];
   // === 🔴 必完成事件 ===
   mustDoItems.forEach((item,idx)=>{
-    tasks.push({group:idx===0?'🔴 必完成事件':'',emoji:'⭐',title:item.text,time:item.time||'--',cat:'must',mustIdx:idx,taskId:'must-'+idx});
+    tasks.push({group:idx===0?'🔴 必完成事件':'',emoji:'⭐',title:item.text,time:item.time||'--',cat:'must',mustIdx:idx});
   });
   if(mustDoItems.length===0){
-    tasks.push({group:'🔴 必完成事件',emoji:'💡',title:'点击下方「+必完成」添加今日重点',time:'',cat:'must',hint:true,taskId:'hint'});
+    tasks.push({group:'🔴 必完成事件',emoji:'💡',title:'点击下方「+必完成」添加今日重点',time:'',cat:'must',hint:true});
   }
   // === 💼 工作 ===
-  tasks.push({group:'💼 工作',emoji:'🧴',title:'护肤 + 收拾自己',time:'10:00',cat:'work',taskKey:'work-0',taskId:'work-0'});
-  tasks.push({emoji:'📊',title:'查看昨日数据 + 回复评论',time:'10:30',cat:'work',taskKey:'work-1',taskId:'work-1'});
-  tasks.push({emoji:'✍️',title:'写文案 / 修图 / 排版',time:'12:30',cat:'work',taskKey:'work-2',taskId:'work-2'});
-  tasks.push({emoji:'📸',title:'深度工作（大纲/选题/拍摄）',time:'13:30',cat:'work',taskKey:'work-3',taskId:'work-3'});
-  tasks.push({emoji:'📁',title:'整理今日产出 + 归档',time:'14:30',cat:'work',taskKey:'work-4',taskId:'work-4'});
-  tasks.push({emoji:'💬',title:'商务沟通 / 品牌对接',time:'16:00',cat:'work',taskKey:'work-5',taskId:'work-5'});
-  tasks.push({emoji:'📦',title:'拍产品素材 / 整理产品库',time:'17:00',cat:'work',taskKey:'work-6',taskId:'work-6'});
-  tasks.push({emoji:'💬',title:'回评论 + 看数据 + 想选题',time:'21:00',cat:'work',taskKey:'work-7',taskId:'work-7'});
-  tasks.push({emoji:'📝',title:'整理明日待办清单',time:'22:00',cat:'work',taskKey:'work-8',taskId:'work-8'});
+  tasks.push({group:'💼 工作',emoji:'🧴',title:'护肤 + 收拾自己',time:'10:00',cat:'work',taskKey:'work-0'});
+  tasks.push({emoji:'📊',title:'查看昨日数据 + 回复评论',time:'10:30',cat:'work',taskKey:'work-1'});
+  tasks.push({emoji:'✍️',title:'写文案 / 修图 / 排版',time:'12:30',cat:'work',taskKey:'work-2'});
+  tasks.push({emoji:'📸',title:'深度工作（大纲/选题/拍摄）',time:'13:30',cat:'work',taskKey:'work-3'});
+  tasks.push({emoji:'📁',title:'整理今日产出 + 归档',time:'14:30',cat:'work',taskKey:'work-4'});
+  tasks.push({emoji:'💬',title:'商务沟通 / 品牌对接',time:'16:00',cat:'work',taskKey:'work-5'});
+  tasks.push({emoji:'📦',title:'拍产品素材 / 整理产品库',time:'17:00',cat:'work',taskKey:'work-6'});
+  tasks.push({emoji:'💬',title:'回评论 + 看数据 + 想选题',time:'21:00',cat:'work',taskKey:'work-7'});
+  tasks.push({emoji:'📝',title:'整理明日待办清单',time:'22:00',cat:'work',taskKey:'work-8'});
   // 工作分类的自定义任务
   const customWork=LS.get('customTasks_'+today(),{work:[],kid:[],life:[]}).work||[];
   customWork.forEach((item,idx)=>{
-    tasks.push({emoji:'✨',title:item.title,time:item.time||'--',cat:'work',taskKey:'work-custom-'+idx,taskId:'work-custom-'+idx,custom:true});
+    tasks.push({emoji:'✨',title:item.title,time:item.time||'--',cat:'work',taskKey:'work-custom-'+idx,custom:true});
   });
   // === 🧒 孩子 ===
-  tasks.push({group:'🧒 孩子',emoji:'🧸',title:'陪七七玩 / 户外散步',time:'8:30',cat:'kid',taskKey:'kid-0',taskId:'kid-0'});
-  tasks.push({emoji:'🍚',title:'和七七一起吃午饭',time:'12:00',cat:'kid',taskKey:'kid-1',taskId:'kid-1'});
-  tasks.push({emoji:'🎨',title:'陪七七（午睡醒来）',time:'15:00',cat:'kid',taskKey:'kid-2',taskId:'kid-2'});
-  tasks.push({emoji:'🛁',title:'给七七洗澡 / 哄睡',time:'19:00',cat:'kid',taskKey:'kid-3',taskId:'kid-3'});
+  tasks.push({group:'🧒 孩子',emoji:'🧸',title:'陪七七玩 / 户外散步',time:'8:30',cat:'kid',taskKey:'kid-0'});
+  tasks.push({emoji:'🍚',title:'和七七一起吃午饭',time:'12:00',cat:'kid',taskKey:'kid-1'});
+  tasks.push({emoji:'🎨',title:'陪七七（午睡醒来）',time:'15:00',cat:'kid',taskKey:'kid-2'});
+  tasks.push({emoji:'🛁',title:'给七七洗澡 / 哄睡',time:'19:00',cat:'kid',taskKey:'kid-3'});
   // 孩子分类的自定义任务
   const customKid=LS.get('customTasks_'+today(),{work:[],kid:[],life:[]}).kid||[];
   customKid.forEach((item,idx)=>{
-    tasks.push({emoji:'✨',title:item.title,time:item.time||'--',cat:'kid',taskKey:'kid-custom-'+idx,taskId:'kid-custom-'+idx,custom:true});
+    tasks.push({emoji:'✨',title:item.title,time:item.time||'--',cat:'kid',taskKey:'kid-custom-'+idx,custom:true});
   });
   // === 🏠 生活日常 ===
-  tasks.push({group:'🏠 生活日常',emoji:'☀️',title:'起床 + 喝温水',time:'7:30',cat:'life',taskKey:'life-0',taskId:'life-0'});
-  tasks.push({emoji:'🥣',title:'早餐',time:'8:00',sub:'鸡蛋2个+蛋白1个+牛油果半个+蓝莓100g+核桃2个',cat:'life',taskKey:'life-1',taskId:'life-1'});
-  tasks.push({emoji:'💪',title:'运动时间',time:'9:00',sub:exerciseSub,cat:'life',taskKey:'life-2',taskId:'life-2'});
-  tasks.push({emoji:'🍳',title:'准备午餐',time:'11:30',sub:'杂粮饭/土豆150g + 鱼肉/鸡肉150g + 炒菜300g',cat:'life',taskKey:'life-3',taskId:'life-3'});
-  tasks.push({emoji:'🥗',title:'准备晚餐',time:'18:00',sub:'杂粮饭/土豆150g + 牛肉/瘦肉150g + 炒菜250g + 姜蒜番茄',cat:'life',taskKey:'life-4',taskId:'life-4'});
-  tasks.push({emoji:'🧴',title:'护肤洗漱',time:'22:30',cat:'life',taskKey:'life-5',taskId:'life-5'});
-  tasks.push({emoji:'💤',title:'上床睡觉（最晚23:30）',time:'23:00',cat:'life',taskKey:'life-6',taskId:'life-6'});
+  tasks.push({group:'🏠 生活日常',emoji:'☀️',title:'起床 + 喝温水',time:'7:30',cat:'life',taskKey:'life-0'});
+  tasks.push({emoji:'🥣',title:'早餐',time:'8:00',sub:'鸡蛋2个+蛋白1个+牛油果半个+蓝莓100g+核桃2个',cat:'life',taskKey:'life-1'});
+  tasks.push({emoji:'💪',title:'运动时间',time:'9:00',sub:exerciseSub,cat:'life',taskKey:'life-2'});
+  tasks.push({emoji:'🍳',title:'准备午餐',time:'11:30',sub:'杂粮饭/土豆150g + 鱼肉/鸡肉150g + 炒菜300g',cat:'life',taskKey:'life-3'});
+  tasks.push({emoji:'🥗',title:'准备晚餐',time:'18:00',sub:'杂粮饭/土豆150g + 牛肉/瘦肉150g + 炒菜250g + 姜蒜番茄',cat:'life',taskKey:'life-4'});
+  tasks.push({emoji:'🧴',title:'护肤洗漱',time:'22:30',cat:'life',taskKey:'life-5'});
+  tasks.push({emoji:'💤',title:'上床睡觉（最晚23:30）',time:'23:00',cat:'life',taskKey:'life-6'});
   // 生活分类的自定义任务
   const customLife=LS.get('customTasks_'+today(),{work:[],kid:[],life:[]}).life||[];
   customLife.forEach((item,idx)=>{
-    tasks.push({emoji:'✨',title:item.title,time:item.time||'--',cat:'life',taskKey:'life-custom-'+idx,taskId:'life-custom-'+idx,custom:true});
+    tasks.push({emoji:'✨',title:item.title,time:item.time||'--',cat:'life',taskKey:'life-custom-'+idx,custom:true});
   });
   // 应用当日编辑/删除修改
   const mods=LS.get('taskMods_'+today(),{deleted:[],edited:{}});
@@ -558,8 +558,6 @@ function getTotalTasks(){
   return mustDoItems.length+9+4+7+customCount-mods.deleted.length; // must + work(9) + kid(4) + life(7) + custom - deleted
 }
 let planState=LS.get('plan_'+today(),{done:[]});
-// 迁移：如果done里存的是数字(旧版索引制)，清空重来
-if(planState.done.length>0&&typeof planState.done[0]==='number'){planState.done=[];LS.set('plan_'+today(),planState)}
 
 function checkDayReset(){
   const key='plan_'+today();
@@ -854,7 +852,11 @@ function forceRefreshAll(){
         if(data.inspiration.texts)LS.set('inspiration_texts',data.inspiration.texts);
         if(data.inspiration.videos)LS.set('inspiration_videos',data.inspiration.videos);
       }
-      // 任务计划数据不从远程覆盖，以本地为准
+      if(data.plans)for(const k in data.plans)LS.set(k,data.plans[k]);
+      if(data.taskMods)for(const k in data.taskMods)LS.set(k,data.taskMods[k]);
+      if(data.topics)for(const k in data.topics)LS.set(k,data.topics[k]);
+      if(data.mustDos)for(const k in data.mustDos)LS.set(k,data.mustDos[k]);
+      if(data.customTasks)for(const k in data.customTasks)LS.set(k,data.customTasks[k]);
     }).catch(()=>{}).finally(()=>{
       // 重新渲染
       if($('orderList'))renderOrderList();
@@ -971,8 +973,8 @@ function renderTasks(){
       return;
     }
     const div=document.createElement('div');
-    div.className='task-item'+(planState.done.includes(t.taskId)?' done':'');
-    div.setAttribute('data-task-id',t.taskId);
+    div.className='task-item'+(planState.done.includes(i)?' done':'');
+    div.setAttribute('data-task-index',i);
     // 操作按钮
     let actionBtns='';
     if(t.taskKey){
@@ -997,18 +999,18 @@ function renderTasks(){
       </div>
       <span class="task-time">${t.time}</span>
       ${mustEdit}${actionBtns}${mustDel}
-      <span class="task-check">${planState.done.includes(t.taskId)?'✓':''}</span>
+      <span class="task-check">${planState.done.includes(i)?'✓':''}</span>
     `;
     target.appendChild(div);
   });
   updateProgress(total);
 }
 
-function toggleTask(taskId){
+function toggleTask(i){
   const key='plan_'+today();
-  const idx=planState.done.indexOf(taskId);
+  const idx=planState.done.indexOf(i);
   if(idx>-1)planState.done.splice(idx,1);
-  else planState.done.push(taskId);
+  else planState.done.push(i);
   LS.set(key,planState);
   renderTasks();
   const total=getTotalTasks();
@@ -1030,7 +1032,7 @@ function addMustDo(){
   const text=$('mustDoInput').value.trim();
   if(!text)return;
   const time=$('mustDoTime').value||'';
-  const key='mustDo_'+today();
+  const key='mustDo';
   const items=LS.get(key,[]);
   items.push({text:text,time:time});
   LS.set(key,items);
@@ -1039,15 +1041,11 @@ function addMustDo(){
   closeModal();
 }
 function removeMustDo(idx){
-  const key='mustDo_'+today();
+  const key='mustDo';
   const items=LS.get(key,[]);
-  // 清理被删除项的完成状态
-  const removedId='must-'+idx;
-  const doneIdx=planState.done.indexOf(removedId);
-  if(doneIdx>-1)planState.done.splice(doneIdx,1);
-  LS.set('plan_'+today(),planState);
   items.splice(idx,1);
   LS.set(key,items);
+  // 不再重置完成状态，保留已有的done数组
   renderTasks();
 }
 // 编辑/删除固定任务
@@ -1055,10 +1053,7 @@ function deleteTask(taskKey){
   const mods=LS.get('taskMods_'+today(),{deleted:[],edited:{}});
   if(!mods.deleted.includes(taskKey))mods.deleted.push(taskKey);
   LS.set('taskMods_'+today(),mods);
-  // 清理被删除任务的完成状态
-  const doneIdx=planState.done.indexOf(taskKey);
-  if(doneIdx>-1)planState.done.splice(doneIdx,1);
-  LS.set('plan_'+today(),planState);
+  // 不再重置完成状态，保留已有的done数组
   renderTasks();
 }
 function editTask(taskKey){
@@ -1105,7 +1100,7 @@ function addCustomTask(cat){
   inp.addEventListener('keydown',e=>{if(e.key==='Enter')saveBtn.click()});
 }
 function editMustDo(mustIdx){
-  const key='mustDo_'+today();
+  const key='mustDo';
   const items=LS.get(key,[]);
   if(!items[mustIdx])return;
   openEditMustDoModal(mustIdx,items[mustIdx].text,items[mustIdx].time||'');
@@ -1121,7 +1116,7 @@ function saveEditTask(taskKey,newTitle){
 }
 function saveEditMustDo(mustIdx,newText,newTime){
   if(!newText.trim())return;
-  const key='mustDo_'+today();
+  const key='mustDo';
   const items=LS.get(key,[]);
   if(items[mustIdx]){
     items[mustIdx].text=newText.trim();
@@ -1274,10 +1269,10 @@ renderTasks();
       return;
     }
     // 点击任务项（打卡）
-    const taskItem=target.closest('[data-task-id]');
+    const taskItem=target.closest('[data-task-index]');
     if(taskItem){
-      const tid=taskItem.getAttribute('data-task-id');
-      toggleTask(tid);
+      const idx=parseInt(taskItem.getAttribute('data-task-index'));
+      toggleTask(idx);
       return;
     }
   });
@@ -1511,20 +1506,16 @@ function renderOrders(title,body){
       </div>
       <div style="display:flex;gap:8px;margin-bottom:8px">
         <input class="input-field" id="newOrderDate" type="date" style="flex:1;margin-bottom:0">
+        <input class="input-field" id="newOrderPrice" placeholder="价格（选填）" style="flex:1;margin-bottom:0">
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:8px">
         <select class="input-field" id="newOrderType" style="flex:1;margin-bottom:0">
           <option value="公司单">公司单</option>
           <option value="自己单">自己单</option>
         </select>
+        <input class="input-field" id="newOrderRebate" placeholder="返点%（选填）" style="flex:1;margin-bottom:0">
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:8px">
-        <select class="input-field" id="newOrderRebate" style="flex:1;margin-bottom:0">
-          <option value="45">返点 45%</option>
-          <option value="30">返点 30%</option>
-          <option value="25">返点 25%</option>
-          <option value="20">返点 20%</option>
-        </select>
-        <input class="input-field" id="newOrderNote" placeholder="备注（选填）" style="flex:1;margin-bottom:0">
-      </div>
+      <input class="input-field" id="newOrderNote" placeholder="备注（选填）" style="margin-bottom:8px">
       <button class="btn btn-primary" style="width:100%" onclick="addOrder()">添加</button>
     </div>
     <div id="orderList"></div>
@@ -1548,19 +1539,21 @@ function addOrder(){
   const name=$('newOrderName').value.trim();
   if(!name){alert('请填写商品名称');return}
   const orders=LS.get('orders',[]);
+  const rebateVal=$('newOrderRebate').value.trim();
   orders.push({
     name:name,
     account:$('newOrderAccount').value,
     brand:$('newOrderBrand').value.trim(),
     date:$('newOrderDate').value,
+    price:$('newOrderPrice').value.trim(),
     type:$('newOrderType').value,
-    rebate:parseInt($('newOrderRebate').value),
+    rebate:rebateVal?parseInt(rebateVal):null,
     note:$('newOrderNote').value.trim(),
     status:0
   });
   LS.set('orders',orders);
   localStorage.setItem('ordersLocalChanged','1');
-  $('newOrderName').value='';$('newOrderBrand').value='';$('newOrderDate').value='';$('newOrderNote').value='';
+  $('newOrderName').value='';$('newOrderBrand').value='';$('newOrderDate').value='';$('newOrderPrice').value='';$('newOrderRebate').value='';$('newOrderNote').value='';
   toggleAddOrderForm();
   renderOrderList();
 }
@@ -1586,7 +1579,7 @@ function renderOrderList(){
     <div class="list-item" style="flex-wrap:wrap">
       <div style="flex:1;min-width:0">
         <div class="list-item-text" style="font-weight:600">${esc(o.name)} <span style="font-size:10px;padding:1px 5px;border-radius:3px;background:${o.account==='宝珠'?'#ff6b9d':'#4ecdc4'};color:#fff;margin-left:4px;vertical-align:middle">${o.account||'土豆'}</span></div>
-        <div class="list-item-sub">${o.brand?esc(o.brand)+' · ':''}${o.date||'无截止日'}${o.type?' · '+esc(o.type):''}${o.rebate!=null?' · '+o.rebate+'%返点':''}${o.note?' · '+esc(o.note):''}</div>
+        <div class="list-item-sub">${o.brand?esc(o.brand)+' · ':''}${o.date||'无截止日'}${o.price?' · ¥'+esc(o.price):''}${o.type?' · '+esc(o.type):''}${o.rebate!=null?' · '+o.rebate+'%返点':''}${o.note?' · '+esc(o.note):''}</div>
       </div>
       <button class="status-badge status-${o.status}" onclick="cycleOrderStatus(${i})">${statusNames[o.status]}</button>
       <button class="delete-btn" onclick="delOrder(${i})">×</button>
@@ -1802,7 +1795,7 @@ function renderMustDoModal(title,body){
     <input class="input-field" id="mustDoInput" placeholder="输入必完成事项，如：提交伊菲丹文案" style="margin-bottom:8px">
     <input class="input-field" id="mustDoTime" type="time" style="margin-bottom:12px;width:auto;display:inline-block">
     <button class="btn btn-primary" style="width:100%;margin-bottom:12px" onclick="addMustDo()">添加</button>
-    <div style="font-size:11px;color:var(--text3);text-align:center">每天可添加多个，第二天自动清空</div>
+    <div style="font-size:11px;color:var(--text3);text-align:center">每天可添加多个，长期保留不清空</div>
   `;
 }
 
