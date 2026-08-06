@@ -50,7 +50,7 @@
       "brand": "松下",
       "date": "2026-07-15",
       "note": "Timeline: 7/15 | 公司单 | 返点45%",
-      "status": 3,
+      "status": 4,
       "account": "土豆",
       "_v4": true
     },
@@ -59,7 +59,7 @@
       "brand": "雅诗兰黛",
       "date": "2026-07-23",
       "note": "Timeline: 初稿7/23→发布7/25 | 公司单 | 返点45%",
-      "status": 3,
+      "status": 4,
       "account": "土豆",
       "_v4": true
     },
@@ -68,7 +68,7 @@
       "brand": "雅诗兰黛",
       "date": "2026-07-06",
       "note": "Timeline: 7/6 | 公司单 | 返点45%",
-      "status": 5,
+      "status": 6,
       "account": "土豆",
       "_v4": true
     },
@@ -77,7 +77,7 @@
       "brand": "袋鼠妈妈",
       "date": "2026-07-17",
       "note": "Timeline: 7/17 | 公司单 | 返点45%",
-      "status": 5,
+      "status": 6,
       "account": "土豆",
       "_v4": true
     },
@@ -86,7 +86,7 @@
       "brand": "奥妙",
       "date": "2026-07-17",
       "note": "Timeline: 7/17→7/25 | 公司单 | 返点45%",
-      "status": 5,
+      "status": 6,
       "account": "宝珠",
       "_v4": true
     },
@@ -95,7 +95,7 @@
       "brand": "适乐肤",
       "date": "2026-07-22",
       "note": "Timeline: 初稿7/22→发布7/23 | 公司单 | 返点45%",
-      "status": 5,
+      "status": 6,
       "account": "土豆",
       "_v4": true
     },
@@ -104,7 +104,7 @@
       "brand": "奥妙",
       "date": "2026-07-23",
       "note": "Timeline: 7/23拍摄 | 公司单 | 返点45%",
-      "status": 5,
+      "status": 6,
       "account": "土豆",
       "_v4": true
     },
@@ -113,7 +113,7 @@
       "brand": "颜芝迷",
       "date": "2026-07-25",
       "note": "Timeline: 7/25 | 公司单 | 返点45%",
-      "status": 5,
+      "status": 6,
       "account": "宝珠",
       "_v4": true
     },
@@ -122,7 +122,7 @@
       "brand": "海蓝之谜",
       "date": "2026-07-28",
       "note": "Timeline: 7/28 | 公司单 | 返点45%",
-      "status": 5,
+      "status": 6,
       "account": "宝珠",
       "_v4": true
     },
@@ -131,7 +131,7 @@
       "brand": "若也",
       "date": "2026-07-29",
       "note": "Timeline: 7/29 | 自己单 | 返点20%",
-      "status": 5,
+      "status": 6,
       "account": "土豆",
       "_v4": true
     },
@@ -140,7 +140,7 @@
       "brand": "薇诺娜",
       "date": "2026-07-30",
       "note": "Timeline: 7/30 | 公司单 | 返点45%",
-      "status": 5,
+      "status": 6,
       "account": "土豆",
       "_v4": true
     },
@@ -149,7 +149,7 @@
       "brand": "兰蔻",
       "date": "",
       "note": "Timeline: 7-8月 | 公司单 | 返点45%",
-      "status": 5,
+      "status": 6,
       "account": "宝珠",
       "_v4": true
     },
@@ -158,7 +158,7 @@
       "brand": "Valcena",
       "date": "",
       "note": "已完成 | 公司单 | 返点45%",
-      "status": 5,
+      "status": 6,
       "account": "宝珠",
       "_v4": true
     },
@@ -167,7 +167,7 @@
       "brand": "舒芙蕾",
       "date": "",
       "note": "已完成 | 公司单 | 返点45%",
-      "status": 5,
+      "status": 6,
       "account": "宝珠",
       "_v4": true
     },
@@ -176,7 +176,7 @@
       "brand": "赫莲娜",
       "date": "",
       "note": "已完成 | 公司单 | 返点45%",
-      "status": 5,
+      "status": 6,
       "account": "土豆",
       "_v4": true
     },
@@ -185,7 +185,7 @@
       "brand": "伊菲丹",
       "date": "",
       "note": "已完成 | 公司单 | 返点45%",
-      "status": 5,
+      "status": 6,
       "account": "土豆",
       "_v4": true
     }
