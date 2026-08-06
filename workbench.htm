@@ -587,7 +587,7 @@ function renderOrders(title,body){
 
 function renderOrderList(){
   const orders=LS.get('orders',[]);
-  const statusNames=['待写大纲','大纲已完成','拍摄中','初稿中','初稿已提交','素材完成','已完成'];
+  const statusNames=['待写大纲','大纲已完成','拍摄中','初稿中','初稿已提交','素材','已完成'];
   const statusColors=['#bbb','#4a90d9','#f5a623','#9b59b6','#4ecdc4','#E65100','#27ae60'];
   // 按状态分组，同状态内按日期排序
   orders.sort((a,b)=>{
