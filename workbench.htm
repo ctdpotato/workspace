@@ -182,9 +182,9 @@ textarea.input-field{resize:vertical;min-height:80px}
 .status-0{background:#EEEEEE;color:#999}
 .status-1{background:var(--blue-light);color:var(--blue)}
 .status-2{background:var(--orange-light);color:var(--orange)}
-.status-4{background:#F3E8FF;color:#7C3AED}
-.status-3{background:#FFF3E0;color:#E65100}
-.status-5{background:#E0F2FE;color:#0284C7}
+.status-4{background:#E0F2FE;color:#0284C7}
+.status-3{background:#F3E8FF;color:#7C3AED}
+.status-5{background:#FFF3E0;color:#E65100}
 .status-6{background:var(--green-light);color:var(--green)}
 /* Calendar */
 .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
@@ -393,11 +393,11 @@ const ORDERS_FALLBACK=[
   {name:'奥妙',brand:'奥妙',date:'2026-07-17',note:'提前完成，档期7/25',status:6,account:'宝珠'},
   {name:'伊菲丹超级面膜',brand:'伊菲丹',date:'',note:'已完成',status:6,account:'土豆'},
   {name:'薇诺娜七夕礼盒',brand:'薇诺娜',date:'2026-07-21',note:'大纲已提交待拍摄，排竞15天',status:1,account:'土豆'},
-  {name:'雅诗兰黛黑神话面霜',brand:'雅诗兰黛',date:'2026-07-23',note:'初稿7/23，发布7/25',status:4,account:'土豆'},
+  {name:'雅诗兰黛黑神话面霜',brand:'雅诗兰黛',date:'2026-07-23',note:'初稿7/23，发布7/25',status:3,account:'土豆'},
   {name:'兰蔻菁纯',brand:'兰蔻',date:'',note:'大纲已提交待拍摄，档期7-8月',status:1,account:'宝珠'},
   {name:'颜芝迷精华',brand:'颜芝迷',date:'2026-07-25',note:'大纲已提交待拍摄，需补拍质地摇晃对比图',status:1,account:'宝珠'},
   {name:'松下剃须刀',brand:'松下',date:'2026-07-15',note:'逾期，原档期7/15',status:0,account:'土豆'},
-  {name:'适乐肤水杨酸洁面+PM乳',brand:'适乐肤',date:'2026-07-22',note:'初稿7/22，发布7/23，需自购后报销',status:5,account:'土豆'},
+  {name:'适乐肤水杨酸洁面+PM乳',brand:'适乐肤',date:'2026-07-22',note:'初稿7/22，发布7/23，需自购后报销',status:4,account:'土豆'},
   {name:'AMIRO觅光X镜',brand:'AMIRO觅光',date:'2026-08-01',note:'档期8/1-2，返点25%，报价3000，寄拍',status:0,account:'土豆'},
   {name:'奥妙',brand:'奥妙',date:'2026-07-23',note:'公司接的，今天拍摄',status:2,account:'土豆'},
 ];
@@ -587,8 +587,8 @@ function renderOrders(title,body){
 
 function renderOrderList(){
   const orders=LS.get('orders',[]);
-  const statusNames=['待写大纲','大纲已完成','拍摄中','素材完成','初稿中','初稿已提交','已完成'];
-  const statusColors=['#bbb','#4a90d9','#f5a623','#E65100','#9b59b6','#4ecdc4','#27ae60'];
+  const statusNames=['待写大纲','大纲已完成','拍摄中','初稿中','初稿已提交','素材完成','已完成'];
+  const statusColors=['#bbb','#4a90d9','#f5a623','#9b59b6','#4ecdc4','#E65100','#27ae60'];
   // 按状态分组，同状态内按日期排序
   orders.sort((a,b)=>{
     if(a.status!==b.status)return a.status-b.status;
