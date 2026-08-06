@@ -10,6 +10,17 @@
     "status": 0
   },
   {
+    "name": "笑容加冲牙器",
+    "account": "宝珠",
+    "brand": "",
+    "date": "2026-08-10",
+    "price": "2400",
+    "type": "自己单",
+    "rebate": 20,
+    "note": "",
+    "status": 0
+  },
+  {
     "name": "馥郁满铺面霜",
     "brand": "馥郁满铺",
     "date": "2026-08-14",
@@ -66,38 +77,19 @@
     "_v4": true
   },
   {
-    "name": "松下剃须刀",
-    "brand": "松下",
-    "date": "2026-07-15",
-    "note": "Timeline: 7/15 | 公司单 | 返点45%",
-    "status": 4,
-    "account": "土豆",
-    "_v4": true
-  },
-  {
-    "name": "雅诗兰黛黑神话面霜",
-    "brand": "雅诗兰黛",
-    "date": "2026-07-23",
-    "note": "Timeline: 初稿7/23→发布7/25 | 公司单 | 返点45%",
-    "status": 4,
-    "account": "土豆",
-    "_v4": true
-  },
-  {
-    "name": "兰蔻塑颜面霜",
-    "account": "宝珠",
-    "brand": "",
-    "date": "",
-    "type": "自己单",
-    "rebate": 30,
-    "note": "",
-    "status": 4
-  },
-  {
     "name": "雅诗兰黛复活水",
     "brand": "雅诗兰黛",
     "date": "2026-07-06",
     "note": "Timeline: 7/6 | 公司单 | 返点45%",
+    "status": 5,
+    "account": "土豆",
+    "_v4": true
+  },
+  {
+    "name": "松下剃须刀",
+    "brand": "松下",
+    "date": "2026-07-15",
+    "note": "Timeline: 7/15 | 公司单 | 返点45%",
     "status": 5,
     "account": "土豆",
     "_v4": true
@@ -125,6 +117,15 @@
     "brand": "适乐肤",
     "date": "2026-07-22",
     "note": "Timeline: 初稿7/22→发布7/23 | 公司单 | 返点45%",
+    "status": 5,
+    "account": "土豆",
+    "_v4": true
+  },
+  {
+    "name": "雅诗兰黛黑神话面霜",
+    "brand": "雅诗兰黛",
+    "date": "2026-07-23",
+    "note": "Timeline: 初稿7/23→发布7/25 | 公司单 | 返点45%",
     "status": 5,
     "account": "土豆",
     "_v4": true
@@ -182,6 +183,16 @@
     "status": 5,
     "account": "土豆",
     "_v4": true
+  },
+  {
+    "name": "兰蔻塑颜面霜",
+    "account": "宝珠",
+    "brand": "",
+    "date": "",
+    "type": "自己单",
+    "rebate": 30,
+    "note": "",
+    "status": 5
   },
   {
     "name": "小棕瓶七夕礼盒",
