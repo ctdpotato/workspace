@@ -1,5 +1,15 @@
 [
   {
+    "name": "水下洗护礼盒",
+    "account": "kiki",
+    "brand": "600块",
+    "date": "2026-08-07",
+    "type": "公司单",
+    "rebate": 45,
+    "note": "",
+    "status": 0
+  },
+  {
     "name": "馥郁满铺面霜",
     "brand": "馥郁满铺",
     "date": "2026-08-14",
@@ -7,6 +17,16 @@
     "status": 0,
     "account": "宝珠",
     "_v4": true
+  },
+  {
+    "name": "倩碧镭射瓶",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-08-17",
+    "type": "公司单",
+    "rebate": 45,
+    "note": "",
+    "status": 0
   },
   {
     "name": "margys面膜",
@@ -28,40 +48,21 @@
     "_v4": true
   },
   {
-    "name": "溪木源洗面奶",
-    "brand": "溪木源",
-    "date": "2026-08-10",
-    "note": "Timeline: 8/10 | 公司单 | 返点25%",
-    "status": 1,
-    "account": "宝珠",
-    "_v4": true
-  },
-  {
-    "name": "兰蔻塑颜面霜",
-    "account": "宝珠",
-    "brand": "",
-    "date": "",
-    "type": "自己单",
-    "rebate": 30,
-    "note": "",
-    "status": 1
-  },
-  {
-    "name": "植物医生石斛精华油",
-    "brand": "植物医生",
-    "date": "2026-07-28",
-    "note": "Timeline: 7/28-8/3 | 公司单 | 返点30%",
-    "status": 2,
-    "account": "宝珠",
-    "_v4": true
-  },
-  {
     "name": "AMIRO觅光X镜",
     "brand": "AMIRO觅光",
     "date": "2026-08-01",
     "note": "Timeline: 8/1-8/2 | 公司单 | 返点25%",
     "status": 2,
     "account": "土豆",
+    "_v4": true
+  },
+  {
+    "name": "溪木源洗面奶",
+    "brand": "溪木源",
+    "date": "2026-08-10",
+    "note": "Timeline: 8/10 | 公司单 | 返点25%",
+    "status": 2,
+    "account": "宝珠",
     "_v4": true
   },
   {
@@ -81,6 +82,16 @@
     "status": 4,
     "account": "土豆",
     "_v4": true
+  },
+  {
+    "name": "兰蔻塑颜面霜",
+    "account": "宝珠",
+    "brand": "",
+    "date": "",
+    "type": "自己单",
+    "rebate": 30,
+    "note": "",
+    "status": 4
   },
   {
     "name": "雅诗兰黛复活水",
@@ -132,6 +143,15 @@
     "brand": "颜芝迷",
     "date": "2026-07-25",
     "note": "Timeline: 7/25 | 公司单 | 返点45%",
+    "status": 5,
+    "account": "宝珠",
+    "_v4": true
+  },
+  {
+    "name": "植物医生石斛精华油",
+    "brand": "植物医生",
+    "date": "2026-07-28",
+    "note": "Timeline: 7/28-8/3 | 公司单 | 返点30%",
     "status": 5,
     "account": "宝珠",
     "_v4": true
