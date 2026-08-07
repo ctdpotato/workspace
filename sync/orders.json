@@ -1,15 +1,5 @@
 [
   {
-    "name": "水下洗护礼盒",
-    "account": "kiki",
-    "brand": "600块",
-    "date": "2026-08-07",
-    "type": "公司单",
-    "rebate": 45,
-    "note": "",
-    "status": 0
-  },
-  {
     "name": "笑容加冲牙器",
     "account": "宝珠",
     "brand": "",
@@ -17,6 +7,26 @@
     "price": "2400",
     "type": "自己单",
     "rebate": 20,
+    "note": "",
+    "status": 0
+  },
+  {
+    "name": "溪木源洗面奶",
+    "brand": "溪木源",
+    "date": "2026-08-10",
+    "note": "Timeline: 8/10 | 公司单 | 返点25%",
+    "status": 0,
+    "account": "宝珠",
+    "_v4": true
+  },
+  {
+    "name": "乐程式",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-08-12",
+    "price": "3000",
+    "type": "自己单",
+    "rebate": 25,
     "note": "",
     "status": 0
   },
@@ -50,15 +60,6 @@
     "status": 0
   },
   {
-    "name": "雅诗兰黛白金逆龄面霜",
-    "brand": "雅诗兰黛",
-    "date": "2026-08-07",
-    "note": "Timeline: 大纲8/3→初稿8/5→发布8/7 | 公司单 | 返点45%",
-    "status": 1,
-    "account": "土豆",
-    "_v4": true
-  },
-  {
     "name": "AMIRO觅光X镜",
     "brand": "AMIRO觅光",
     "date": "2026-08-01",
@@ -68,20 +69,30 @@
     "_v4": true
   },
   {
-    "name": "溪木源洗面奶",
-    "brand": "溪木源",
-    "date": "2026-08-10",
-    "note": "Timeline: 8/10 | 公司单 | 返点25%",
+    "name": "雅诗兰黛白金逆龄面霜",
+    "brand": "雅诗兰黛",
+    "date": "2026-08-07",
+    "note": "Timeline: 大纲8/3→初稿8/5→发布8/7 | 公司单 | 返点45%",
     "status": 2,
-    "account": "宝珠",
+    "account": "土豆",
     "_v4": true
+  },
+  {
+    "name": "水下洗护礼盒",
+    "account": "kiki",
+    "brand": "600块",
+    "date": "2026-08-07",
+    "type": "公司单",
+    "rebate": 45,
+    "note": "",
+    "status": 2
   },
   {
     "name": "雅诗兰黛复活水",
     "brand": "雅诗兰黛",
     "date": "2026-07-06",
     "note": "Timeline: 7/6 | 公司单 | 返点45%",
-    "status": 5,
+    "status": 6,
     "account": "土豆",
     "_v4": true
   },
@@ -90,7 +101,7 @@
     "brand": "松下",
     "date": "2026-07-15",
     "note": "Timeline: 7/15 | 公司单 | 返点45%",
-    "status": 5,
+    "status": 6,
     "account": "土豆",
     "_v4": true
   },
@@ -99,7 +110,7 @@
     "brand": "袋鼠妈妈",
     "date": "2026-07-17",
     "note": "Timeline: 7/17 | 公司单 | 返点45%",
-    "status": 5,
+    "status": 6,
     "account": "土豆",
     "_v4": true
   },
@@ -108,7 +119,7 @@
     "brand": "奥妙",
     "date": "2026-07-17",
     "note": "Timeline: 7/17→7/25 | 公司单 | 返点45%",
-    "status": 5,
+    "status": 6,
     "account": "宝珠",
     "_v4": true
   },
@@ -117,16 +128,7 @@
     "brand": "适乐肤",
     "date": "2026-07-22",
     "note": "Timeline: 初稿7/22→发布7/23 | 公司单 | 返点45%",
-    "status": 5,
-    "account": "土豆",
-    "_v4": true
-  },
-  {
-    "name": "雅诗兰黛黑神话面霜",
-    "brand": "雅诗兰黛",
-    "date": "2026-07-23",
-    "note": "Timeline: 初稿7/23→发布7/25 | 公司单 | 返点45%",
-    "status": 5,
+    "status": 6,
     "account": "土豆",
     "_v4": true
   },
@@ -135,7 +137,16 @@
     "brand": "奥妙",
     "date": "2026-07-23",
     "note": "Timeline: 7/23拍摄 | 公司单 | 返点45%",
-    "status": 5,
+    "status": 6,
+    "account": "土豆",
+    "_v4": true
+  },
+  {
+    "name": "雅诗兰黛黑神话面霜",
+    "brand": "雅诗兰黛",
+    "date": "2026-07-23",
+    "note": "Timeline: 初稿7/23→发布7/25 | 公司单 | 返点45%",
+    "status": 6,
     "account": "土豆",
     "_v4": true
   },
@@ -144,16 +155,7 @@
     "brand": "颜芝迷",
     "date": "2026-07-25",
     "note": "Timeline: 7/25 | 公司单 | 返点45%",
-    "status": 5,
-    "account": "宝珠",
-    "_v4": true
-  },
-  {
-    "name": "植物医生石斛精华油",
-    "brand": "植物医生",
-    "date": "2026-07-28",
-    "note": "Timeline: 7/28-8/3 | 公司单 | 返点30%",
-    "status": 5,
+    "status": 6,
     "account": "宝珠",
     "_v4": true
   },
@@ -162,7 +164,16 @@
     "brand": "海蓝之谜",
     "date": "2026-07-28",
     "note": "Timeline: 7/28 | 公司单 | 返点45%",
-    "status": 5,
+    "status": 6,
+    "account": "宝珠",
+    "_v4": true
+  },
+  {
+    "name": "植物医生石斛精华油",
+    "brand": "植物医生",
+    "date": "2026-07-28",
+    "note": "Timeline: 7/28-8/3 | 公司单 | 返点30%",
+    "status": 6,
     "account": "宝珠",
     "_v4": true
   },
@@ -171,7 +182,7 @@
     "brand": "若也",
     "date": "2026-07-29",
     "note": "Timeline: 7/29 | 自己单 | 返点20%",
-    "status": 5,
+    "status": 6,
     "account": "土豆",
     "_v4": true
   },
@@ -180,19 +191,54 @@
     "brand": "薇诺娜",
     "date": "2026-07-30",
     "note": "Timeline: 7/30 | 公司单 | 返点45%",
-    "status": 5,
+    "status": 6,
     "account": "土豆",
     "_v4": true
   },
   {
-    "name": "兰蔻塑颜面霜",
-    "account": "宝珠",
-    "brand": "",
+    "name": "伊菲丹超级面膜",
+    "brand": "伊菲丹",
     "date": "",
-    "type": "自己单",
-    "rebate": 30,
-    "note": "",
-    "status": 5
+    "note": "已完成 | 公司单 | 返点45%",
+    "status": 6,
+    "account": "土豆",
+    "_v4": true
+  },
+  {
+    "name": "赫莲娜（黑绷带+绿宝瓶）",
+    "brand": "赫莲娜",
+    "date": "",
+    "note": "已完成 | 公司单 | 返点45%",
+    "status": 6,
+    "account": "土豆",
+    "_v4": true
+  },
+  {
+    "name": "舒芙蕾慕斯",
+    "brand": "舒芙蕾",
+    "date": "",
+    "note": "已完成 | 公司单 | 返点45%",
+    "status": 6,
+    "account": "宝珠",
+    "_v4": true
+  },
+  {
+    "name": "Valcena抗糖前体胶囊",
+    "brand": "Valcena",
+    "date": "",
+    "note": "已完成 | 公司单 | 返点45%",
+    "status": 6,
+    "account": "宝珠",
+    "_v4": true
+  },
+  {
+    "name": "兰蔻菁纯",
+    "brand": "兰蔻",
+    "date": "",
+    "note": "Timeline: 7-8月 | 公司单 | 返点45%",
+    "status": 6,
+    "account": "宝珠",
+    "_v4": true
   },
   {
     "name": "小棕瓶七夕礼盒",
@@ -202,51 +248,16 @@
     "type": "公司单",
     "rebate": 45,
     "note": "",
-    "status": 5
+    "status": 6
   },
   {
-    "name": "兰蔻菁纯",
-    "brand": "兰蔻",
-    "date": "",
-    "note": "Timeline: 7-8月 | 公司单 | 返点45%",
-    "status": 5,
+    "name": "兰蔻塑颜面霜",
     "account": "宝珠",
-    "_v4": true
-  },
-  {
-    "name": "Valcena抗糖前体胶囊",
-    "brand": "Valcena",
+    "brand": "",
     "date": "",
-    "note": "已完成 | 公司单 | 返点45%",
-    "status": 5,
-    "account": "宝珠",
-    "_v4": true
-  },
-  {
-    "name": "舒芙蕾慕斯",
-    "brand": "舒芙蕾",
-    "date": "",
-    "note": "已完成 | 公司单 | 返点45%",
-    "status": 5,
-    "account": "宝珠",
-    "_v4": true
-  },
-  {
-    "name": "赫莲娜（黑绷带+绿宝瓶）",
-    "brand": "赫莲娜",
-    "date": "",
-    "note": "已完成 | 公司单 | 返点45%",
-    "status": 5,
-    "account": "土豆",
-    "_v4": true
-  },
-  {
-    "name": "伊菲丹超级面膜",
-    "brand": "伊菲丹",
-    "date": "",
-    "note": "已完成 | 公司单 | 返点45%",
-    "status": 5,
-    "account": "土豆",
-    "_v4": true
+    "type": "自己单",
+    "rebate": 30,
+    "note": "",
+    "status": 6
   }
 ]
