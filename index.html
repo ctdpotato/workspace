@@ -32,7 +32,7 @@
 body{
   font-family:-apple-system,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
   background:var(--bg);color:var(--text);
-  max-width:420px;margin:0 auto;min-height:100vh;
+  max-width:768px;margin:0 auto;min-height:100vh;
   padding-bottom:70px;overflow-x:hidden;
 }
 /* Top Nav */
@@ -45,7 +45,7 @@ body{
 /* Bottom Tab */
 .tab-bar{
   position:fixed;bottom:0;left:50%;transform:translateX(-50%);
-  width:100%;max-width:420px;background:var(--card);
+  width:100%;max-width:768px;background:var(--card);
   border-top:1px solid var(--border);display:flex;z-index:100;
   padding:6px 0 env(safe-area-inset-bottom,8px);
 }
@@ -146,7 +146,7 @@ body{
 }
 .modal-overlay.show{display:flex;align-items:flex-end;justify-content:center;opacity:1}
 .modal-sheet{
-  background:var(--bg);width:100%;max-width:420px;
+  background:var(--bg);width:100%;max-width:768px;
   border-radius:20px 20px 0 0;padding:20px 16px 30px;
   max-height:85vh;overflow-y:auto;
   transform:translateY(100%);transition:transform .3s ease;
