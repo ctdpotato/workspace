@@ -204,68 +204,30 @@ textarea.input-field{resize:vertical;min-height:80px}
 .status-2{background:var(--orange-light);color:var(--orange)}
 .status-3{background:#F3E8FF;color:#7C3AED}
 .status-4{background:#E0F2FE;color:#0284C7}
-.status-5{background:var(--green-light);color:var(--green)}
-.status-6{background:var(--green-light);color:var(--green)}
-/* Calendar */
-.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
-.cal-header{font-size:11px;color:var(--text3);padding:4px 0;font-weight:600}
-.cal-day{
-  font-size:13px;padding:6px 2px;border-radius:8px;cursor:pointer;
-  min-height:36px;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;transition:all .2s;position:relative;
-}
-.cal-day.empty{cursor:default}
-.cal-day.today{border:2px solid var(--green)}
-.cal-day.checked{background:var(--green-light)}
-.cal-day .check-mark{font-size:10px;color:var(--green);font-weight:700}
-.cal-day .exercise-icon{font-size:8px;color:var(--text3)}
-.cal-stats{font-size:13px;color:var(--text2);margin-top:10px;text-align:center}
-/* Meal section */
-.meal-section{margin-bottom:12px}
-.meal-label{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px;display:flex;align-items:center;gap:4px}
-.meal-item{
-  display:flex;align-items:center;padding:8px 10px;
-  background:var(--card);border-radius:8px;margin-bottom:4px;
-  gap:6px;font-size:13px;
-}
-.meal-item-text{flex:1}
-/* Tab sections */
-.section-title{font-size:15px;font-weight:700;margin:16px 0 10px;display:flex;align-items:center;gap:6px}
-/* Placeholder */
-.placeholder{text-align:center;padding:30px;color:var(--text3);font-size:14px}
-/* Scrollbar */
-::-webkit-scrollbar{width:0;height:0}
-/* Life tab full-width card */
-.life-full{grid-template-columns:1fr}
+.status-5{background:var(--green-light);color:var(-/* Order Calendar */
+.order-calendar{margin-bottom:16px}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+.cal-nav-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--card);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .2s;flex-shrink:0;padding:0}
+.cal-nav-btn:active{background:var(--green-light);border-color:var(--green)}
+.cal-month-title{font-size:15px;font-weight:700;color:var(--text)}
+.cal-weekday-row{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;margin-bottom:4px}
+.cal-weekday-row span{font-size:11px;color:var(--text3);font-weight:600;padding:4px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-cell{min-height:60px;padding:4px;border-radius:6px;background:var(--card);cursor:pointer;border:1.5px solid transparent;transition:all .2s;display:flex;flex-direction:column;position:relative}
+.cal-cell:active{background:var(--bg)}
+.cal-cell.empty{background:transparent;cursor:default;border-color:transparent}
+.cal-cell.today{border-color:var(--green)}
+.cal-cell.has-orders{border-color:var(--border)}
+.cal-date{font-size:12px;font-weight:600;color:var(--text2);line-height:1}
+.cal-cell.today .cal-date{color:var(--green);font-weight:700}
+.cal-order-list{margin-top:3px;flex:1;display:flex;flex-direction:column;gap:2px;overflow:hidden}
+.cal-order-item{font-size:9px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:2px;line-height:1.3}
+.order-dot{width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0}
+.cal-summary{display:flex;justify-content:space-around;padding:12px 0 4px;margin-top:8px;border-top:1px solid var(--border)}
+.cal-summary-item{text-align:center}
+.cal-summary-num{font-size:18px;font-weight:700;color:var(--text)}
+.cal-summary-label{font-size:10px;color:var(--text3);margin-top:2px}
 
-/* === WEEKLY EXERCISE MODULE === */
-.weekly-exercise{margin-bottom:16px}
-.we-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.we-nav{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--card);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .2s;flex-shrink:0;min-height:32px;padding:0}
-.we-nav:active{background:var(--green-light);border-color:var(--green)}
-.we-week-label{font-size:13px;font-weight:600;color:var(--text)}
-.we-today-badge{font-size:10px;color:var(--green);font-weight:600;margin-left:4px}
-.we-stats{font-size:12px;color:var(--text3);text-align:center;margin-bottom:14px;padding:6px 10px;background:var(--green-light);border-radius:8px}
-.we-day-row{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;margin-bottom:6px;background:var(--card);border:1.5px solid var(--border);transition:all .25s}
-.we-day-row.is-today{border-color:var(--green);box-shadow:0 2px 10px rgba(76,175,80,0.12);background:var(--green-light);border-left:4px solid var(--green)}
-.we-day-row.is-done{background:var(--green-light);border-color:rgba(76,175,80,0.3)}
-.we-day-label{min-width:52px;flex-shrink:0}
-.we-day-name{font-size:14px;font-weight:700;color:var(--text);display:block;line-height:1.2}
-.we-day-date{font-size:10px;color:var(--text3);display:block}
-.we-day-row.is-today .we-day-name{color:var(--green)}
-.we-today-tag{display:inline-block;font-size:9px;font-weight:700;color:#fff;background:var(--green);border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle;line-height:1.4}
-.we-tags-wrap{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.we-tag{padding:6px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);font-size:12px;cursor:pointer;transition:all .2s;color:var(--text2);touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;white-space:nowrap}
-.we-tag:active{transform:scale(0.93)}
-.we-tag.active{border-color:var(--green);background:var(--green-light);color:var(--green);font-weight:600}
-.we-tag.is-rest.active{border-color:#FF9800;background:#FFF3E0;color:#E65100}
-
-.we-check-btn{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0;position:relative;padding:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
-.we-check-btn:active{transform:scale(0.9)}
-.we-check-btn.checked{border-color:var(--green);background:var(--green);animation:checkBounce .4s ease}
-.we-check-btn.checked::after{content:'✓';color:#fff;font-size:18px;font-weight:700}
-.we-check-btn:not(.checked)::after{content:'';display:block;width:10px;height:10px;border-radius:50%;background:var(--border);opacity:0.4}
-@keyframes checkBounce{0%{transform:scale(0.8)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
 
 /* Topics Plan */
 .topics-header{margin-bottom:12px}
@@ -409,21 +371,19 @@ textarea.input-field{resize:vertical;min-height:80px}
 
 <!-- Page 3: Life -->
 <div class="page" id="page-life">
-  <div class="card weekly-exercise">
-    <div class="we-header">
-      <button class="we-nav" onclick="changeWeek(-1)">◀</button>
-      <div style="text-align:center">
-        <span class="we-week-label" id="weWeekLabel"></span>
-        <span class="we-today-badge" id="weTodayBadge"></span>
-      </div>
-      <button class="we-nav" onclick="changeWeek(1)">▶</button>
+  <div class="card order-calendar">
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="changeMonth(-1)">◀</button>
+      <span class="cal-month-title" id="calMonthTitle"></span>
+      <button class="cal-nav-btn" onclick="changeMonth(1)">▶</button>
     </div>
-    <div class="we-stats" id="weStats"></div>
-    <div id="weDayList"></div>
+    <div class="cal-weekday-row">
+      <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-summary" id="calSummary"></div>
   </div>
 </div>
-
-
 
 <!-- Bottom Tab Bar -->
 <div class="tab-bar">
@@ -434,7 +394,7 @@ textarea.input-field{resize:vertical;min-height:80px}
     <span class="tab-icon">🎨</span>创作
   </button>
   <button class="tab-item" onclick="switchTab(2)">
-    <span class="tab-icon">🏃</span>运动
+    <span class="tab-icon">📅</span>商单日历
   </button>
 </div>
 
@@ -483,8 +443,6 @@ function switchTab(idx){
 // ======================== DAILY PLAN ========================
 function getTasks(){
   const dow=new Date().getDay();// 0=Sun
-  const isCore=[1,3,6].includes(dow);// Mon,Wed,Sat
-  const exerciseSub=isCore?'核心跟练+体态训练+3000步大步走':'骑车30分钟';
   // 用户自定义必完成事件
   const mustDoKey='mustDo';
   const mustDoItems=LS.get(mustDoKey,[]);
@@ -525,7 +483,6 @@ function getTasks(){
   // === 🏠 生活日常 ===
   tasks.push({group:'🏠 生活日常',emoji:'☀️',title:'起床 + 喝温水',time:'7:30',cat:'life',taskKey:'life-0'});
   tasks.push({emoji:'🥣',title:'早餐',time:'8:00',sub:'鸡蛋2个+蛋白1个+牛油果半个+蓝莓100g+核桃2个',cat:'life',taskKey:'life-1'});
-  tasks.push({emoji:'💪',title:'运动时间',time:'9:00',sub:exerciseSub,cat:'life',taskKey:'life-2'});
   tasks.push({emoji:'🍳',title:'准备午餐',time:'11:30',sub:'杂粮饭/土豆150g + 鱼肉/鸡肉150g + 炒菜300g',cat:'life',taskKey:'life-3'});
   tasks.push({emoji:'🥗',title:'准备晚餐',time:'18:00',sub:'杂粮饭/土豆150g + 牛肉/瘦肉150g + 炒菜250g + 姜蒜番茄',cat:'life',taskKey:'life-4'});
   tasks.push({emoji:'🧴',title:'护肤洗漱',time:'22:30',cat:'life',taskKey:'life-5'});
@@ -1800,138 +1757,141 @@ function renderMustDoModal(title,body){
   `;
 }
 
-// ======================== LIFE TAB ========================
-let _weekOffset=0;
-function getMonday(d){d=new Date(d);const day=d.getDay()||7;d.setDate(d.getDate()-(day-1));d.setHours(0,0,0,0);return d}
-function dateStr(d){return d.toISOString().slice(0,10)}
-function changeWeek(offset){_weekOffset+=offset;renderWeeklyExercise()}
+// ======================== ORDER CALENDAR ========================
+let _calYear, _calMonth;
+(function(){
+  const now = new Date();
+  _calYear = now.getFullYear();
+  _calMonth = now.getMonth();
+})();
 
-function renderWeeklyExercise(){
-  const now=new Date();
-  const monday=getMonday(now);
-  monday.setDate(monday.getDate()+_weekOffset*7);
-  const days=[];
-  for(let i=0;i<7;i++){const d=new Date(monday);d.setDate(monday.getDate()+i);days.push(d)}
-  const weekKey=days[0].toISOString().slice(0,10);
-  const startM=days[0].getMonth()+1,startD=days[0].getDate();
-  const endM=days[6].getMonth()+1,endD=days[6].getDate();
-  const todayStr=today();
-  const isCurrentWeek=_weekOffset===0;
-  $('weWeekLabel').textContent=`${startM}/${startD} - ${endM}/${endD}`;
-  $('weTodayBadge').textContent=isCurrentWeek?'(本周)':'';
-  // Load data
-  const weData=LS.get('weeklyExercise',{});
-  const weekData=(weData.weeks||{})[weekKey]||{};
-  const doneData=(weData.done||{})[weekKey]||{};
-  // Options
-  const opts=[
-    {id:'骑车',emoji:'🚴'},
-    {id:'游泳',emoji:'🏊'},
-    {id:'健身',emoji:'💪'},
-    {id:'跑酷',emoji:'🏃‍♂️'},
-    {id:'休息',emoji:'😴'}
-  ];
-  // Stats
-  const doneCount=days.filter(d=>doneData[dateStr(d)]).length;
-  const exerciseCount=days.filter(d=>{const arr=getExerciseArr(weekData[dateStr(d)]);return arr.some(v=>v!=='休息')}).length;
-  $('weStats').textContent=`运动 ${exerciseCount} 天 · 已完成 ${doneCount}/7 天`;
-  // Day rows
-  let html='';
-  const dayNames=['周一','周二','周三','周四','周五','周六','周日'];
-  days.forEach((d,i)=>{
-    const ds=dateStr(d);
-    const selectedArr=getExerciseArr(weekData[ds]);
-    const isDone=doneData[ds];
-    const isToday=ds===todayStr;
-    let rowCls='we-day-row';
-    if(isToday)rowCls+=' is-today';
-    if(isDone)rowCls+=' is-done';
-    // Build tags
-    let tagsHtml=opts.map(o=>{
-      const isActive=selectedArr.includes(o.id)?'active':'';
-      const isRest=o.id==='休息'?' is-rest':'';
-      return `<button class="we-tag${isActive}${isRest}" data-action="toggle-tag" data-date="${ds}" data-tag="${o.id}">${o.emoji} ${o.id}</button>`;
-    }).join('');
-    html+=`<div class="${rowCls}">
-      <div class="we-day-label">
-        <span class="we-day-name">${dayNames[i]}${isToday?'<span class="we-today-tag">今天</span>':''}</span>
-        <span class="we-day-date">${d.getMonth()+1}/${d.getDate()}</span>
-      </div>
-      <div class="we-tags-wrap">
-        ${tagsHtml}
-      </div>
-      <button class="we-check-btn${isDone?' checked':''}" data-action="complete" data-date="${ds}"></button>
-    </div>`;
-  });
-  $('weDayList').innerHTML=html;
-}
+const STATUS_NAMES = ['待写大纲','大纲已完成','拍摄中','初稿中','初稿已提交','素材','已完成'];
+const STATUS_COLORS = ['#bbb','#4a90d9','#f5a623','#9b59b6','#4ecdc4','#E65100','#27ae60'];
 
-// 兼容旧数据：字符串转数组
-function getExerciseArr(val){
-  if(!val)return[];
-  if(Array.isArray(val))return val;
-  return[val];
-}
-function toggleExerciseTag(ds,tag){
-  const parts=ds.split('-').map(Number);
-  const monday=getMonday(new Date(Date.UTC(parts[0],parts[1]-1,parts[2])));
-  const weekKey=monday.toISOString().slice(0,10);
-  const weData=LS.get('weeklyExercise',{});
-  if(!weData.weeks)weData.weeks={};
-  if(!weData.weeks[weekKey])weData.weeks[weekKey]={};
-  let arr=getExerciseArr(weData.weeks[weekKey][ds]);
-  if(tag==='休息'){
-    // 选休息→清空其他
-    arr=arr.includes('休息')?[]:['休息'];
-  }else{
-    if(arr.includes(tag)){
-      arr=arr.filter(v=>v!==tag);
-    }else{
-      arr.push(tag);
-      // 选运动→去掉休息
-      arr=arr.filter(v=>v!=='休息');
+function renderCalendar(year, month) {
+  _calYear = year;
+  _calMonth = month;
+  const title = $('calMonthTitle');
+  if(title) title.textContent = year + '年' + (month+1) + '月';
+
+  const grid = $('calGrid');
+  if(!grid) return;
+
+  const orders = LS.get('orders', []);
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month+1, 0);
+  const daysInMonth = lastDay.getDate();
+
+  // Monday=0 offset
+  let startDow = firstDay.getDay() - 1;
+  if(startDow < 0) startDow = 6;
+
+  const today = new Date();
+  const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+
+  // Build orders map for this month
+  const orderMap = {};
+  orders.forEach(o => {
+    if(!o.date) return;
+    const parts = o.date.split('-');
+    if(parts.length === 3 && parseInt(parts[0]) === year && parseInt(parts[1]) === month+1) {
+      const day = parseInt(parts[2]);
+      if(!orderMap[day]) orderMap[day] = [];
+      orderMap[day].push(o);
     }
-  }
-  if(arr.length>0){
-    weData.weeks[weekKey][ds]=arr;
-  }else{
-    delete weData.weeks[weekKey][ds];
-  }
-  LS.set('weeklyExercise',weData);
-  renderWeeklyExercise();
-}
+  });
 
-function toggleComplete(ds){
-  const parts=ds.split('-').map(Number);
-  const monday=getMonday(new Date(Date.UTC(parts[0],parts[1]-1,parts[2])));
-  const weekKey=monday.toISOString().slice(0,10);
-  const weData=LS.get('weeklyExercise',{});
-  if(!weData.done)weData.done={};
-  if(!weData.done[weekKey])weData.done[weekKey]={};
-  weData.done[weekKey][ds]=!weData.done[weekKey][ds];
-  LS.set('weeklyExercise',weData);
-  renderWeeklyExercise();
-}
+  let html = '';
+  // Empty cells before first day
+  for(let i = 0; i < startDow; i++) {
+    html += '<div class="cal-cell empty"></div>';
+  }
+  // Day cells
+  for(let d = 1; d <= daysInMonth; d++) {
+    const dateStr = year + '-' + String(month+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const isToday = dateStr === todayStr;
+    const dayOrders = orderMap[d] || [];
+    const hasOrders = dayOrders.length > 0;
+    let cls = 'cal-cell';
+    if(isToday) cls += ' today';
+    if(hasOrders) cls += ' has-orders';
 
-let _weListInited=false;
-function renderLife(){
-  renderWeeklyExercise();
-  if(!_weListInited){
-    _weListInited=true;
-    const list=$('weDayList');
-    list.addEventListener('click',function(e){
-      const btn=e.target.closest('[data-action]');
-      if(!btn)return;
-      const action=btn.getAttribute('data-action');
-      const ds=btn.dataset.date;
-      if(action==='complete'&&ds){
-        toggleComplete(ds);
-      }else if(action==='toggle-tag'&&ds){
-        const tag=btn.getAttribute('data-tag');
-        if(tag)toggleExerciseTag(ds,tag);
+    html += '<div class="' + cls + '" onclick="showOrderDetail(\'' + dateStr + '\')">';
+    html += '<span class="cal-date">' + d + '</span>';
+    if(hasOrders) {
+      html += '<div class="cal-order-list">';
+      const show = dayOrders.slice(0, 3);
+      show.forEach(o => {
+        const color = STATUS_COLORS[o.status] || '#bbb';
+        const brandShort = (o.brand || o.name || '').substring(0, 4);
+        html += '<div class="cal-order-item"><span class="order-dot" style="background:' + color + '"></span>' + brandShort + '</div>';
+      });
+      if(dayOrders.length > 3) {
+        html += '<div class="cal-order-item" style="color:var(--text3)">+' + (dayOrders.length - 3) + '</div>';
       }
-    });
+      html += '</div>';
+    }
+    html += '</div>';
   }
+  grid.innerHTML = html;
+
+  // Summary
+  const monthOrders = [];
+  Object.values(orderMap).forEach(arr => monthOrders.push(...arr));
+  const pending = monthOrders.filter(o => o.status < 6).length;
+  const done = monthOrders.filter(o => o.status === 6).length;
+  const summary = $('calSummary');
+  if(summary) {
+    summary.innerHTML = '<div class="cal-summary-item"><div class="cal-summary-num" style="color:var(--blue)">' + pending + '</div><div class="cal-summary-label">待完成</div></div>' +
+      '<div class="cal-summary-item"><div class="cal-summary-num" style="color:var(--green)">' + done + '</div><div class="cal-summary-label">已完成</div></div>' +
+      '<div class="cal-summary-item"><div class="cal-summary-num">' + monthOrders.length + '</div><div class="cal-summary-label">本月总计</div></div>';
+  }
+}
+
+function changeMonth(delta) {
+  let m = _calMonth + delta;
+  let y = _calYear;
+  if(m < 0) { m = 11; y--; }
+  if(m > 11) { m = 0; y++; }
+  renderCalendar(y, m);
+}
+
+function showOrderDetail(dateStr) {
+  const orders = LS.get('orders', []);
+  const dayOrders = orders.filter(o => o.date === dateStr);
+  if(dayOrders.length === 0) return;
+
+  const overlay = $('modalOverlay');
+  const title = $('modalTitleText');
+  const body = $('modalBody');
+
+  title.textContent = '📅 ' + dateStr + ' 商单';
+
+  let html = '<div style="display:flex;flex-direction:column;gap:10px">';
+  dayOrders.forEach(o => {
+    const sIdx = o.status || 0;
+    const color = STATUS_COLORS[sIdx] || '#bbb';
+    const sName = STATUS_NAMES[sIdx] || '未知';
+    html += '<div style="padding:12px;border-radius:10px;background:var(--bg);border:1px solid var(--border)">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">';
+    html += '<span style="font-size:14px;font-weight:700;color:var(--text)">' + (o.brand || '未填品牌') + ' · ' + (o.name || '未填产品') + '</span>';
+    html += '<span style="font-size:11px;padding:2px 8px;border-radius:10px;color:#fff;background:' + color + ';white-space:nowrap">' + sName + '</span>';
+    html += '</div>';
+    html += '<div style="display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--text2)">';
+    html += '<span>📱 ' + (o.account || '未指定') + '</span>';
+    if(o.note) html += '<span>📝 ' + o.note + '</span>';
+    html += '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  body.innerHTML = html;
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => overlay.classList.add('show'));
+}
+
+function renderLife() {
+  renderCalendar(_calYear, _calMonth);
 }
 
 // ======================== TOPICS PLAN ========================
