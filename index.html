@@ -1895,22 +1895,18 @@ function renderCalendar(year, month) {
   const pending = monthOrders.filter(o => o.status < 6).length;
   const done = monthOrders.filter(o => o.status === 6).length;
   
-  // 计算本月收入（按账号区分手续费）
+  // 计算本月收入（按账号统计）
   let totalRevenue = 0;
-  let companyRevenue = 0;
-  let personalRevenue = 0;
+  let tudouRevenue = 0;
+  let baozhuRevenue = 0;
   monthOrders.forEach(o => {
     const price = parseFloat(o.price);
     if(!isNaN(price)) {
-      if(o.type === '公司单') {
-        // 土豆扣10%手续费，宝珠不扣
-        let actual = price;
-        if(o.account === '土豆') actual = price * 0.9;
-        companyRevenue += actual;
-        totalRevenue += actual;
-      } else if(o.type === '自己单') {
-        personalRevenue += price;
-        totalRevenue += price;
+      totalRevenue += price;
+      if(o.account === '土豆') {
+        tudouRevenue += price;
+      } else if(o.account === '宝珠') {
+        baozhuRevenue += price;
       }
     }
   });
