@@ -1894,11 +1894,34 @@ function renderCalendar(year, month) {
   Object.values(orderMap).forEach(arr => monthOrders.push(...arr));
   const pending = monthOrders.filter(o => o.status < 6).length;
   const done = monthOrders.filter(o => o.status === 6).length;
+  
+  // 计算本月收入
+  let totalRevenue = 0;
+  let companyRevenue = 0;
+  let personalRevenue = 0;
+  monthOrders.forEach(o => {
+    const price = parseFloat(o.price);
+    const rebate = parseInt(o.rebate);
+    if(o.type === '公司单' && !isNaN(price) && !isNaN(rebate)) {
+      const rev = price * (rebate / 100);
+      companyRevenue += rev;
+      totalRevenue += rev;
+    } else if(o.type === '自己单' && !isNaN(price)) {
+      personalRevenue += price;
+      totalRevenue += price;
+    }
+  });
+  
   const summary = $('calSummary');
   if(summary) {
-    summary.innerHTML = '<div class="cal-summary-item"><div class="cal-summary-num" style="color:var(--blue)">' + pending + '</div><div class="cal-summary-label">待完成</div></div>' +
+    let html = '<div class="cal-summary-item"><div class="cal-summary-num" style="color:var(--blue)">' + pending + '</div><div class="cal-summary-label">待完成</div></div>' +
       '<div class="cal-summary-item"><div class="cal-summary-num" style="color:var(--green)">' + done + '</div><div class="cal-summary-label">已完成</div></div>' +
-      '<div class="cal-summary-item"><div class="cal-summary-num">' + monthOrders.length + '</div><div class="cal-summary-label">本月总计</div></div>';
+      '<div class="cal-summary-item"><div class="cal-summary-num">' + monthOrders.length + '</div><div class="cal-summary-label">本月总计</div></div>' +
+      '<div style="width:100%;height:1px;background:var(--border);margin:8px 0"></div>' +
+      '<div class="cal-summary-item"><div class="cal-summary-num" style="color:#f5a623;font-size:16px">¥' + totalRevenue.toFixed(0) + '</div><div class="cal-summary-label">本月收入合计</div></div>' +
+      '<div class="cal-summary-item"><div class="cal-summary-num" style="color:#4a90d9;font-size:13px">¥' + companyRevenue.toFixed(0) + '</div><div class="cal-summary-label">公司单返点</div></div>' +
+      '<div class="cal-summary-item"><div class="cal-summary-num" style="color:#27ae60;font-size:13px">¥' + personalRevenue.toFixed(0) + '</div><div class="cal-summary-label">自己单全款</div></div>';
+    summary.innerHTML = html;
   }
 }
 
