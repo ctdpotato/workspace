@@ -1490,6 +1490,9 @@ function toggleAddOrderForm(){
   }else{
     form.style.display='none';
     btn.textContent='+ 添加商单';
+    _editIdx = -1;
+    const saveBtn = form.querySelector('button');
+    if(saveBtn) saveBtn.textContent = '添加';
   }
 }
 
@@ -1498,23 +1501,74 @@ function addOrder(){
   if(!name){alert('请填写商品名称');return}
   const orders=LS.get('orders',[]);
   const rebateVal=$('newOrderRebate').value.trim();
-  orders.push({
-    name:name,
-    account:$('newOrderAccount').value,
-    brand:$('newOrderBrand').value.trim(),
-    date:$('newOrderDate').value,
-    price:$('newOrderPrice').value.trim(),
-    type:$('newOrderType').value,
-    rebate:rebateVal?parseInt(rebateVal):null,
-    note:$('newOrderNote').value.trim(),
-    status:0
-  });
+  
+  if(_editIdx >= 0 && _editIdx < orders.length){
+    // Edit existing order - keep status, update other fields
+    orders[_editIdx].name = name;
+    orders[_editIdx].account = $('newOrderAccount').value;
+    orders[_editIdx].brand = $('newOrderBrand').value.trim();
+    orders[_editIdx].date = $('newOrderDate').value;
+    orders[_editIdx].price = $('newOrderPrice').value.trim();
+    orders[_editIdx].type = $('newOrderType').value;
+    orders[_editIdx].rebate = rebateVal ? parseInt(rebateVal) : null;
+    orders[_editIdx].note = $('newOrderNote').value.trim();
+    _editIdx = -1;
+  } else {
+    // Add new order
+    orders.push({
+      name:name,
+      account:$('newOrderAccount').value,
+      brand:$('newOrderBrand').value.trim(),
+      date:$('newOrderDate').value,
+      price:$('newOrderPrice').value.trim(),
+      type:$('newOrderType').value,
+      rebate:rebateVal?parseInt(rebateVal):null,
+      note:$('newOrderNote').value.trim(),
+      status:0
+    });
+  }
   LS.set('orders',orders);
   localStorage.setItem('ordersLocalChanged','1');
   $('newOrderName').value='';$('newOrderBrand').value='';$('newOrderDate').value='';$('newOrderPrice').value='';$('newOrderRebate').value='';$('newOrderNote').value='';
+  // Reset button text
+  const saveBtn = $('addOrderForm').querySelector('button');
+  if(saveBtn) saveBtn.textContent = '添加';
   toggleAddOrderForm();
   renderOrderList();
 }
+
+let _editIdx = -1;
+
+function editOrder(idx){
+  const orders = LS.get('orders',[]);
+  const o = orders[idx];
+  if(!o) return;
+  _editIdx = idx;
+  
+  // Show the form
+  const form = $('addOrderForm');
+  const btn = $('addOrderToggleBtn');
+  form.style.display = 'block';
+  btn.textContent = '收起';
+  
+  // Fill in existing data
+  $('newOrderName').value = o.name || '';
+  $('newOrderAccount').value = o.account || '土豆';
+  $('newOrderBrand').value = o.brand || '';
+  $('newOrderDate').value = o.date || '';
+  $('newOrderPrice').value = o.price || '';
+  $('newOrderType').value = o.type || '公司单';
+  $('newOrderRebate').value = o.rebate != null ? o.rebate : '';
+  $('newOrderNote').value = o.note || '';
+  
+  // Change the button text
+  const saveBtn = form.querySelector('button[onclick="addOrder()"]');
+  if(saveBtn) saveBtn.textContent = '保存修改';
+  
+  // Scroll to form
+  form.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
 
 function renderOrderList(){
   const orders=LS.get('orders',[]);
@@ -1540,7 +1594,7 @@ function renderOrderList(){
         <div class="list-item-sub">${o.brand?esc(o.brand)+' · ':''}${o.date||'无截止日'}${o.price?' · ¥'+esc(o.price):''}${o.type?' · '+esc(o.type):''}${o.rebate!=null?' · '+o.rebate+'%返点':''}${o.note?' · '+esc(o.note):''}</div>
       </div>
       <button class="status-badge status-${o.status}" onclick="cycleOrderStatus(${i})">${statusNames[o.status]}</button>
-      <button class="delete-btn" onclick="delOrder(${i})">×</button>
+      <button class="edit-btn" onclick="editOrder(${i})" style="font-size:13px;padding:0 6px;border:none;background:none;cursor:pointer;opacity:0.6;margin-right:2px">✏️</button><button class="delete-btn" onclick="delOrder(${i})">×</button>
     </div>`;
   });
   if(!orders.length)html='<div class="placeholder">暂无商单</div>';
