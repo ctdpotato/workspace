@@ -1,47 +1,15 @@
 [
   {
-    "name": "sk2",
-    "account": "宝珠",
-    "brand": "",
-    "date": "2026-11-01",
-    "price": "1960（送品）",
-    "type": "公司单",
-    "rebate": 30,
-    "note": "",
-    "status": 0
-  },
-  {
     "name": "松下吹风机",
     "account": "土豆",
     "brand": "",
-    "date": "",
+    "date": "2026-10-22",
     "price": "",
     "type": "自己单",
     "rebate": 30,
     "note": "",
-    "status": 0
-  },
-  {
-    "name": "敷尔佳pdrn",
-    "account": "宝珠",
-    "brand": "",
-    "date": "",
-    "price": "",
-    "type": "公司单",
-    "rebate": 30,
-    "note": "",
-    "status": 0
-  },
-  {
-    "name": "松下冲牙器",
-    "account": "宝珠",
-    "brand": "",
-    "date": "",
-    "price": "",
-    "type": "公司单",
-    "rebate": 30,
-    "note": "",
-    "status": 0
+    "status": 0,
+    "_v4": true
   },
   {
     "name": "力士沐浴露",
@@ -52,7 +20,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 0
+    "status": 0,
+    "_v4": true
   },
   {
     "name": "力士洗发水",
@@ -63,51 +32,77 @@
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 0
+    "status": 0,
+    "_v4": true
+  },
+  {
+    "name": "回春油",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-10-20",
+    "price": "2100",
+    "type": "自己单",
+    "rebate": 20,
+    "note": "",
+    "status": 1
+  },
+  {
+    "name": "妇炎洁卫生巾",
+    "account": "宝珠",
+    "brand": "",
+    "date": "2026-10-18",
+    "price": "1820",
+    "type": "自己单",
+    "rebate": 35,
+    "note": "",
+    "status": 2
+  },
+  {
+    "name": "敷尔佳",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-10-19",
+    "price": "1600",
+    "type": "公司单",
+    "rebate": null,
+    "note": "",
+    "status": 2
   },
   {
     "name": "欧莱雅松露",
     "account": "宝珠",
     "brand": "",
-    "date": "",
-    "price": "",
-    "type": "公司单",
+    "date": "2026-10-21",
+    "price": "2100（送品）",
+    "type": "自己单",
     "rebate": 25,
     "note": "",
-    "status": 0
-  },
-  {
-    "name": "屈臣氏棉片",
-    "account": "土豆",
-    "brand": "",
-    "date": "",
-    "price": "1830",
-    "type": "自己单",
-    "rebate": 30,
-    "note": "",
-    "status": 0
-  },
-  {
-    "name": "得宝洗脸巾",
-    "account": "宝珠",
-    "brand": "",
-    "date": "",
-    "price": "",
-    "type": "公司单",
-    "rebate": 35,
-    "note": "",
-    "status": 1
+    "status": 2,
+    "_v4": true
   },
   {
     "name": "极萌",
     "account": "土豆",
     "brand": "",
-    "date": "",
+    "date": "2026-10-23",
     "price": "",
     "type": "自己单",
     "rebate": 35,
     "note": "",
-    "status": 3
+    "status": 2,
+    "_v4": true
+  },
+  {
+    "name": "sk2",
+    "account": "宝珠",
+    "brand": "",
+    "date": "2026-11-01",
+    "price": "1960（送品）",
+    "type": "自己单",
+    "rebate": 30,
+    "note": "",
+    "status": 2,
+    "_v4": true
   },
   {
     "name": "雅诗兰黛白金逆龄面霜",
@@ -135,7 +130,56 @@
     "type": "公司单",
     "rebate": 45,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
+  },
+  {
+    "name": "屈臣氏棉片",
+    "account": "土豆",
+    "brand": "",
+    "date": "",
+    "price": "1830",
+    "type": "自己单",
+    "rebate": 30,
+    "note": "",
+    "status": 5,
+    "_v4": true
+  },
+  {
+    "name": "松下冲牙器",
+    "account": "宝珠",
+    "brand": "",
+    "date": "",
+    "price": "",
+    "type": "公司单",
+    "rebate": 30,
+    "note": "",
+    "status": 5,
+    "_v4": true
+  },
+  {
+    "name": "敷尔佳pdrn",
+    "account": "宝珠",
+    "brand": "",
+    "date": "",
+    "price": "",
+    "type": "公司单",
+    "rebate": 30,
+    "note": "",
+    "status": 5,
+    "_v4": true
+  },
+  {
+    "name": "得宝洗脸巾",
+    "account": "宝珠",
+    "brand": "",
+    "date": "",
+    "price": "",
+    "type": "公司单",
+    "rebate": 35,
+    "note": "",
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "巴欧美发",
@@ -146,7 +190,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "雅诗兰黛微雕眼霜",
@@ -157,7 +202,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "自由之丘",
@@ -168,7 +214,8 @@
     "type": "自己单",
     "rebate": 30,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "吕",
@@ -179,7 +226,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "粉水",
@@ -190,7 +238,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "屈臣氏",
@@ -201,7 +250,8 @@
     "type": "自己单",
     "rebate": 30,
     "note": "25",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "金纺",
@@ -212,7 +262,8 @@
     "type": "自己单",
     "rebate": 30,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "立白",
@@ -223,7 +274,8 @@
     "type": "自己单",
     "rebate": 30,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "Tommy Hilfiger",
@@ -234,7 +286,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "小棕瓶精华水",
@@ -245,7 +298,8 @@
     "type": "自己单",
     "rebate": 25,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "OLAY大红瓶",
@@ -256,7 +310,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "9.17号",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "小棕瓶",
@@ -267,7 +322,8 @@
     "type": "公司单",
     "rebate": 30,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "精华",
@@ -278,7 +334,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "妮维雅",
@@ -289,7 +346,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "9.13",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "娇韵诗面霜",
@@ -300,7 +358,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "娇韵诗小瓷瓶",
@@ -311,7 +370,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "燕之屋",
@@ -322,7 +382,8 @@
     "type": "自己单",
     "rebate": 23,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "康夫",
@@ -333,7 +394,8 @@
     "type": "自己单",
     "rebate": 30,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "珀莱雅京东礼盒",
@@ -344,7 +406,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "雅诗兰黛复活水",
@@ -463,7 +526,8 @@
     "type": "自己单",
     "rebate": 20,
     "note": "",
-    "status": 6
+    "status": 6,
+    "_v4": true
   },
   {
     "name": "溪木源洗面奶",
@@ -483,7 +547,8 @@
     "type": "自己单",
     "rebate": 25,
     "note": "",
-    "status": 6
+    "status": 6,
+    "_v4": true
   },
   {
     "name": "娇韵诗礼盒七夕",
@@ -494,7 +559,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 6
+    "status": 6,
+    "_v4": true
   },
   {
     "name": "sudee素玳面膜",
@@ -505,7 +571,8 @@
     "type": "自己单",
     "rebate": null,
     "note": "",
-    "status": 6
+    "status": 6,
+    "_v4": true
   },
   {
     "name": "素带",
@@ -516,7 +583,8 @@
     "type": "自己单",
     "rebate": null,
     "note": "",
-    "status": 6
+    "status": 6,
+    "_v4": true
   },
   {
     "name": "乐程式",
@@ -527,7 +595,8 @@
     "type": "自己单",
     "rebate": 25,
     "note": "",
-    "status": 6
+    "status": 6,
+    "_v4": true
   },
   {
     "name": "伊菲丹超级面膜",
@@ -582,7 +651,8 @@
     "type": "公司单",
     "rebate": 45,
     "note": "",
-    "status": 6
+    "status": 6,
+    "_v4": true
   },
   {
     "name": "兰蔻塑颜面霜",
@@ -592,6 +662,7 @@
     "type": "自己单",
     "rebate": 30,
     "note": "",
-    "status": 6
+    "status": 6,
+    "_v4": true
   }
 ]
