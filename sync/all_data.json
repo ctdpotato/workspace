@@ -1,17 +1,6 @@
 {
   "orders": [
     {
-      "name": "sk2",
-      "account": "宝珠",
-      "brand": "",
-      "date": "",
-      "price": "",
-      "type": "公司单",
-      "rebate": 30,
-      "note": "",
-      "status": 0
-    },
-    {
       "name": "松下吹风机",
       "account": "土豆",
       "brand": "",
@@ -30,28 +19,6 @@
       "price": "",
       "type": "公司单",
       "rebate": null,
-      "note": "",
-      "status": 0
-    },
-    {
-      "name": "敷尔佳pdrn",
-      "account": "宝珠",
-      "brand": "",
-      "date": "",
-      "price": "",
-      "type": "公司单",
-      "rebate": 30,
-      "note": "",
-      "status": 0
-    },
-    {
-      "name": "松下冲牙器",
-      "account": "宝珠",
-      "brand": "",
-      "date": "",
-      "price": "",
-      "type": "公司单",
-      "rebate": 30,
       "note": "",
       "status": 0
     },
@@ -89,15 +56,37 @@
       "status": 0
     },
     {
-      "name": "得宝洗脸巾",
+      "name": "妇炎洁卫生巾",
+      "account": "宝珠",
+      "brand": "",
+      "date": "2026-10-18",
+      "price": "",
+      "type": "自己单",
+      "rebate": null,
+      "note": "",
+      "status": 2
+    },
+    {
+      "name": "sk2",
       "account": "宝珠",
       "brand": "",
       "date": "",
       "price": "",
       "type": "公司单",
-      "rebate": 35,
+      "rebate": null,
       "note": "",
-      "status": 1
+      "status": 2
+    },
+    {
+      "name": "敷尔佳pdrn",
+      "account": "宝珠",
+      "brand": "",
+      "date": "",
+      "price": "",
+      "type": "公司单",
+      "rebate": 30,
+      "note": "",
+      "status": 2
     },
     {
       "name": "极萌",
@@ -109,6 +98,17 @@
       "rebate": 35,
       "note": "",
       "status": 3
+    },
+    {
+      "name": "得宝洗脸巾",
+      "account": "宝珠",
+      "brand": "",
+      "date": "",
+      "price": "",
+      "type": "公司单",
+      "rebate": 35,
+      "note": "",
+      "status": 4
     },
     {
       "name": "雅诗兰黛白金逆龄面霜",
@@ -722,6 +722,9 @@
       "done": []
     },
     "plan_2026-08-23": {
+      "done": []
+    },
+    "plan_2026-10-16": {
       "done": []
     },
     "plan_2026-08-11": {
