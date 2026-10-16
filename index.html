@@ -1895,20 +1895,20 @@ function renderCalendar(year, month) {
   const pending = monthOrders.filter(o => o.status < 6).length;
   const done = monthOrders.filter(o => o.status === 6).length;
   
-  // 计算本月收入
+  // 计算本月收入（价格字段就是到手价）
   let totalRevenue = 0;
   let companyRevenue = 0;
   let personalRevenue = 0;
   monthOrders.forEach(o => {
     const price = parseFloat(o.price);
-    const rebate = parseInt(o.rebate);
-    if(o.type === '公司单' && !isNaN(price) && !isNaN(rebate)) {
-      const rev = price * (rebate / 100);
-      companyRevenue += rev;
-      totalRevenue += rev;
-    } else if(o.type === '自己单' && !isNaN(price)) {
-      personalRevenue += price;
-      totalRevenue += price;
+    if(!isNaN(price)) {
+      if(o.type === '公司单') {
+        companyRevenue += price;
+        totalRevenue += price;
+      } else if(o.type === '自己单') {
+        personalRevenue += price;
+        totalRevenue += price;
+      }
     }
   });
   
