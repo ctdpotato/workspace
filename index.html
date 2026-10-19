@@ -715,14 +715,36 @@ async function pushAllToGitHub(){
   const modules={};
   if(remoteData){
     for(const key of Object.keys(remoteData)){
-      if(isLocalEmpty(key)){
+      if(key==='plans'&&remoteData.plans&&localModules.plans){
+        // 计划数据合并：两个设备各自添加的任务都要保留
+        const merged={};
+        for(const k in remoteData.plans) merged[k]=remoteData.plans[k];
+        for(const k in localModules.plans){
+          if(!merged[k]){
+            merged[k]=localModules.plans[k];
+          }else{
+            // 同一天两边都有数据，取条数多的
+            const remoteLen=Array.isArray(remoteData.plans[k])?remoteData.plans[k].length:0;
+            const localLen=Array.isArray(localModules.plans[k])?localModules.plans[k].length:0;
+            if(localLen>remoteLen) merged[k]=localModules.plans[k];
+          }
+        }
+        modules.plans=merged;
+      }else if(isLocalEmpty(key)){
         modules[key]=remoteData[key];
       }else{
         modules[key]=localModules[key];
       }
     }
     for(const key of Object.keys(localModules)){
-      if(!(key in modules)) modules[key]=localModules[key];
+      if(key==='plans'){
+        if(!modules.plans){
+          modules.plans={};
+          for(const k in localModules.plans) modules.plans[k]=localModules.plans[k];
+        }
+      }else if(!(key in modules)){
+        modules[key]=localModules[key];
+      }
     }
   }else{
     Object.assign(modules,localModules);
