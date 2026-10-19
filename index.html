@@ -732,7 +732,6 @@ async function pushAllToGitHub(){
           if(!mergedPlans[k]){
             mergedPlans[k]=Array.isArray(localPlans[k])?[...localPlans[k]]:localPlans[k];
           }else if(Array.isArray(mergedPlans[k])&&Array.isArray(localPlans[k])){
-            // 同一天两边都有数组，合并去重
             const existingIds=new Set(mergedPlans[k].map(t=>(typeof t==='object'?t.id:t)));
             for(const t of localPlans[k]){
               const tid=typeof t==='object'?t.id:t;
@@ -741,6 +740,23 @@ async function pushAllToGitHub(){
           }
         }
         modules.plans=mergedPlans;
+      }else if(key==='mustDos'){
+        // 必完成事件合并：两边都保留，按text去重
+        const mergedMustDos={};
+        const remoteMD=remoteData.mustDos||{};
+        const localMD=localModules.mustDos||{};
+        for(const k in remoteMD) mergedMustDos[k]=remoteMD[k];
+        for(const k in localMD){
+          if(!mergedMustDos[k]){
+            mergedMustDos[k]=localMD[k];
+          }else if(Array.isArray(mergedMustDos[k])&&Array.isArray(localMD[k])){
+            const existingTexts=new Set(mergedMustDos[k].map(t=>t.text||''));
+            for(const t of localMD[k]){
+              if(!existingTexts.has(t.text||'')) mergedMustDos[k].push(t);
+            }
+          }
+        }
+        modules.mustDos=mergedMustDos;
       }else if(isLocalEmpty(key)){
         modules[key]=remoteData[key];
       }else{
@@ -752,6 +768,11 @@ async function pushAllToGitHub(){
         if(!modules.plans){
           modules.plans={};
           for(const k in localModules.plans) modules.plans[k]=localModules.plans[k];
+        }
+      }else if(key==='mustDos'){
+        if(!modules.mustDos){
+          modules.mustDos={};
+          for(const k in localModules.mustDos) modules.mustDos[k]=localModules.mustDos[k];
         }
       }else if(!(key in modules)){
         modules[key]=localModules[key];
