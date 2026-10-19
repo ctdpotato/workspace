@@ -827,12 +827,12 @@ function syncAllToAgent(){
     localStorage.setItem('allLastSync',ts);
     const info=$('syncAllInfo');
     if(info)info.textContent='上次同步: '+ts;
-    btn.textContent='\u2705 已同步';
+    btn.textContent='✅ 已同步';
     btn.style.background='#e8f5e9';
     btn.style.color='#2e7d32';
     btn.style.borderColor='#4caf50';
     setTimeout(()=>{
-      btn.textContent='\U0001f504 全量同步';
+      btn.textContent='🔄 全量同步';
       btn.disabled=false;
       btn.style.opacity='1';
       btn.style.background='';
@@ -840,11 +840,11 @@ function syncAllToAgent(){
       btn.style.borderColor='';
     },2000);
   }).catch(err=>{
-    btn.textContent='\u274c 同步失败';
+    btn.textContent='❌ 同步失败';
     btn.style.background='#ffebee';
     btn.style.color='#c62828';
     setTimeout(()=>{
-      btn.textContent='\U0001f504 全量同步';
+      btn.textContent='🔄 全量同步';
       btn.disabled=false;
       btn.style.opacity='1';
       btn.style.background='';
