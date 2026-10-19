@@ -685,6 +685,11 @@ async function pushAllToGitHub(){
     else if(key.startsWith('mustDo_')){mustDos[key]=LS.get(key,null);}
     else if(key.startsWith('customTasks_')){customTasks[key]=LS.get(key,null);}
   }
+  // 必完成事件和自定义任务也要同步（无日期后缀的基础key）
+  const mustDoBase=LS.get('mustDo',null);
+  if(mustDoBase!==null) mustDos['mustDo']=mustDoBase;
+  const customTasksBase=LS.get('customTasks',null);
+  if(customTasksBase!==null) customTasks['customTasks']=customTasksBase;
   localModules.plans=plans;
   localModules.taskMods=taskMods;
   localModules.topics=topics;
@@ -715,21 +720,27 @@ async function pushAllToGitHub(){
   const modules={};
   if(remoteData){
     for(const key of Object.keys(remoteData)){
-      if(key==='plans'&&remoteData.plans&&localModules.plans){
-        // 计划数据合并：两个设备各自添加的任务都要保留
-        const merged={};
-        for(const k in remoteData.plans) merged[k]=remoteData.plans[k];
-        for(const k in localModules.plans){
-          if(!merged[k]){
-            merged[k]=localModules.plans[k];
-          }else{
-            // 同一天两边都有数据，取条数多的
-            const remoteLen=Array.isArray(remoteData.plans[k])?remoteData.plans[k].length:0;
-            const localLen=Array.isArray(localModules.plans[k])?localModules.plans[k].length:0;
-            if(localLen>remoteLen) merged[k]=localModules.plans[k];
+      if(key==='plans'){
+        // 计划数据深度合并：两边的任务都保留，按任务id去重
+        const mergedPlans={};
+        const remotePlans=remoteData.plans||{};
+        const localPlans=localModules.plans||{};
+        for(const k in remotePlans){
+          mergedPlans[k]=Array.isArray(remotePlans[k])?[...remotePlans[k]]:remotePlans[k];
+        }
+        for(const k in localPlans){
+          if(!mergedPlans[k]){
+            mergedPlans[k]=Array.isArray(localPlans[k])?[...localPlans[k]]:localPlans[k];
+          }else if(Array.isArray(mergedPlans[k])&&Array.isArray(localPlans[k])){
+            // 同一天两边都有数组，合并去重
+            const existingIds=new Set(mergedPlans[k].map(t=>(typeof t==='object'?t.id:t)));
+            for(const t of localPlans[k]){
+              const tid=typeof t==='object'?t.id:t;
+              if(!existingIds.has(tid)) mergedPlans[k].push(t);
+            }
           }
         }
-        modules.plans=merged;
+        modules.plans=mergedPlans;
       }else if(isLocalEmpty(key)){
         modules[key]=remoteData[key];
       }else{
@@ -768,18 +779,39 @@ function syncAllToAgent(){
   btn.textContent='同步中...';
   btn.disabled=true;
   btn.style.opacity='0.6';
+  const now=new Date();
+  const ts=`${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
   pushAllToGitHub().then(()=>{
-    btn.textContent='✅ 已同步';
-    btn.style.background='#e8f5e9';
-    btn.style.color='#2e7d32';
-    btn.style.borderColor='#4caf50';
-    const now=new Date();
-    const ts=`${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    return fetch('https://ctdpotato.github.io/workspace/sync/all_data.json?t='+Date.now(),{cache:'no-store'});
+  }).then(r=>r.json()).then(data=>{
+    if(!data)return;
+    if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',data.orders)}
+    if(data.memos!==undefined)LS.set('memos',data.memos||[]);
+    if(data.reviews!==undefined)LS.set('reviews',data.reviews||[]);
+    if(data.weeklyExercise)LS.set('weeklyExercise',data.weeklyExercise);
+    if(data.inspiration){
+      if(data.inspiration.images)LS.set('inspiration_images',data.inspiration.images);
+      if(data.inspiration.texts)LS.set('inspiration_texts',data.inspiration.texts);
+      if(data.inspiration.videos)LS.set('inspiration_videos',data.inspiration.videos);
+    }
+    if(data.plans)for(const k in data.plans)LS.set(k,data.plans[k]);
+    if(data.taskMods)for(const k in data.taskMods)LS.set(k,data.taskMods[k]);
+    if(data.topics)for(const k in data.topics)LS.set(k,data.topics[k]);
+    if(data.mustDos)for(const k in data.mustDos)LS.set(k,data.mustDos[k]);
+    if(data.customTasks)for(const k in data.customTasks)LS.set(k,data.customTasks[k]);
+    if(data.mustDos&&data.mustDos.mustDo!==undefined)LS.set('mustDo',data.mustDos.mustDo);
+    if(data.customTasks&&data.customTasks.customTasks!==undefined)LS.set('customTasks',data.customTasks.customTasks);
+    if($('orderList'))renderOrderList();
+    if($('taskContainer'))renderTasks();
     localStorage.setItem('allLastSync',ts);
     const info=$('syncAllInfo');
     if(info)info.textContent='上次同步: '+ts;
+    btn.textContent='\u2705 已同步';
+    btn.style.background='#e8f5e9';
+    btn.style.color='#2e7d32';
+    btn.style.borderColor='#4caf50';
     setTimeout(()=>{
-      btn.textContent='🔄 全量同步';
+      btn.textContent='\U0001f504 全量同步';
       btn.disabled=false;
       btn.style.opacity='1';
       btn.style.background='';
@@ -787,11 +819,11 @@ function syncAllToAgent(){
       btn.style.borderColor='';
     },2000);
   }).catch(err=>{
-    btn.textContent='❌ 同步失败';
+    btn.textContent='\u274c 同步失败';
     btn.style.background='#ffebee';
     btn.style.color='#c62828';
     setTimeout(()=>{
-      btn.textContent='🔄 全量同步';
+      btn.textContent='\U0001f504 全量同步';
       btn.disabled=false;
       btn.style.opacity='1';
       btn.style.background='';
@@ -837,6 +869,9 @@ function forceRefreshAll(){
       if(data.topics)for(const k in data.topics)LS.set(k,data.topics[k]);
       if(data.mustDos)for(const k in data.mustDos)LS.set(k,data.mustDos[k]);
       if(data.customTasks)for(const k in data.customTasks)LS.set(k,data.customTasks[k]);
+      // 恢复必完成事件基础key
+      if(data.mustDos&&data.mustDos.mustDo!==undefined)LS.set('mustDo',data.mustDos.mustDo);
+      if(data.customTasks&&data.customTasks.customTasks!==undefined)LS.set('customTasks',data.customTasks.customTasks);
     }).catch(()=>{}).finally(()=>{
       // 重新渲染
       if($('orderList'))renderOrderList();
@@ -886,6 +921,8 @@ async function restoreFromGitHub(){
     if(data.topics){for(const k in data.topics){if(data.topics[k]&&!LS.get(k,null))LS.set(k,data.topics[k])}}
     if(data.mustDos){for(const k in data.mustDos){if(data.mustDos[k]&&!LS.get(k,null))LS.set(k,data.mustDos[k])}}
     if(data.customTasks){for(const k in data.customTasks){if(data.customTasks[k]&&!LS.get(k,null))LS.set(k,data.customTasks[k])}}
+    if(data.mustDos&&data.mustDos.mustDo!==undefined&&!LS.get('mustDo',null))LS.set('mustDo',data.mustDos.mustDo);
+    if(data.customTasks&&data.customTasks.customTasks!==undefined&&!LS.get('customTasks',null))LS.set('customTasks',data.customTasks.customTasks);
     return true;
   }catch(e){return false}
 }
