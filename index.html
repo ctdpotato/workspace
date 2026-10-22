@@ -704,7 +704,7 @@ async function pushAllToGitHub(){
     if(gr.ok){
       const gd=await gr.json();
       sha=gd.sha||'';
-      const remoteContent=JSON.parse(atob(gd.content));
+      const remoteContent=JSON.parse(decodeURIComponent(escape(atob(gd.content))));
       remoteData=remoteContent;
     }
   }catch(e){}
