@@ -160,6 +160,23 @@ body{
   display:flex;align-items:center;justify-content:center;color:var(--text2);
   min-height:28px;font-family:inherit;
 }
+/* Image Viewer (点击看大图) */
+.img-viewer{
+  display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.92);z-index:400;
+  align-items:center;justify-content:center;padding:16px;
+}
+.img-viewer.show{display:flex}
+.img-viewer img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;display:block}
+.img-viewer .iv-close{
+  position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,0.18);color:#fff;border:none;font-size:18px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1;
+}
+.img-viewer .iv-hint{
+  position:absolute;bottom:20px;left:0;width:100%;text-align:center;
+  color:rgba(255,255,255,0.5);font-size:12px;
+}
 /* Form elements */
 .input-row{display:flex;gap:8px;margin-bottom:10px}
 .input-field{
@@ -269,9 +286,9 @@ textarea.input-field{resize:vertical;min-height:80px}
 .idea-upload-area svg{width:40px;height:40px;margin-bottom:8px;opacity:0.4}
 .idea-upload-text{font-size:13px;color:var(--text2);font-weight:500}
 .idea-upload-hint{font-size:11px;color:var(--text3);margin-top:4px}
-.idea-img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.idea-img-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;align-items:start}
 .idea-img-card{position:relative;border-radius:10px;overflow:hidden;background:var(--bg);border:1px solid var(--border)}
-.idea-img-card img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.idea-img-card img{width:100%;height:auto;object-fit:contain;display:block;cursor:zoom-in}
 .idea-img-card .idea-img-desc{font-size:11px;color:var(--text2);padding:6px 8px;line-height:1.4;word-break:break-all}
 .idea-img-card .idea-img-del{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.5);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;line-height:1}
 .idea-img-card .idea-img-time{font-size:10px;color:var(--text3);padding:0 8px 6px}
@@ -405,6 +422,13 @@ textarea.input-field{resize:vertical;min-height:80px}
     <div class="modal-title"><span id="modalTitleText"></span><button class="modal-close" onclick="closeModal()">✕</button></div>
     <div id="modalBody"></div>
   </div>
+</div>
+
+<!-- Image Viewer -->
+<div class="img-viewer" id="imgViewer" onclick="closeImgViewer()">
+  <button class="iv-close" onclick="closeImgViewer()">✕</button>
+  <img id="imgViewerImg" src="" alt="">
+  <div class="iv-hint">点击任意处关闭</div>
 </div>
 
 <!-- Confetti Container -->
@@ -1449,13 +1473,31 @@ function renderIdeaImagePanel(){
   panel.innerHTML=html;
   // upload click
   $('ideaUploadBtn').addEventListener('click',()=>$('ideaFileInput').click());
-  // delete delegation
-  panel.addEventListener('click',function handler(e){
-    const del=e.target.closest('[data-del-img]');if(!del)return;
-    const idx=parseInt(del.dataset.delImg);
-    const images=LS.get('inspiration_images',[]);images.splice(idx,1);LS.set('inspiration_images',images);
-    renderIdeaImagePanel();
-  });
+  // 点击缩略图看大图 / 删除（onclick 覆盖，避免重复绑定）
+  panel.onclick=function(e){
+    const del=e.target.closest('[data-del-img]');
+    if(del){
+      const idx=parseInt(del.dataset.delImg);
+      const images=LS.get('inspiration_images',[]);images.splice(idx,1);LS.set('inspiration_images',images);
+      renderIdeaImagePanel();
+      return;
+    }
+    const im=e.target.closest('.idea-img-card img');
+    if(im)openImgViewer(im.getAttribute('src'));
+  };
+}
+function openImgViewer(src){
+  if(!src)return;
+  const v=$('imgViewer');if(!v)return;
+  $('imgViewerImg').setAttribute('src',src);
+  v.classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeImgViewer(){
+  const v=$('imgViewer');if(!v)return;
+  v.classList.remove('show');
+  $('imgViewerImg').setAttribute('src','');
+  document.body.style.overflow='';
 }
 function renderIdeaTextPanel(){
   const texts=LS.get('inspiration_texts',[]);
@@ -1482,12 +1524,12 @@ function renderIdeaTextPanel(){
   const inp=$('ideaTextInput');
   $('ideaTextAddBtn').addEventListener('click',()=>addIdeaText());
   inp.addEventListener('keydown',e=>{if(e.key==='Enter')addIdeaText()});
-  panel.addEventListener('click',function handler(e){
+  panel.onclick=function(e){
     const del=e.target.closest('[data-del-text]');if(!del)return;
     const idx=parseInt(del.dataset.delText);
     const texts=LS.get('inspiration_texts',[]);texts.splice(idx,1);LS.set('inspiration_texts',texts);
     renderIdeaTextPanel();
-  });
+  };
 }
 function addIdeaText(){
   const inp=$('ideaTextInput');const v=inp.value.trim();if(!v)return;
@@ -1521,12 +1563,12 @@ function renderIdeaVideoPanel(){
   }
   panel.innerHTML=html;
   $('ideaVideoAddBtn').addEventListener('click',()=>addIdeaVideo());
-  panel.addEventListener('click',function handler(e){
+  panel.onclick=function(e){
     const del=e.target.closest('[data-del-video]');if(!del)return;
     const idx=parseInt(del.dataset.delVideo);
     const videos=LS.get('inspiration_videos',[]);videos.splice(idx,1);LS.set('inspiration_videos',videos);
     renderIdeaVideoPanel();
-  });
+  };
 }
 function addIdeaVideo(){
   const title=$('ideaVideoTitle').value.trim();
