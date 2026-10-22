@@ -4,7 +4,7 @@
     "account": "土豆",
     "brand": "",
     "date": "2026-10-22",
-    "price": "",
+    "price": "1800",
     "type": "自己单",
     "rebate": 30,
     "note": "",
@@ -12,39 +12,38 @@
     "_v4": true
   },
   {
-    "name": "力士沐浴露",
+    "name": "谭木匠",
     "account": "土豆",
     "brand": "",
-    "date": "",
-    "price": "",
+    "date": "2026-10-28",
+    "price": "1638",
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 0,
-    "_v4": true
-  },
-  {
-    "name": "力士洗发水",
-    "account": "土豆",
-    "brand": "",
-    "date": "",
-    "price": "",
-    "type": "公司单",
-    "rebate": null,
-    "note": "",
-    "status": 0,
-    "_v4": true
+    "status": 0
   },
   {
     "name": "回春油",
-    "account": "土豆",
+    "account": "宝珠",
     "brand": "",
-    "date": "2026-10-20",
-    "price": "2100",
+    "date": "2026-11-02",
+    "price": "2240",
     "type": "自己单",
     "rebate": 20,
     "note": "",
-    "status": 1
+    "status": 0
+  },
+  {
+    "name": "力士沐浴露",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-10-23",
+    "price": "1638",
+    "type": "公司单",
+    "rebate": null,
+    "note": "",
+    "status": 1,
+    "_v4": true
   },
   {
     "name": "妇炎洁卫生巾",
@@ -55,29 +54,19 @@
     "type": "自己单",
     "rebate": 35,
     "note": "",
-    "status": 2
+    "status": 3,
+    "_v4": true
   },
   {
-    "name": "敷尔佳",
+    "name": "力士洗发水",
     "account": "土豆",
     "brand": "",
-    "date": "2026-10-19",
-    "price": "1600",
+    "date": "2026-10-22",
+    "price": "1638",
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 2
-  },
-  {
-    "name": "欧莱雅松露",
-    "account": "宝珠",
-    "brand": "",
-    "date": "2026-10-21",
-    "price": "2100（送品）",
-    "type": "自己单",
-    "rebate": 25,
-    "note": "",
-    "status": 2,
+    "status": 3,
     "_v4": true
   },
   {
@@ -89,7 +78,7 @@
     "type": "自己单",
     "rebate": 35,
     "note": "",
-    "status": 2,
+    "status": 3,
     "_v4": true
   },
   {
@@ -101,7 +90,31 @@
     "type": "自己单",
     "rebate": 30,
     "note": "",
-    "status": 2,
+    "status": 3,
+    "_v4": true
+  },
+  {
+    "name": "回春油",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-10-20",
+    "price": "2100",
+    "type": "自己单",
+    "rebate": 20,
+    "note": "",
+    "status": 4,
+    "_v4": true
+  },
+  {
+    "name": "欧莱雅松露",
+    "account": "宝珠",
+    "brand": "",
+    "date": "2026-10-21",
+    "price": "2100（送品）",
+    "type": "自己单",
+    "rebate": 25,
+    "note": "",
+    "status": 4,
     "_v4": true
   },
   {
@@ -134,11 +147,11 @@
     "_v4": true
   },
   {
-    "name": "屈臣氏棉片",
-    "account": "土豆",
+    "name": "金纺",
+    "account": "宝珠",
     "brand": "",
-    "date": "",
-    "price": "1830",
+    "date": "2026-10-01",
+    "price": "1969",
     "type": "自己单",
     "rebate": 30,
     "note": "",
@@ -146,13 +159,59 @@
     "_v4": true
   },
   {
+    "name": "欧莱雅护发精油",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-10-04",
+    "price": "1550",
+    "type": "公司单",
+    "rebate": null,
+    "note": "",
+    "status": 5
+  },
+  {
     "name": "松下冲牙器",
     "account": "宝珠",
     "brand": "",
-    "date": "",
-    "price": "",
-    "type": "公司单",
+    "date": "2026-10-12",
+    "price": "1700",
+    "type": "自己单",
     "rebate": 30,
+    "note": "",
+    "status": 5,
+    "_v4": true
+  },
+  {
+    "name": "屈臣氏棉片",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-10-14",
+    "price": "1570",
+    "type": "自己单",
+    "rebate": null,
+    "note": "",
+    "status": 5
+  },
+  {
+    "name": "得宝洗脸巾",
+    "account": "宝珠",
+    "brand": "",
+    "date": "2026-10-15",
+    "price": "1800",
+    "type": "自己单",
+    "rebate": null,
+    "note": "",
+    "status": 5,
+    "_v4": true
+  },
+  {
+    "name": "敷尔佳",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-10-19",
+    "price": "1600",
+    "type": "公司单",
+    "rebate": null,
     "note": "",
     "status": 5,
     "_v4": true
@@ -165,18 +224,6 @@
     "price": "",
     "type": "公司单",
     "rebate": 30,
-    "note": "",
-    "status": 5,
-    "_v4": true
-  },
-  {
-    "name": "得宝洗脸巾",
-    "account": "宝珠",
-    "brand": "",
-    "date": "",
-    "price": "",
-    "type": "公司单",
-    "rebate": 35,
     "note": "",
     "status": 5,
     "_v4": true
@@ -250,18 +297,6 @@
     "type": "自己单",
     "rebate": 30,
     "note": "25",
-    "status": 5,
-    "_v4": true
-  },
-  {
-    "name": "金纺",
-    "account": "宝珠",
-    "brand": "",
-    "date": "",
-    "price": "",
-    "type": "自己单",
-    "rebate": 30,
-    "note": "",
     "status": 5,
     "_v4": true
   },
