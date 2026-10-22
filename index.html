@@ -656,6 +656,28 @@ function syncOrdersToAgent(){
   });
 }
 
+// === 中文乱码自愈（修复历史同步造成的多层latin1<->utf8破坏）===
+function _fixMojibake(s){
+  if(typeof s!=='string'||!s)return s;
+  let cur=s,prev=null;
+  for(let i=0;i<8;i++){
+    if(cur===prev)break;
+    prev=cur;
+    try{
+      const d=decodeURIComponent(escape(cur));
+      if(d===cur)break;
+      cur=d;
+    }catch(e){break;}
+  }
+  return cur;
+}
+function _fixMojibakeDeep(o){
+  if(typeof o==='string')return _fixMojibake(o);
+  if(Array.isArray(o))return o.map(_fixMojibakeDeep);
+  if(o&&typeof o==='object'){const r={};for(const k in o)r[k]=_fixMojibakeDeep(o[k]);return r;}
+  return o;
+}
+
 // === 全量同步到 GitHub ===
 async function pushAllToGitHub(){
   const cfg=_ghCfg();
@@ -695,6 +717,8 @@ async function pushAllToGitHub(){
   localModules.topics=topics;
   localModules.mustDos=mustDos;
   localModules.customTasks=customTasks;
+  // 修复历史同步造成的乱码，避免污染云端
+  for(const _k in localModules){ localModules[_k]=_fixMojibakeDeep(localModules[_k]); }
   
   // 2. 获取远程现有数据，用于合并
   let remoteData=null;
