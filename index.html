@@ -663,7 +663,7 @@ if(!localStorage.getItem('orders')){
 function _ghCfg(){return{owner:'ctdpotato',repo:'workspace',branch:'main',path:'sync/orders.json',tok:['ghp_9aDl','MqnrENk','MclYT6S','0Mlpej','YzYhfK','2mf0sH'].join('')}}
 async function pushOrdersToGitHub(){
   const cfg=_ghCfg();
-  const orders=LS.get('orders',[]).filter(dmDone);
+  const orders=LS.get('orders',[]);
   const content=JSON.stringify(orders,null,2);
   const encoded=btoa(unescape(encodeURIComponent(content)));
   const url=`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`;
@@ -706,13 +706,10 @@ function mergeDM(remoteDM,localDM){
 function syncOrdersToAgent(){
   const btn=$('syncOrdersBtn');
   if(!btn)return;
-  const _doneOrders=LS.get('orders',[]).filter(dmDone);
-  if(!_doneOrders.length){alert('还没有「已完成」的商单。\n\n请先在「数据维护」里，给已经发布完成的商单点「✅ 标记已完成」，再回来同步。');return}
   btn.textContent='同步中...';
   btn.disabled=true;
   btn.style.opacity='0.6';
   pushOrdersToGitHub().then(()=>{
-    _markDoneSynced();
     btn.textContent='✅ 已同步';
     btn.style.background='#e8f5e9';
     btn.style.color='#2e7d32';
@@ -721,7 +718,7 @@ function syncOrdersToAgent(){
     const ts=`${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
     localStorage.setItem('ordersLastSync',ts);
     const info=$('syncOrdersInfo');
-    if(info)info.textContent='上次同步: '+ts+'（仅已完成 '+_doneOrders.length+' 单）';
+    if(info)info.textContent='上次同步: '+ts;
     setTimeout(()=>{
       btn.textContent='🔄 同步到小薯';
       btn.disabled=false;
@@ -774,14 +771,9 @@ async function pushAllToGitHub(){
   const path='sync/all_data.json';
   const url=`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`;
   
-  // 1. 收集本地数据（只同步「已完成」的商单及其投流数据，未完成的只留在本机）
-  const _allOrders=LS.get('orders',[]);
-  const _doneKeys=new Set(_allOrders.filter(dmDone).map(o=>dmKey(o)));
-  const _dmAll=LS.get('dataMaint',{});
-  const _dmDone={};
-  for(const _k in _dmAll){ if(_doneKeys.has(_k)) _dmDone[_k]=_dmAll[_k]; }
+  // 1. 收集本地数据
   const localModules={
-    orders:_allOrders.filter(dmDone),
+    orders:LS.get('orders',[]),
     memos:LS.get('memos',[]),
     inspiration:{
       images:LS.get('inspiration_images',[]),
@@ -789,7 +781,7 @@ async function pushAllToGitHub(){
       videos:LS.get('inspiration_videos',[])
     },
     reviews:LS.get('reviews',[]),
-    dataMaint:_dmDone,
+    dataMaint:LS.get('dataMaint',{}),
     weeklyExercise:LS.get('weeklyExercise',null)
   };
   const plans={},taskMods={},topics={},mustDos={},customTasks={};
@@ -838,10 +830,7 @@ async function pushAllToGitHub(){
   const modules={};
   if(remoteData){
     for(const key of Object.keys(remoteData)){
-      if(key==='orders'){
-        // 商单：云端只保留「已完成」的，未完成的只留本机
-        modules.orders=localModules.orders;
-      }else if(key==='plans'){
+      if(key==='plans'){
         // 计划数据深度合并：两边的任务都保留，按任务id去重
         const mergedPlans={};
         const remotePlans=remoteData.plans||{};
@@ -893,10 +882,7 @@ async function pushAllToGitHub(){
           });
           mergedDM[k]=o;
         });
-        // 云端也只保留「已完成」商单的投流记录
-        const _prunedDM={};
-        for(const _pk in mergedDM){ if(_doneKeys.has(_pk)) _prunedDM[_pk]=mergedDM[_pk]; }
-        modules.dataMaint=_prunedDM;
+        modules.dataMaint=mergedDM;
       }else if(isLocalEmpty(key)){
         modules[key]=remoteData[key];
       }else{
@@ -948,7 +934,6 @@ function syncAllToAgent(){
   const now=new Date();
   const ts=`${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
   pushAllToGitHub().then(()=>{
-    _markDoneSynced();
     return fetch('https://ctdpotato.github.io/workspace/sync/all_data.json?t='+Date.now(),{cache:'no-store'});
   }).then(r=>r.json()).then(data=>{
     if(!data)return;
@@ -1916,76 +1901,8 @@ function delReview(i){const a=LS.get('reviews',[]);a.splice(i,1);LS.set('reviews
 const DM_TYPES=[{k:'fries',n:'薯条'},{k:'spill',n:'外溢'},{k:'like',n:'买赞'}];
 let dmExpanded=new Set();
 function dmKey(o){return (o.name||'')+'|'+(o.account||'土豆')}
-// 「已完成」标记存在商单对象上（_done），只有标记过的商单及其投流数据才会同步到云端
-let dmSyncState={};
-// 判定「已完成」：商单状态走到「已完成」或手动标了标记，都算
-function dmDone(o){return !!(o&&(o._done===true||o.status===6))}
-function _markDoneSynced(){
-  const os=LS.get('orders',[]);let ch=false;const now=Date.now();
-  os.forEach(o=>{if(dmDone(o)){o._syncTs=now;ch=true}});
-  if(ch)LS.set('orders',os);
-}
-function dmFindOrder(key){const os=LS.get('orders',[]);for(let i=0;i<os.length;i++){if(dmKey(os[i])===key)return os[i]}return null}
-function dmFmtTs(ts){if(!ts)return'';const d=new Date(ts);return (d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
-function dmSetDone(key,val){
-  const os=LS.get('orders',[]);let hit=false;
-  os.forEach(o=>{
-    if(dmKey(o)!==key)return;
-    hit=true;
-    if(val){o._done=true;o._doneTs=o._doneTs||Date.now();o._syncTs=null;}
-    else{delete o._done;delete o._doneTs;delete o._syncTs;}
-  });
-  if(hit)LS.set('orders',os);
-  return hit;
-}
-function dmMarkDone(key){
-  const o=dmFindOrder(key);
-  if(!o){alert('没找到这个商单，请先在「商单管理」里添加');return}
-  if(!confirm('确认这单已经发布成功？\n\n确认后，这单的商单信息和投流数据才会同步到云端。'))return;
-  dmSetDone(key,true);
-  renderDataMaintList();
-  dmSyncOne(key);
-}
-function dmUndoDone(key){
-  if(!confirm('取消这单的「已完成」标记？\n\n取消后本机不再同步它（云端已同步的记录不会自动删除）。'))return;
-  dmSetDone(key,false);
-  renderDataMaintList();
-}
-function dmSyncOne(key){
-  const o=dmFindOrder(key);
-  if(!o||!dmDone(o))return;
-  dmSyncState[key]='syncing';
-  renderDataMaintList();
-  pushAllToGitHub().then(()=>{
-    const os=LS.get('orders',[]);
-    os.forEach(x=>{if(dmKey(x)===key)x._syncTs=Date.now()});
-    LS.set('orders',os);
-    dmSyncState[key]='ok';
-    renderDataMaintList();
-    try{
-      localStorage.setItem('allLastSync',dmFmtTs(Date.now()));
-      const info=$('syncAllInfo');
-      if(info)info.textContent='上次同步: '+dmFmtTs(Date.now());
-    }catch(e){}
-  }).catch(err=>{
-    dmSyncState[key]='fail';
-    renderDataMaintList();
-  });
-}
-function dmFinHtml(o,key,ek){
-  const byStatus=(o.status===6);
-  const srcTxt=byStatus?'商单状态已完成':'手动标记已完成';
-  if(!dmDone(o)){
-    return `<div class="dm-fin"><button class="dm-fin-btn" data-dm-fin="${ek}">✅ 标记已完成</button><span class="dm-fin-info">未完成 · 只存本机，不同步云端</span></div>`;
-  }
-  const st=dmSyncState[key];
-  if(st==='syncing')return `<div class="dm-fin"><button class="dm-fin-btn syncing" disabled>⏳ 同步中…</button><span class="dm-fin-info">正在同步到云端</span></div>`;
-  if(st==='fail'||!o._syncTs){
-    return `<div class="dm-fin"><button class="dm-fin-btn retry" data-dm-fin="${ek}" data-dm-retry="1">🔄 同步这一单</button><span class="dm-fin-info warn">⚠️ ${srcTxt} · 还没同步</span></div>`;
-  }
-  const btnAttr=byStatus?' data-dm-resync="1"':' data-dm-undo="1"';
-  return `<div class="dm-fin"><button class="dm-fin-btn done" data-dm-fin="${ek}"${btnAttr}>✅ 已完成 · 已同步</button><span class="dm-fin-info ok">${srcTxt} · 同步于 ${dmFmtTs(o._syncTs)}</span></div>`;
-}
+// 数据维护只展示「已完成」的商单（在「商单管理」里把状态点到「已完成」）
+function dmDone(o){return !!(o&&o.status===6)}
 function dmAll(){return LS.get('dataMaint',{})}
 function dmGet(key){
   const r=dmAll()[key]||{};
@@ -2057,13 +1974,11 @@ function renderDataMaintList(){
   const s=dmStats();
   if($('dmMonth'))$('dmMonth').textContent='¥'+s.month;
   if($('dmTotal'))$('dmTotal').textContent='¥'+s.total;
-  const _dmOrders=LS.get('orders',[]);
-  const _pendingCount=_dmOrders.filter(o=>!(dmDone(o)&&o._syncTs)).length;
-  if($('dmBreak'))$('dmBreak').innerHTML=DM_TYPES.map(t=>`<span>${t.n} 本月 ¥${s.byM[t.k]}</span>`).join('')+`<span style="color:var(--text3)">投流已完成 ${s.doneAll} 项</span>`+`<span style="color:${_pendingCount?'#c47b00':'var(--text3)'}">未同步 ${_pendingCount} 单（只存本机）</span>`;
+  if($('dmBreak'))$('dmBreak').innerHTML=DM_TYPES.map(t=>`<span>${t.n} 本月 ¥${s.byM[t.k]}</span>`).join('')+`<span style="color:var(--text3)">已完成 ${s.doneAll} 项</span>`;
   const q=($('dmSearch')?$('dmSearch').value.trim().toLowerCase():'');
-  const orders=LS.get('orders',[]);
+  const orders=LS.get('orders',[]).filter(dmDone);
   const sorted=[...orders].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-  let doneHtml='';let pendHtml='';let shown=0;let nDone=0;let nPend=0;
+  let html='';let shown=0;
   sorted.forEach(o=>{
     const key=dmKey(o);
     const label=((o.name||'')+' '+(o.brand||'')+' '+(o.account||'')).toLowerCase();
@@ -2073,7 +1988,7 @@ function renderDataMaintList(){
     const sum=DM_TYPES.reduce((a,t)=>a+rec[t.k].amount,0);
     const doneCount=DM_TYPES.filter(t=>rec[t.k].done).length;
     const ek=encodeURIComponent(key);
-    const cardHtml=`<div class="dm-card">
+    html+=`<div class="dm-card">
       <div class="dm-head" data-dm-head="${ek}">
         <div style="flex:1;min-width:0">
           <div class="dm-name">${esc(o.name||'未命名')}<span class="dm-acc">${esc(o.account||'土豆')}</span></div>
@@ -2087,7 +2002,6 @@ function renderDataMaintList(){
           <span class="dm-cell-amt">${rec[t.k].amount?'¥'+rec[t.k].amount:(rec[t.k].done?'✓':'—')}</span>
         </button>`).join('')}
       </div>
-      ${dmFinHtml(o,key,ek)}
       ${dmExpanded.has(key)?`<div class="dm-detail">
         ${DM_TYPES.map(t=>`<div class="dm-detail-row">
           <span class="dm-detail-name">${t.n}</span>
@@ -2095,22 +2009,10 @@ function renderDataMaintList(){
         </div>`).join('')}
       </div>`:''}
     </div>`;
-    if(dmDone(o)&&o._syncTs){nDone++;doneHtml+=cardHtml}else{nPend++;pendHtml+=cardHtml}
   });
-  let html='';
-  if(nDone)html+=`<div class="dm-group">✅ 已同步到云端 · ${nDone} 单</div>`+doneHtml;
-  if(nPend)html+=`<div class="dm-group">⏳ 只存本机 · ${nPend} 单</div>`+pendHtml;
-  if(!shown)html='<div class="placeholder">没有匹配的商单</div>';
+  if(!shown)html='<div class="placeholder">还没有已完成的商单<br>在「商单管理」里把状态点到「已完成」，这单就会出现在这里</div>';
   listEl.innerHTML=html;
   listEl.onclick=function(e){
-    const fin=e.target.closest('[data-dm-fin]');
-    if(fin){
-      const fk=decodeURIComponent(fin.dataset.dmFin);
-      if(fin.dataset.dmUndo==='1')dmUndoDone(fk);
-      else if(fin.dataset.dmRetry==='1'||fin.dataset.dmResync==='1')dmSyncOne(fk);
-      else dmMarkDone(fk);
-      return;
-    }
     const cell=e.target.closest('[data-dm-cell]');
     if(cell){dmToggle(decodeURIComponent(cell.dataset.dmCell),cell.dataset.dmType);return;}
     const head=e.target.closest('[data-dm-head]');
@@ -2555,4 +2457,4 @@ if ('serviceWorker' in navigator) {
 </body>
 </html>
 
-<!-- cache-bust 20261023-group-sync -->
+<!-- cache-bust 20261023-dm-done-only -->
