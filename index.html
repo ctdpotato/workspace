@@ -660,7 +660,7 @@ if(!localStorage.getItem('orders')){
 function _ghCfg(){return{owner:'ctdpotato',repo:'workspace',branch:'main',path:'sync/orders.json',tok:['ghp_9aDl','MqnrENk','MclYT6S','0Mlpej','YzYhfK','2mf0sH'].join('')}}
 async function pushOrdersToGitHub(){
   const cfg=_ghCfg();
-  const orders=LS.get('orders',[]).filter(o=>o._done);
+  const orders=LS.get('orders',[]).filter(dmDone);
   const content=JSON.stringify(orders,null,2);
   const encoded=btoa(unescape(encodeURIComponent(content)));
   const url=`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`;
@@ -703,12 +703,13 @@ function mergeDM(remoteDM,localDM){
 function syncOrdersToAgent(){
   const btn=$('syncOrdersBtn');
   if(!btn)return;
-  const _doneOrders=LS.get('orders',[]).filter(o=>o._done);
+  const _doneOrders=LS.get('orders',[]).filter(dmDone);
   if(!_doneOrders.length){alert('还没有「已完成」的商单。\n\n请先在「数据维护」里，给已经发布完成的商单点「✅ 标记已完成」，再回来同步。');return}
   btn.textContent='同步中...';
   btn.disabled=true;
   btn.style.opacity='0.6';
   pushOrdersToGitHub().then(()=>{
+    _markDoneSynced();
     btn.textContent='✅ 已同步';
     btn.style.background='#e8f5e9';
     btn.style.color='#2e7d32';
@@ -772,12 +773,12 @@ async function pushAllToGitHub(){
   
   // 1. 收集本地数据（只同步「已完成」的商单及其投流数据，未完成的只留在本机）
   const _allOrders=LS.get('orders',[]);
-  const _doneKeys=new Set(_allOrders.filter(o=>o._done).map(o=>dmKey(o)));
+  const _doneKeys=new Set(_allOrders.filter(dmDone).map(o=>dmKey(o)));
   const _dmAll=LS.get('dataMaint',{});
   const _dmDone={};
   for(const _k in _dmAll){ if(_doneKeys.has(_k)) _dmDone[_k]=_dmAll[_k]; }
   const localModules={
-    orders:_allOrders.filter(o=>o._done),
+    orders:_allOrders.filter(dmDone),
     memos:LS.get('memos',[]),
     inspiration:{
       images:LS.get('inspiration_images',[]),
@@ -944,6 +945,7 @@ function syncAllToAgent(){
   const now=new Date();
   const ts=`${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
   pushAllToGitHub().then(()=>{
+    _markDoneSynced();
     return fetch('https://ctdpotato.github.io/workspace/sync/all_data.json?t='+Date.now(),{cache:'no-store'});
   }).then(r=>r.json()).then(data=>{
     if(!data)return;
@@ -1913,6 +1915,13 @@ let dmExpanded=new Set();
 function dmKey(o){return (o.name||'')+'|'+(o.account||'土豆')}
 // 「已完成」标记存在商单对象上（_done），只有标记过的商单及其投流数据才会同步到云端
 let dmSyncState={};
+// 判定「已完成」：商单状态走到「已完成」或手动标了标记，都算
+function dmDone(o){return !!(o&&(o._done===true||o.status===6))}
+function _markDoneSynced(){
+  const os=LS.get('orders',[]);let ch=false;const now=Date.now();
+  os.forEach(o=>{if(dmDone(o)){o._syncTs=now;ch=true}});
+  if(ch)LS.set('orders',os);
+}
 function dmFindOrder(key){const os=LS.get('orders',[]);for(let i=0;i<os.length;i++){if(dmKey(os[i])===key)return os[i]}return null}
 function dmFmtTs(ts){if(!ts)return'';const d=new Date(ts);return (d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
 function dmSetDone(key,val){
@@ -1941,7 +1950,7 @@ function dmUndoDone(key){
 }
 function dmSyncOne(key){
   const o=dmFindOrder(key);
-  if(!o||!o._done)return;
+  if(!o||!dmDone(o))return;
   dmSyncState[key]='syncing';
   renderDataMaintList();
   pushAllToGitHub().then(()=>{
@@ -1961,13 +1970,18 @@ function dmSyncOne(key){
   });
 }
 function dmFinHtml(o,key,ek){
-  if(!o._done){
+  const byStatus=(o.status===6);
+  const srcTxt=byStatus?'商单状态已完成':'手动标记已完成';
+  if(!dmDone(o)){
     return `<div class="dm-fin"><button class="dm-fin-btn" data-dm-fin="${ek}">✅ 标记已完成</button><span class="dm-fin-info">未完成 · 只存本机，不同步云端</span></div>`;
   }
   const st=dmSyncState[key];
   if(st==='syncing')return `<div class="dm-fin"><button class="dm-fin-btn syncing" disabled>⏳ 同步中…</button><span class="dm-fin-info">正在同步到云端</span></div>`;
-  if(st==='fail'||!o._syncTs)return `<div class="dm-fin"><button class="dm-fin-btn retry" data-dm-fin="${ek}" data-dm-retry="1">🔄 重试同步</button><span class="dm-fin-info warn">⚠️ 已完成，但还没同步成功</span></div>`;
-  return `<div class="dm-fin"><button class="dm-fin-btn done" data-dm-fin="${ek}" data-dm-undo="1">✅ 已完成 · 已同步</button><span class="dm-fin-info ok">同步于 ${dmFmtTs(o._syncTs)}</span></div>`;
+  if(st==='fail'||!o._syncTs){
+    return `<div class="dm-fin"><button class="dm-fin-btn retry" data-dm-fin="${ek}" data-dm-retry="1">🔄 同步这一单</button><span class="dm-fin-info warn">⚠️ ${srcTxt} · 还没同步</span></div>`;
+  }
+  const btnAttr=byStatus?' data-dm-resync="1"':' data-dm-undo="1"';
+  return `<div class="dm-fin"><button class="dm-fin-btn done" data-dm-fin="${ek}"${btnAttr}>✅ 已完成 · 已同步</button><span class="dm-fin-info ok">${srcTxt} · 同步于 ${dmFmtTs(o._syncTs)}</span></div>`;
 }
 function dmAll(){return LS.get('dataMaint',{})}
 function dmGet(key){
@@ -2041,7 +2055,7 @@ function renderDataMaintList(){
   if($('dmMonth'))$('dmMonth').textContent='¥'+s.month;
   if($('dmTotal'))$('dmTotal').textContent='¥'+s.total;
   const _dmOrders=LS.get('orders',[]);
-  const _pendingCount=_dmOrders.filter(o=>!o._done).length;
+  const _pendingCount=_dmOrders.filter(o=>!dmDone(o)).length;
   if($('dmBreak'))$('dmBreak').innerHTML=DM_TYPES.map(t=>`<span>${t.n} 本月 ¥${s.byM[t.k]}</span>`).join('')+`<span style="color:var(--text3)">投流已完成 ${s.doneAll} 项</span>`+`<span style="color:${_pendingCount?'#c47b00':'var(--text3)'}">待确认 ${_pendingCount} 单（只存本机）</span>`;
   const q=($('dmSearch')?$('dmSearch').value.trim().toLowerCase():'');
   const orders=LS.get('orders',[]);
@@ -2086,7 +2100,7 @@ function renderDataMaintList(){
     if(fin){
       const fk=decodeURIComponent(fin.dataset.dmFin);
       if(fin.dataset.dmUndo==='1')dmUndoDone(fk);
-      else if(fin.dataset.dmRetry==='1')dmSyncOne(fk);
+      else if(fin.dataset.dmRetry==='1'||fin.dataset.dmResync==='1')dmSyncOne(fk);
       else dmMarkDone(fk);
       return;
     }
@@ -2511,7 +2525,7 @@ function esc(s){const d=document.createElement('div');d.textContent=s;return d.i
 
 <script>
 if ('serviceWorker' in navigator) {
-  const SW_VERSION = 'workstation-v4';
+  const SW_VERSION = 'workstation-v5';
   navigator.serviceWorker.register('./sw.js').then(reg => {
     const sw = reg.installing || reg.waiting || reg.active;
     if (sw) {
@@ -2534,4 +2548,4 @@ if ('serviceWorker' in navigator) {
 </body>
 </html>
 
-<!-- cache-bust 20261023-done-sync -->
+<!-- cache-bust 20261023-done-status-sync -->
