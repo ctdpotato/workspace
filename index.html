@@ -190,7 +190,7 @@ body{
 .dm-acc{font-size:9px;padding:1px 5px;border-radius:3px;background:var(--blue);color:#fff;margin-left:3px;vertical-align:middle}
 .dm-sub{font-size:10px;color:var(--text3);margin-top:3px}
 .dm-prog{font-size:10px;color:var(--text3);white-space:nowrap;flex:none}
-.dm-cells{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}
+.dm-cells{display:grid;grid-template-columns:repeat(auto-fit,minmax(68px,1fr));gap:6px;margin-top:9px}
 .dm-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:7px 4px;border-radius:9px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-family:inherit;transition:all .15s}
 .dm-cell-name{font-size:11px;color:var(--text2)}
 .dm-cell-amt{font-size:11px;font-weight:600;color:var(--text3)}
@@ -200,17 +200,6 @@ body{
 .dm-detail-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .dm-detail-name{font-size:12px;color:var(--text2);width:34px;flex:none}
 .dm-detail-input{margin-bottom:0;min-height:36px;padding:6px 10px;font-size:13px}
-.dm-group{font-size:11px;font-weight:700;color:var(--text2);margin:14px 0 8px;display:flex;align-items:center;gap:8px}
-.dm-group:first-child{margin-top:4px}
-.dm-group::after{content:'';flex:1;height:1px;background:var(--border)}
-.dm-fin{display:flex;align-items:center;gap:8px;margin-top:9px;padding-top:9px;border-top:1px dashed var(--border)}
-.dm-fin-btn{font-size:11px;padding:5px 10px;border-radius:9px;border:1px solid var(--border);background:var(--bg);color:var(--text2);cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s}
-.dm-fin-btn.done{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:600}
-.dm-fin-btn.retry{background:#fff5e6;border-color:#f5a623;color:#c47b00;font-weight:600}
-.dm-fin-btn.syncing{opacity:.6}
-.dm-fin-info{font-size:10px;color:var(--text3);line-height:1.35}
-.dm-fin-info.ok{color:var(--green)}
-.dm-fin-info.warn{color:#c47b00}
 /* Form elements */
 .input-row{display:flex;gap:8px;margin-bottom:10px}
 .input-field{
@@ -1897,8 +1886,8 @@ function renderReviewList(){
 }
 function delReview(i){const a=LS.get('reviews',[]);a.splice(i,1);LS.set('reviews',a);renderReviewList()}
 
-// --- 数据维护（投流记录：薯条 / 外溢 / 买赞） ---
-const DM_TYPES=[{k:'fries',n:'薯条'},{k:'spill',n:'外溢'},{k:'like',n:'买赞'}];
+// --- 数据维护（投流记录：薯条 / 外溢 / 买赞 / 评论） ---
+const DM_TYPES=[{k:'fries',n:'薯条'},{k:'spill',n:'外溢'},{k:'like',n:'买赞'},{k:'comment',n:'评论'}];
 let dmExpanded=new Set();
 function dmKey(o){return (o.name||'')+'|'+(o.account||'土豆')}
 // 数据维护只展示「已完成」的商单（在「商单管理」里把状态点到「已完成」）
@@ -1941,7 +1930,7 @@ function dmToggleExpand(key){
 }
 function dmStats(){
   const all=dmAll();const cur=today().slice(0,7);
-  const s={total:0,month:0,byM:{fries:0,spill:0,like:0},doneAll:0};
+  const s={total:0,month:0,byM:{fries:0,spill:0,like:0,comment:0},doneAll:0};
   for(const k in all){
     const r=all[k]||{};
     DM_TYPES.forEach(t=>{
@@ -1994,7 +1983,7 @@ function renderDataMaintList(){
           <div class="dm-name">${esc(o.name||'未命名')}<span class="dm-acc">${esc(o.account||'土豆')}</span></div>
           <div class="dm-sub">${o.brand?esc(o.brand)+' · ':''}${esc(o.date||'无日期')}${sum?' · 已投 ¥'+sum:''}</div>
         </div>
-        <div class="dm-prog">${doneCount}/3 ${dmExpanded.has(key)?'▲':'▼'}</div>
+        <div class="dm-prog">${doneCount}/${DM_TYPES.length} ${dmExpanded.has(key)?'▲':'▼'}</div>
       </div>
       <div class="dm-cells">
         ${DM_TYPES.map(t=>`<button class="dm-cell ${rec[t.k].done?'done':''}" data-dm-cell="${ek}" data-dm-type="${t.k}">
@@ -2457,4 +2446,4 @@ if ('serviceWorker' in navigator) {
 </body>
 </html>
 
-<!-- cache-bust 20261023-dm-done-only -->
+<!-- cache-bust 20261023-dm-comment -->
