@@ -200,6 +200,14 @@ body{
 .dm-detail-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .dm-detail-name{font-size:12px;color:var(--text2);width:34px;flex:none}
 .dm-detail-input{margin-bottom:0;min-height:36px;padding:6px 10px;font-size:13px}
+.dm-fin{display:flex;align-items:center;gap:8px;margin-top:9px;padding-top:9px;border-top:1px dashed var(--border)}
+.dm-fin-btn{font-size:11px;padding:5px 10px;border-radius:9px;border:1px solid var(--border);background:var(--bg);color:var(--text2);cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s}
+.dm-fin-btn.done{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:600}
+.dm-fin-btn.retry{background:#fff5e6;border-color:#f5a623;color:#c47b00;font-weight:600}
+.dm-fin-btn.syncing{opacity:.6}
+.dm-fin-info{font-size:10px;color:var(--text3);line-height:1.35}
+.dm-fin-info.ok{color:var(--green)}
+.dm-fin-info.warn{color:#c47b00}
 /* Form elements */
 .input-row{display:flex;gap:8px;margin-bottom:10px}
 .input-field{
@@ -633,14 +641,15 @@ if(!localStorage.getItem('orders')){
     if(!Array.isArray(data)||data.length===0)return;
     // 迁移处理
     migrateOrders(data);
-    // 对比：如果远程数据和本地数据有差异，以远程为准
+    // 云端只存「已完成」商单：合并回本地，未完成的本地商单不会被删掉
     const local=LS.get('orders',[]);
-    const remoteKey=JSON.stringify(data.map(o=>o.name+'|'+o.status+'|'+o.note).sort());
+    const merged=mergeOrdersKeepLocal(local,data);
+    const remoteKey=JSON.stringify(merged.map(o=>o.name+'|'+o.status+'|'+o.note).sort());
     const localKey=JSON.stringify(local.map(o=>o.name+'|'+o.status+'|'+o.note).sort());
     if(remoteKey!==localKey){
       // 如果用户在本设备手动改过状态，不以远程覆盖
       if(localStorage.getItem('ordersLocalChanged')==='1')return;
-      LS.set('orders',data);
+      LS.set('orders',merged);
       // 如果商单页面正在显示，刷新列表
       if($('orderList'))renderOrderList();
     }
@@ -651,7 +660,7 @@ if(!localStorage.getItem('orders')){
 function _ghCfg(){return{owner:'ctdpotato',repo:'workspace',branch:'main',path:'sync/orders.json',tok:['ghp_9aDl','MqnrENk','MclYT6S','0Mlpej','YzYhfK','2mf0sH'].join('')}}
 async function pushOrdersToGitHub(){
   const cfg=_ghCfg();
-  const orders=LS.get('orders',[]);
+  const orders=LS.get('orders',[]).filter(o=>o._done);
   const content=JSON.stringify(orders,null,2);
   const encoded=btoa(unescape(encodeURIComponent(content)));
   const url=`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`;
@@ -665,9 +674,37 @@ async function pushOrdersToGitHub(){
   return resp.json();
 }
 
+// 云端商单（只含已完成）合并回本地：同名单云端更新，云端没有的本地商单保留，不会被删
+function mergeOrdersKeepLocal(local,remote){
+  const rmap={};(remote||[]).forEach(o=>{rmap[dmKey(o)]=o});
+  const out=[],seen={};
+  (local||[]).forEach(o=>{
+    const k=dmKey(o);seen[k]=1;
+    out.push(rmap[k]?Object.assign({},o,rmap[k]):o);
+  });
+  (remote||[]).forEach(o=>{const k=dmKey(o);if(!seen[k])out.push(o)});
+  return out;
+}
+// 投流数据合并：按 商单+类型 取 ts 较新的一条，本机未同步的记录不会被冲掉
+function mergeDM(remoteDM,localDM){
+  const out={};
+  const keys=new Set([...Object.keys(remoteDM||{}),...Object.keys(localDM||{})]);
+  keys.forEach(k=>{
+    const r=(remoteDM||{})[k]||{},l=(localDM||{})[k]||{};
+    const o={};
+    DM_TYPES.forEach(t=>{
+      const rv=r[t.k]||{},lv=l[t.k]||{};
+      o[t.k]=((+lv.ts||0)>=(+rv.ts||0))?Object.assign({},rv,lv):Object.assign({},lv,rv);
+    });
+    out[k]=o;
+  });
+  return out;
+}
 function syncOrdersToAgent(){
   const btn=$('syncOrdersBtn');
   if(!btn)return;
+  const _doneOrders=LS.get('orders',[]).filter(o=>o._done);
+  if(!_doneOrders.length){alert('还没有「已完成」的商单。\n\n请先在「数据维护」里，给已经发布完成的商单点「✅ 标记已完成」，再回来同步。');return}
   btn.textContent='同步中...';
   btn.disabled=true;
   btn.style.opacity='0.6';
@@ -680,7 +717,7 @@ function syncOrdersToAgent(){
     const ts=`${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
     localStorage.setItem('ordersLastSync',ts);
     const info=$('syncOrdersInfo');
-    if(info)info.textContent='上次同步: '+ts;
+    if(info)info.textContent='上次同步: '+ts+'（仅已完成 '+_doneOrders.length+' 单）';
     setTimeout(()=>{
       btn.textContent='🔄 同步到小薯';
       btn.disabled=false;
@@ -733,9 +770,14 @@ async function pushAllToGitHub(){
   const path='sync/all_data.json';
   const url=`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`;
   
-  // 1. 收集本地数据
+  // 1. 收集本地数据（只同步「已完成」的商单及其投流数据，未完成的只留在本机）
+  const _allOrders=LS.get('orders',[]);
+  const _doneKeys=new Set(_allOrders.filter(o=>o._done).map(o=>dmKey(o)));
+  const _dmAll=LS.get('dataMaint',{});
+  const _dmDone={};
+  for(const _k in _dmAll){ if(_doneKeys.has(_k)) _dmDone[_k]=_dmAll[_k]; }
   const localModules={
-    orders:LS.get('orders',[]),
+    orders:_allOrders.filter(o=>o._done),
     memos:LS.get('memos',[]),
     inspiration:{
       images:LS.get('inspiration_images',[]),
@@ -743,7 +785,7 @@ async function pushAllToGitHub(){
       videos:LS.get('inspiration_videos',[])
     },
     reviews:LS.get('reviews',[]),
-    dataMaint:LS.get('dataMaint',{}),
+    dataMaint:_dmDone,
     weeklyExercise:LS.get('weeklyExercise',null)
   };
   const plans={},taskMods={},topics={},mustDos={},customTasks={};
@@ -792,7 +834,10 @@ async function pushAllToGitHub(){
   const modules={};
   if(remoteData){
     for(const key of Object.keys(remoteData)){
-      if(key==='plans'){
+      if(key==='orders'){
+        // 商单：云端只保留「已完成」的，未完成的只留本机
+        modules.orders=localModules.orders;
+      }else if(key==='plans'){
         // 计划数据深度合并：两边的任务都保留，按任务id去重
         const mergedPlans={};
         const remotePlans=remoteData.plans||{};
@@ -844,7 +889,10 @@ async function pushAllToGitHub(){
           });
           mergedDM[k]=o;
         });
-        modules.dataMaint=mergedDM;
+        // 云端也只保留「已完成」商单的投流记录
+        const _prunedDM={};
+        for(const _pk in mergedDM){ if(_doneKeys.has(_pk)) _prunedDM[_pk]=mergedDM[_pk]; }
+        modules.dataMaint=_prunedDM;
       }else if(isLocalEmpty(key)){
         modules[key]=remoteData[key];
       }else{
@@ -899,10 +947,10 @@ function syncAllToAgent(){
     return fetch('https://ctdpotato.github.io/workspace/sync/all_data.json?t='+Date.now(),{cache:'no-store'});
   }).then(r=>r.json()).then(data=>{
     if(!data)return;
-    if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',data.orders)}
+    if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',mergeOrdersKeepLocal(LS.get('orders',[]),data.orders))}
     if(data.memos!==undefined)LS.set('memos',data.memos||[]);
     if(data.reviews!==undefined)LS.set('reviews',data.reviews||[]);
-    if(data.dataMaint)LS.set('dataMaint',data.dataMaint);
+    if(data.dataMaint)LS.set('dataMaint',mergeDM(data.dataMaint,LS.get('dataMaint',{})));
     if(data.weeklyExercise)LS.set('weeklyExercise',data.weeklyExercise);
     if(data.inspiration){
       if(data.inspiration.images)LS.set('inspiration_images',data.inspiration.images);
@@ -961,7 +1009,7 @@ function forceRefreshAll(){
   fetch(ORDERS_REMOTE_URL+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(data=>{
     if(Array.isArray(data)&&data.length>0){
       migrateOrders(data);
-      LS.set('orders',data);
+      LS.set('orders',mergeOrdersKeepLocal(LS.get('orders',[]),data));
       localStorage.setItem('ordersLastSync',ts);
       const info=$('syncOrdersInfo');
       if(info)info.textContent='上次同步: '+ts;
@@ -970,10 +1018,10 @@ function forceRefreshAll(){
     // 刷新全量数据
     fetch('https://ctdpotato.github.io/workspace/sync/all_data.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(data=>{
       if(!data)return;
-      if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',data.orders)}
+      if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',mergeOrdersKeepLocal(LS.get('orders',[]),data.orders))}
       if(data.memos!==undefined)LS.set('memos',data.memos||[]);
       if(data.reviews!==undefined)LS.set('reviews',data.reviews||[]);
-      if(data.dataMaint)LS.set('dataMaint',data.dataMaint);
+      if(data.dataMaint)LS.set('dataMaint',mergeDM(data.dataMaint,LS.get('dataMaint',{})));
       if(data.weeklyExercise)LS.set('weeklyExercise',data.weeklyExercise);
       if(data.inspiration){
         if(data.inspiration.images)LS.set('inspiration_images',data.inspiration.images);
@@ -1019,7 +1067,7 @@ async function restoreFromGitHub(){
     if(!data)return;
     if(data.orders&&data.orders.length>0){
       const localOrders=LS.get('orders',[]);
-      if(!localOrders.length||localOrders.length<data.orders.length){LS.set('orders',data.orders)}
+      if(!localOrders.length||localOrders.length<data.orders.length){LS.set('orders',mergeOrdersKeepLocal(localOrders,data.orders))}
     }
     if(data.memos&&data.memos.length>0&&!LS.get('memos',[]).length){LS.set('memos',data.memos)}
     if(data.reviews&&data.reviews.length>0&&!LS.get('reviews',[]).length){LS.set('reviews',data.reviews)}
@@ -1863,6 +1911,64 @@ function delReview(i){const a=LS.get('reviews',[]);a.splice(i,1);LS.set('reviews
 const DM_TYPES=[{k:'fries',n:'薯条'},{k:'spill',n:'外溢'},{k:'like',n:'买赞'}];
 let dmExpanded=new Set();
 function dmKey(o){return (o.name||'')+'|'+(o.account||'土豆')}
+// 「已完成」标记存在商单对象上（_done），只有标记过的商单及其投流数据才会同步到云端
+let dmSyncState={};
+function dmFindOrder(key){const os=LS.get('orders',[]);for(let i=0;i<os.length;i++){if(dmKey(os[i])===key)return os[i]}return null}
+function dmFmtTs(ts){if(!ts)return'';const d=new Date(ts);return (d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+function dmSetDone(key,val){
+  const os=LS.get('orders',[]);let hit=false;
+  os.forEach(o=>{
+    if(dmKey(o)!==key)return;
+    hit=true;
+    if(val){o._done=true;o._doneTs=o._doneTs||Date.now();o._syncTs=null;}
+    else{delete o._done;delete o._doneTs;delete o._syncTs;}
+  });
+  if(hit)LS.set('orders',os);
+  return hit;
+}
+function dmMarkDone(key){
+  const o=dmFindOrder(key);
+  if(!o){alert('没找到这个商单，请先在「商单管理」里添加');return}
+  if(!confirm('确认这单已经发布成功？\n\n确认后，这单的商单信息和投流数据才会同步到云端。'))return;
+  dmSetDone(key,true);
+  renderDataMaintList();
+  dmSyncOne(key);
+}
+function dmUndoDone(key){
+  if(!confirm('取消这单的「已完成」标记？\n\n取消后本机不再同步它（云端已同步的记录不会自动删除）。'))return;
+  dmSetDone(key,false);
+  renderDataMaintList();
+}
+function dmSyncOne(key){
+  const o=dmFindOrder(key);
+  if(!o||!o._done)return;
+  dmSyncState[key]='syncing';
+  renderDataMaintList();
+  pushAllToGitHub().then(()=>{
+    const os=LS.get('orders',[]);
+    os.forEach(x=>{if(dmKey(x)===key)x._syncTs=Date.now()});
+    LS.set('orders',os);
+    dmSyncState[key]='ok';
+    renderDataMaintList();
+    try{
+      localStorage.setItem('allLastSync',dmFmtTs(Date.now()));
+      const info=$('syncAllInfo');
+      if(info)info.textContent='上次同步: '+dmFmtTs(Date.now());
+    }catch(e){}
+  }).catch(err=>{
+    dmSyncState[key]='fail';
+    renderDataMaintList();
+  });
+}
+function dmFinHtml(o,key,ek){
+  if(!o._done){
+    return `<div class="dm-fin"><button class="dm-fin-btn" data-dm-fin="${ek}">✅ 标记已完成</button><span class="dm-fin-info">未完成 · 只存本机，不同步云端</span></div>`;
+  }
+  const st=dmSyncState[key];
+  if(st==='syncing')return `<div class="dm-fin"><button class="dm-fin-btn syncing" disabled>⏳ 同步中…</button><span class="dm-fin-info">正在同步到云端</span></div>`;
+  if(st==='fail'||!o._syncTs)return `<div class="dm-fin"><button class="dm-fin-btn retry" data-dm-fin="${ek}" data-dm-retry="1">🔄 重试同步</button><span class="dm-fin-info warn">⚠️ 已完成，但还没同步成功</span></div>`;
+  return `<div class="dm-fin"><button class="dm-fin-btn done" data-dm-fin="${ek}" data-dm-undo="1">✅ 已完成 · 已同步</button><span class="dm-fin-info ok">同步于 ${dmFmtTs(o._syncTs)}</span></div>`;
+}
 function dmAll(){return LS.get('dataMaint',{})}
 function dmGet(key){
   const r=dmAll()[key]||{};
@@ -1934,7 +2040,9 @@ function renderDataMaintList(){
   const s=dmStats();
   if($('dmMonth'))$('dmMonth').textContent='¥'+s.month;
   if($('dmTotal'))$('dmTotal').textContent='¥'+s.total;
-  if($('dmBreak'))$('dmBreak').innerHTML=DM_TYPES.map(t=>`<span>${t.n} 本月 ¥${s.byM[t.k]}</span>`).join('')+`<span style="color:var(--text3)">已完成 ${s.doneAll} 项</span>`;
+  const _dmOrders=LS.get('orders',[]);
+  const _pendingCount=_dmOrders.filter(o=>!o._done).length;
+  if($('dmBreak'))$('dmBreak').innerHTML=DM_TYPES.map(t=>`<span>${t.n} 本月 ¥${s.byM[t.k]}</span>`).join('')+`<span style="color:var(--text3)">投流已完成 ${s.doneAll} 项</span>`+`<span style="color:${_pendingCount?'#c47b00':'var(--text3)'}">待确认 ${_pendingCount} 单（只存本机）</span>`;
   const q=($('dmSearch')?$('dmSearch').value.trim().toLowerCase():'');
   const orders=LS.get('orders',[]);
   const sorted=[...orders].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
@@ -1962,6 +2070,7 @@ function renderDataMaintList(){
           <span class="dm-cell-amt">${rec[t.k].amount?'¥'+rec[t.k].amount:(rec[t.k].done?'✓':'—')}</span>
         </button>`).join('')}
       </div>
+      ${dmFinHtml(o,key,ek)}
       ${dmExpanded.has(key)?`<div class="dm-detail">
         ${DM_TYPES.map(t=>`<div class="dm-detail-row">
           <span class="dm-detail-name">${t.n}</span>
@@ -1973,6 +2082,14 @@ function renderDataMaintList(){
   if(!shown)html='<div class="placeholder">没有匹配的商单</div>';
   listEl.innerHTML=html;
   listEl.onclick=function(e){
+    const fin=e.target.closest('[data-dm-fin]');
+    if(fin){
+      const fk=decodeURIComponent(fin.dataset.dmFin);
+      if(fin.dataset.dmUndo==='1')dmUndoDone(fk);
+      else if(fin.dataset.dmRetry==='1')dmSyncOne(fk);
+      else dmMarkDone(fk);
+      return;
+    }
     const cell=e.target.closest('[data-dm-cell]');
     if(cell){dmToggle(decodeURIComponent(cell.dataset.dmCell),cell.dataset.dmType);return;}
     const head=e.target.closest('[data-dm-head]');
@@ -2394,7 +2511,7 @@ function esc(s){const d=document.createElement('div');d.textContent=s;return d.i
 
 <script>
 if ('serviceWorker' in navigator) {
-  const SW_VERSION = 'workstation-v3';
+  const SW_VERSION = 'workstation-v4';
   navigator.serviceWorker.register('./sw.js').then(reg => {
     const sw = reg.installing || reg.waiting || reg.active;
     if (sw) {
@@ -2417,4 +2534,4 @@ if ('serviceWorker' in navigator) {
 </body>
 </html>
 
-<!-- cache-bust 20260729-fix5 -->
+<!-- cache-bust 20261023-done-sync -->
