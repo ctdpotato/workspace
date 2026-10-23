@@ -200,6 +200,9 @@ body{
 .dm-detail-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .dm-detail-name{font-size:12px;color:var(--text2);width:34px;flex:none}
 .dm-detail-input{margin-bottom:0;min-height:36px;padding:6px 10px;font-size:13px}
+.dm-group{font-size:11px;font-weight:700;color:var(--text2);margin:14px 0 8px;display:flex;align-items:center;gap:8px}
+.dm-group:first-child{margin-top:4px}
+.dm-group::after{content:'';flex:1;height:1px;background:var(--border)}
 .dm-fin{display:flex;align-items:center;gap:8px;margin-top:9px;padding-top:9px;border-top:1px dashed var(--border)}
 .dm-fin-btn{font-size:11px;padding:5px 10px;border-radius:9px;border:1px solid var(--border);background:var(--bg);color:var(--text2);cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s}
 .dm-fin-btn.done{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:600}
@@ -2055,12 +2058,12 @@ function renderDataMaintList(){
   if($('dmMonth'))$('dmMonth').textContent='¥'+s.month;
   if($('dmTotal'))$('dmTotal').textContent='¥'+s.total;
   const _dmOrders=LS.get('orders',[]);
-  const _pendingCount=_dmOrders.filter(o=>!dmDone(o)).length;
-  if($('dmBreak'))$('dmBreak').innerHTML=DM_TYPES.map(t=>`<span>${t.n} 本月 ¥${s.byM[t.k]}</span>`).join('')+`<span style="color:var(--text3)">投流已完成 ${s.doneAll} 项</span>`+`<span style="color:${_pendingCount?'#c47b00':'var(--text3)'}">待确认 ${_pendingCount} 单（只存本机）</span>`;
+  const _pendingCount=_dmOrders.filter(o=>!(dmDone(o)&&o._syncTs)).length;
+  if($('dmBreak'))$('dmBreak').innerHTML=DM_TYPES.map(t=>`<span>${t.n} 本月 ¥${s.byM[t.k]}</span>`).join('')+`<span style="color:var(--text3)">投流已完成 ${s.doneAll} 项</span>`+`<span style="color:${_pendingCount?'#c47b00':'var(--text3)'}">未同步 ${_pendingCount} 单（只存本机）</span>`;
   const q=($('dmSearch')?$('dmSearch').value.trim().toLowerCase():'');
   const orders=LS.get('orders',[]);
   const sorted=[...orders].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-  let html='';let shown=0;
+  let doneHtml='';let pendHtml='';let shown=0;let nDone=0;let nPend=0;
   sorted.forEach(o=>{
     const key=dmKey(o);
     const label=((o.name||'')+' '+(o.brand||'')+' '+(o.account||'')).toLowerCase();
@@ -2070,7 +2073,7 @@ function renderDataMaintList(){
     const sum=DM_TYPES.reduce((a,t)=>a+rec[t.k].amount,0);
     const doneCount=DM_TYPES.filter(t=>rec[t.k].done).length;
     const ek=encodeURIComponent(key);
-    html+=`<div class="dm-card">
+    const cardHtml=`<div class="dm-card">
       <div class="dm-head" data-dm-head="${ek}">
         <div style="flex:1;min-width:0">
           <div class="dm-name">${esc(o.name||'未命名')}<span class="dm-acc">${esc(o.account||'土豆')}</span></div>
@@ -2092,7 +2095,11 @@ function renderDataMaintList(){
         </div>`).join('')}
       </div>`:''}
     </div>`;
+    if(dmDone(o)&&o._syncTs){nDone++;doneHtml+=cardHtml}else{nPend++;pendHtml+=cardHtml}
   });
+  let html='';
+  if(nDone)html+=`<div class="dm-group">✅ 已同步到云端 · ${nDone} 单</div>`+doneHtml;
+  if(nPend)html+=`<div class="dm-group">⏳ 只存本机 · ${nPend} 单</div>`+pendHtml;
   if(!shown)html='<div class="placeholder">没有匹配的商单</div>';
   listEl.innerHTML=html;
   listEl.onclick=function(e){
@@ -2548,4 +2555,4 @@ if ('serviceWorker' in navigator) {
 </body>
 </html>
 
-<!-- cache-bust 20261023-done-status-sync -->
+<!-- cache-bust 20261023-group-sync -->
