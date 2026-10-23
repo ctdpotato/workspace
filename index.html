@@ -177,6 +177,29 @@ body{
   position:absolute;bottom:20px;left:0;width:100%;text-align:center;
   color:rgba(255,255,255,0.5);font-size:12px;
 }
+/* 数据维护 */
+.dm-sum{display:flex;gap:8px;margin-bottom:10px}
+.dm-sum-box{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
+.dm-sum-label{font-size:10px;color:var(--text3)}
+.dm-sum-val{font-size:17px;font-weight:700;color:var(--text);margin-top:2px}
+.dm-sum-val.green{color:var(--green)}
+.dm-breakdown{font-size:11px;color:var(--text2);margin:-4px 0 10px;display:flex;gap:12px;flex-wrap:wrap}
+.dm-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.dm-head{display:flex;align-items:center;gap:8px;cursor:pointer}
+.dm-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.dm-acc{font-size:9px;padding:1px 5px;border-radius:3px;background:var(--blue);color:#fff;margin-left:3px;vertical-align:middle}
+.dm-sub{font-size:10px;color:var(--text3);margin-top:3px}
+.dm-prog{font-size:10px;color:var(--text3);white-space:nowrap;flex:none}
+.dm-cells{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}
+.dm-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:7px 4px;border-radius:9px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-family:inherit;transition:all .15s}
+.dm-cell-name{font-size:11px;color:var(--text2)}
+.dm-cell-amt{font-size:11px;font-weight:600;color:var(--text3)}
+.dm-cell.done{background:var(--green-light);border-color:var(--green)}
+.dm-cell.done .dm-cell-name,.dm-cell.done .dm-cell-amt{color:var(--green)}
+.dm-detail{margin-top:9px;padding-top:9px;border-top:1px dashed var(--border)}
+.dm-detail-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.dm-detail-name{font-size:12px;color:var(--text2);width:34px;flex:none}
+.dm-detail-input{margin-bottom:0;min-height:36px;padding:6px 10px;font-size:13px}
 /* Form elements */
 .input-row{display:flex;gap:8px;margin-bottom:10px}
 .input-field{
@@ -356,10 +379,10 @@ textarea.input-field{resize:vertical;min-height:80px}
       <div class="cc-title">商单进度</div>
       <div class="cc-desc">管理合作进度</div>
     </button>
-    <button class="creative-card" onclick="openModal('review')">
+    <button class="creative-card" onclick="openModal('datamaint')">
       <div class="cc-icon">📊</div>
-      <div class="cc-title">内容复盘</div>
-      <div class="cc-desc">数据追踪分析</div>
+      <div class="cc-title">数据维护</div>
+      <div class="cc-desc">投流记录·商单数据</div>
     </button>
     <button class="creative-card" onclick="openModal('hot')">
       <div class="cc-icon">🔥</div>
@@ -720,6 +743,7 @@ async function pushAllToGitHub(){
       videos:LS.get('inspiration_videos',[])
     },
     reviews:LS.get('reviews',[]),
+    dataMaint:LS.get('dataMaint',{}),
     weeklyExercise:LS.get('weeklyExercise',null)
   };
   const plans={},taskMods={},topics={},mustDos={},customTasks={};
@@ -805,6 +829,22 @@ async function pushAllToGitHub(){
           }
         }
         modules.mustDos=mergedMustDos;
+      }else if(key==='dataMaint'){
+        // 数据维护合并：按 商单+类型 取较新的一条
+        const mergedDM={};
+        const remoteDM=remoteData.dataMaint||{};
+        const localDM=localModules.dataMaint||{};
+        const allDmKeys=new Set([...Object.keys(remoteDM),...Object.keys(localDM)]);
+        allDmKeys.forEach(k=>{
+          const r=remoteDM[k]||{},l=localDM[k]||{};
+          const o={};
+          DM_TYPES.forEach(t=>{
+            const rv=r[t.k]||{},lv=l[t.k]||{};
+            o[t.k]=((+lv.ts||0)>=(+rv.ts||0))?{...rv,...lv}:{...lv,...rv};
+          });
+          mergedDM[k]=o;
+        });
+        modules.dataMaint=mergedDM;
       }else if(isLocalEmpty(key)){
         modules[key]=remoteData[key];
       }else{
@@ -821,6 +861,11 @@ async function pushAllToGitHub(){
         if(!modules.mustDos){
           modules.mustDos={};
           for(const k in localModules.mustDos) modules.mustDos[k]=localModules.mustDos[k];
+        }
+      }else if(key==='dataMaint'){
+        if(!modules.dataMaint){
+          modules.dataMaint={};
+          for(const k in localModules.dataMaint) modules.dataMaint[k]=localModules.dataMaint[k];
         }
       }else if(!(key in modules)){
         modules[key]=localModules[key];
@@ -857,6 +902,7 @@ function syncAllToAgent(){
     if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',data.orders)}
     if(data.memos!==undefined)LS.set('memos',data.memos||[]);
     if(data.reviews!==undefined)LS.set('reviews',data.reviews||[]);
+    if(data.dataMaint)LS.set('dataMaint',data.dataMaint);
     if(data.weeklyExercise)LS.set('weeklyExercise',data.weeklyExercise);
     if(data.inspiration){
       if(data.inspiration.images)LS.set('inspiration_images',data.inspiration.images);
@@ -927,6 +973,7 @@ function forceRefreshAll(){
       if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',data.orders)}
       if(data.memos!==undefined)LS.set('memos',data.memos||[]);
       if(data.reviews!==undefined)LS.set('reviews',data.reviews||[]);
+      if(data.dataMaint)LS.set('dataMaint',data.dataMaint);
       if(data.weeklyExercise)LS.set('weeklyExercise',data.weeklyExercise);
       if(data.inspiration){
         if(data.inspiration.images)LS.set('inspiration_images',data.inspiration.images);
@@ -976,6 +1023,7 @@ async function restoreFromGitHub(){
     }
     if(data.memos&&data.memos.length>0&&!LS.get('memos',[]).length){LS.set('memos',data.memos)}
     if(data.reviews&&data.reviews.length>0&&!LS.get('reviews',[]).length){LS.set('reviews',data.reviews)}
+    if(data.dataMaint&&Object.keys(data.dataMaint).length&&!Object.keys(LS.get('dataMaint',{})).length){LS.set('dataMaint',data.dataMaint)}
     if(data.weeklyExercise){
       const local=LS.get('weeklyExercise',null);
       if(!local||(!local.weeks||Object.keys(local.weeks).length===0)){LS.set('weeklyExercise',data.weeklyExercise)}
@@ -1375,6 +1423,7 @@ function openModal(type){
     case 'ideas':renderIdeas(title,body);break;
     case 'orders':renderOrders(title,body);break;
     case 'review':renderReview(title,body);break;
+    case 'datamaint':renderDataMaint(title,body);break;
     case 'hot':renderHot(title,body);break;
     case 'memo':renderMemo(title,body);break;
     case 'mustdo':renderMustDoModal(title,body);break;
@@ -1809,6 +1858,132 @@ function renderReviewList(){
   `).join('');
 }
 function delReview(i){const a=LS.get('reviews',[]);a.splice(i,1);LS.set('reviews',a);renderReviewList()}
+
+// --- 数据维护（投流记录：薯条 / 外溢 / 买赞） ---
+const DM_TYPES=[{k:'fries',n:'薯条'},{k:'spill',n:'外溢'},{k:'like',n:'买赞'}];
+let dmExpanded=new Set();
+function dmKey(o){return (o.name||'')+'|'+(o.account||'土豆')}
+function dmAll(){return LS.get('dataMaint',{})}
+function dmGet(key){
+  const r=dmAll()[key]||{};
+  const out={};
+  DM_TYPES.forEach(t=>{
+    const v=r[t.k]||{};
+    out[t.k]={done:!!v.done,amount:+v.amount||0,date:v.date||'',ts:+v.ts||0};
+  });
+  return out;
+}
+function dmSave(key,rec,changed){
+  const all=dmAll();
+  const now=Date.now();
+  if(changed&&rec[changed])rec[changed].ts=now;
+  else DM_TYPES.forEach(t=>{if(!rec[t.k].ts)rec[t.k].ts=now});
+  all[key]=rec;
+  LS.set('dataMaint',all);
+}
+function dmToggle(key,tk){
+  const rec=dmGet(key);
+  rec[tk].done=!rec[tk].done;
+  if(rec[tk].done&&!rec[tk].date)rec[tk].date=today();
+  dmSave(key,rec,tk);
+  renderDataMaintList();
+}
+function dmSetAmount(key,tk,val){
+  const rec=dmGet(key);
+  rec[tk].amount=parseFloat(val)||0;
+  if(rec[tk].amount>0&&!rec[tk].date)rec[tk].date=today();
+  dmSave(key,rec,tk);
+  renderDataMaintList();
+}
+function dmToggleExpand(key){
+  if(dmExpanded.has(key))dmExpanded.delete(key);else dmExpanded.add(key);
+  renderDataMaintList();
+}
+function dmStats(){
+  const all=dmAll();const cur=today().slice(0,7);
+  const s={total:0,month:0,byM:{fries:0,spill:0,like:0},doneAll:0};
+  for(const k in all){
+    const r=all[k]||{};
+    DM_TYPES.forEach(t=>{
+      const v=r[t.k]||{};
+      const a=+v.amount||0;
+      s.total+=a;
+      if((v.date||'').slice(0,7)===cur){s.month+=a;s.byM[t.k]+=a}
+      if(v.done)s.doneAll++;
+    });
+  }
+  return s;
+}
+function renderDataMaint(title,body){
+  title.textContent='📊 数据维护';
+  body.innerHTML=`
+    <div class="dm-sum">
+      <div class="dm-sum-box"><div class="dm-sum-label">本月投放</div><div class="dm-sum-val green" id="dmMonth">¥0</div></div>
+      <div class="dm-sum-box"><div class="dm-sum-label">累计投放</div><div class="dm-sum-val" id="dmTotal">¥0</div></div>
+    </div>
+    <div class="dm-breakdown" id="dmBreak"></div>
+    <input class="input-field" id="dmSearch" placeholder="🔍 搜索商单 / 品牌" style="margin-bottom:10px" oninput="renderDataMaintList()">
+    <div id="dmList"></div>
+  `;
+  renderDataMaintList();
+}
+function renderDataMaintList(){
+  const listEl=$('dmList');if(!listEl)return;
+  const sheet=$('modalSheet');
+  const st=sheet?sheet.scrollTop:0;
+  const s=dmStats();
+  if($('dmMonth'))$('dmMonth').textContent='¥'+s.month;
+  if($('dmTotal'))$('dmTotal').textContent='¥'+s.total;
+  if($('dmBreak'))$('dmBreak').innerHTML=DM_TYPES.map(t=>`<span>${t.n} 本月 ¥${s.byM[t.k]}</span>`).join('')+`<span style="color:var(--text3)">已完成 ${s.doneAll} 项</span>`;
+  const q=($('dmSearch')?$('dmSearch').value.trim().toLowerCase():'');
+  const orders=LS.get('orders',[]);
+  const sorted=[...orders].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  let html='';let shown=0;
+  sorted.forEach(o=>{
+    const key=dmKey(o);
+    const label=((o.name||'')+' '+(o.brand||'')+' '+(o.account||'')).toLowerCase();
+    if(q&&label.indexOf(q)<0)return;
+    shown++;
+    const rec=dmGet(key);
+    const sum=DM_TYPES.reduce((a,t)=>a+rec[t.k].amount,0);
+    const doneCount=DM_TYPES.filter(t=>rec[t.k].done).length;
+    const ek=encodeURIComponent(key);
+    html+=`<div class="dm-card">
+      <div class="dm-head" data-dm-head="${ek}">
+        <div style="flex:1;min-width:0">
+          <div class="dm-name">${esc(o.name||'未命名')}<span class="dm-acc">${esc(o.account||'土豆')}</span></div>
+          <div class="dm-sub">${o.brand?esc(o.brand)+' · ':''}${esc(o.date||'无日期')}${sum?' · 已投 ¥'+sum:''}</div>
+        </div>
+        <div class="dm-prog">${doneCount}/3 ${dmExpanded.has(key)?'▲':'▼'}</div>
+      </div>
+      <div class="dm-cells">
+        ${DM_TYPES.map(t=>`<button class="dm-cell ${rec[t.k].done?'done':''}" data-dm-cell="${ek}" data-dm-type="${t.k}">
+          <span class="dm-cell-name">${t.n}</span>
+          <span class="dm-cell-amt">${rec[t.k].amount?'¥'+rec[t.k].amount:(rec[t.k].done?'✓':'—')}</span>
+        </button>`).join('')}
+      </div>
+      ${dmExpanded.has(key)?`<div class="dm-detail">
+        ${DM_TYPES.map(t=>`<div class="dm-detail-row">
+          <span class="dm-detail-name">${t.n}</span>
+          <input class="input-field dm-detail-input" type="number" inputmode="decimal" placeholder="花了多少钱" value="${rec[t.k].amount||''}" data-dm-amt="${ek}" data-dm-type="${t.k}">
+        </div>`).join('')}
+      </div>`:''}
+    </div>`;
+  });
+  if(!shown)html='<div class="placeholder">没有匹配的商单</div>';
+  listEl.innerHTML=html;
+  listEl.onclick=function(e){
+    const cell=e.target.closest('[data-dm-cell]');
+    if(cell){dmToggle(decodeURIComponent(cell.dataset.dmCell),cell.dataset.dmType);return;}
+    const head=e.target.closest('[data-dm-head]');
+    if(head){dmToggleExpand(decodeURIComponent(head.dataset.dmHead));return;}
+  };
+  listEl.onchange=function(e){
+    const inp=e.target.closest('[data-dm-amt]');
+    if(inp){dmSetAmount(decodeURIComponent(inp.dataset.dmAmt),inp.dataset.dmType,inp.value);}
+  };
+  if(sheet)sheet.scrollTop=st;
+}
 
 // --- Hot (爆款热点 - 按账号分类+人设融合) ---
 let currentHotAccount='土豆';
