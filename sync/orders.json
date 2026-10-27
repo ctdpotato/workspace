@@ -20,7 +20,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 0
+    "status": 0,
+    "_v4": true
   },
   {
     "name": "回春油",
@@ -31,7 +32,8 @@
     "type": "自己单",
     "rebate": 20,
     "note": "",
-    "status": 0
+    "status": 0,
+    "_v4": true
   },
   {
     "name": "力士沐浴露",
@@ -167,7 +169,8 @@
     "type": "公司单",
     "rebate": null,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "松下冲牙器",
@@ -190,7 +193,8 @@
     "type": "自己单",
     "rebate": null,
     "note": "",
-    "status": 5
+    "status": 5,
+    "_v4": true
   },
   {
     "name": "得宝洗脸巾",
