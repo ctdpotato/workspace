@@ -24,6 +24,17 @@
     "_v4": true
   },
   {
+    "name": "hfp",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-10-30",
+    "price": "2400",
+    "type": "公司单",
+    "rebate": 20,
+    "note": "礼盒",
+    "status": 0
+  },
+  {
     "name": "回春油",
     "account": "宝珠",
     "brand": "",
@@ -34,6 +45,17 @@
     "note": "",
     "status": 0,
     "_v4": true
+  },
+  {
+    "name": "水下护肤品",
+    "account": "宝珠",
+    "brand": "",
+    "date": "",
+    "price": "1000",
+    "type": "公司单",
+    "rebate": null,
+    "note": "帕尔玛之水身体乳/ysl身体油",
+    "status": 0
   },
   {
     "name": "力士沐浴露",
