@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>数据恢复</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;padding:24px 18px 40px;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;background:#f7f7f5;color:#2b2b2b;line-height:1.6}
+.wrap{max-width:520px;margin:0 auto}
+h1{font-size:20px;margin:0 0 6px;font-weight:600}
+.sub{font-size:13px;color:#888;margin-bottom:20px}
+.card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.05);margin-bottom:16px}
+#log{font-size:14px;font-family:ui-monospace,Menlo,monospace}
+.line{padding:5px 0;border-bottom:1px dashed #eee;word-break:break-all}
+.line:last-child{border-bottom:none}
+.ok{color:#2e7d32}
+.err{color:#c62828}
+.warn{color:#ef6c00}
+.muted{color:#999}
+#back{display:none;width:100%;padding:14px;border:none;border-radius:14px;background:#2e7d32;color:#fff;font-size:16px;font-weight:600;cursor:pointer;margin-top:8px}
+#back:active{opacity:.85}
+#retry{display:none;width:100%;padding:14px;border:none;border-radius:14px;background:#c62828;color:#fff;font-size:16px;font-weight:600;cursor:pointer;margin-top:8px}
+.tip{font-size:12px;color:#999;margin-top:12px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🔄 数据恢复</h1>
+  <div class="sub">从云端把数据拉回这台设备 · 只下载，不上传</div>
+  <div class="card"><div id="log"></div></div>
+  <button id="back">✅ 回到工作台</button>
+  <button id="retry">重新尝试</button>
+  <div class="tip">这个页面不会修改云端任何数据，只把云端的记录写回本机浏览器。恢复完成后请回工作台确认。</div>
+</div>
+<script>
+var box=document.getElementById('log');
+function log(msg,cls){
+  var d=document.createElement('div');
+  d.className='line '+(cls||'');
+  d.textContent=msg;
+  box.appendChild(d);
+}
+function set(k,v){localStorage.setItem(k,JSON.stringify(v));}
+
+function mergeOrders(local,remote){
+  var key=function(o){return (o.name||'')+'|'+(o.account||'')+'|'+(o.date||'')};
+  var out=[],seen={};
+  (local||[]).forEach(function(o){var k=key(o);if(!seen[k]){seen[k]=1;out.push(o)}});
+  (remote||[]).forEach(function(o){var k=key(o);if(!seen[k]){seen[k]=1;out.push(o)}});
+  return out;
+}
+
+async function run(){
+  box.innerHTML='';
+  document.getElementById('back').style.display='none';
+  document.getElementById('retry').style.display='none';
+  log('正在连接云端…');
+  var d=null,lastErr=null;
+  for(var i=1;i<=3;i++){
+    try{
+      var r=await fetch('sync/all_data.json?t='+Date.now()+'_'+i,{cache:'no-store'});
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      d=await r.json();
+      break;
+    }catch(e){
+      lastErr=e;
+      log('第 '+i+' 次失败：'+e.message+'，重试中…','warn');
+      await new Promise(function(s){setTimeout(s,1200)});
+    }
+  }
+  if(!d){
+    log('❌ 云端读取失败：'+(lastErr?lastErr.message:'未知错误'),'err');
+    log('请检查网络后点下面按钮重试','muted');
+    document.getElementById('retry').style.display='block';
+    return;
+  }
+  log('✅ 云端数据读取成功','ok');
+
+  var added=0,kept=0;
+
+  if(Array.isArray(d.orders)&&d.orders.length){
+    var local=[];try{local=JSON.parse(localStorage.getItem('orders')||'[]')}catch(e){}
+    if(!Array.isArray(local))local=[];
+    var merged=mergeOrders(local,d.orders);
+    set('orders',merged);
+    log('商单：本机 '+local.length+' 条 + 云端 '+d.orders.length+' 条 → 合并后 '+merged.length+' 条','ok');
+    added++;
+  }else{log('商单：云端无数据，跳过','warn')}
+
+  if(d.dataMaint&&Object.keys(d.dataMaint).length){
+    var ldm={};try{ldm=JSON.parse(localStorage.getItem('dataMaint')||'{}')}catch(e){}
+    if(!ldm||typeof ldm!=='object')ldm={};
+    var out={};
+    var keys=Object.keys(d.dataMaint);
+    Object.keys(ldm).forEach(function(k){if(keys.indexOf(k)<0)keys.push(k)});
+    keys.forEach(function(k){
+      var rr=d.dataMaint[k]||{},ll=ldm[k]||{},o={};
+      Object.keys(Object.assign({},rr,ll)).forEach(function(t){
+        var rv=rr[t]||{},lv=ll[t]||{};
+        o[t]=((+lv.ts||0)>=(+rv.ts||0))?Object.assign({},rv,lv):Object.assign({},lv,rv);
+      });
+      out[k]=o;
+    });
+    set('dataMaint',out);
+    log('数据维护：恢复 '+Object.keys(out).length+' 组','ok');
+    added++;
+  }
+
+  var simple=[['memos','备忘'],['reviews','回顾'],['weeklyExercise','运动计划']];
+  simple.forEach(function(p){
+    var v=d[p[0]];
+    if(v===undefined||v===null)return;
+    if(localStorage.getItem(p[0])===null){set(p[0],v);log(p[1]+'：已恢复','ok');added++}
+    else{kept++}
+  });
+
+  if(d.inspiration){
+    [['images','inspiration_images','灵感图'],['texts','inspiration_texts','灵感文'],['videos','inspiration_videos','灵感视频']].forEach(function(p){
+      var v=d.inspiration[p[0]];
+      if(!v||!v.length)return;
+      if(localStorage.getItem(p[1])===null){set(p[1],v);log(p[2]+'：已恢复 '+v.length+' 条','ok');added++}
+      else{kept++}
+    });
+  }
+
+  var groupMap=[['plans','计划'],['taskMods','任务修改'],['topics','选题'],['mustDos','必完成'],['customTasks','自定义任务']];
+  var totalFill=0,totalSkip=0;
+  groupMap.forEach(function(g){
+    var obj=d[g[0]];
+    if(!obj)return;
+    Object.keys(obj).forEach(function(k){
+      if(localStorage.getItem(k)===null){set(k,obj[k]);totalFill++}
+      else{totalSkip++}
+    });
+  });
+  if(totalFill){log('计划/选题/必完成：补回 '+totalFill+' 组','ok');added++}
+  if(totalSkip){log('本机已有 '+totalSkip+' 组，保持不动（不覆盖）','muted')}
+
+  var now=new Date();
+  var ts=(now.getMonth()+1)+'/'+now.getDate()+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  localStorage.setItem('allLastSync',ts);
+
+  log('────────────','muted');
+  log('✅ 恢复完成，共处理 '+added+' 个模块','ok');
+  log('点击下方按钮回工作台查看','muted');
+  document.getElementById('back').style.display='block';
+}
+
+document.getElementById('back').onclick=function(){location.href='index.html'};
+document.getElementById('retry').onclick=function(){run()};
+run();
+</script>
+</body>
+</html>
