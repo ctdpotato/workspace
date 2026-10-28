@@ -293,6 +293,15 @@ textarea.input-field{resize:vertical;min-height:80px}
 .hot-topic-title{font-size:14px;font-weight:600;color:var(--text)}
 .hot-topic-suggest{font-size:12px;color:var(--text2);margin-top:4px;padding:4px 8px;background:#f8f8f8;border-radius:6px;line-height:1.5}
 .hot-topic-date{font-size:11px;color:var(--text3);margin-top:4px}
+.hot-products{margin-top:7px;padding:8px 10px;background:#fffdf5;border:1px dashed #f0d9a8;border-radius:8px}
+.hp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.hp-title{font-size:11px;font-weight:700;color:#B8860B}
+.hp-shuffle{font-size:11px;padding:2px 8px;border-radius:10px;border:1px solid #e8d5a8;background:#fff;color:#B8860B;cursor:pointer}
+.hp-list{display:flex;flex-wrap:wrap;gap:5px}
+.hp-chip{font-size:11px;padding:3px 8px;border-radius:10px;background:#fff;border:1px solid #f0e2c0;color:#5a4a2a;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hp-chip:active{background:#FFF3E0}
+.hp-detail{font-size:11px;color:#7a6a4a;margin-top:6px;padding-top:6px;border-top:1px dashed #f0e2c0;line-height:1.5}
+.hp-note{font-size:10px;color:#b0a080;margin-top:5px;display:block}
 .hot-add-bar{display:flex;gap:8px;margin-top:12px;align-items:center}
 .hot-update-info{font-size:11px;color:var(--text3);margin-bottom:8px}
 
@@ -2031,6 +2040,193 @@ let selectedHotTopics=new Set();
 const HOT_ACCOUNTS=['土豆','宝珠','kiki','番茄','夏安','Leah'];
 const HOT_TOPICS_URL='https://ctdpotato.github.io/workspace/hot_topics.json';
 
+// --- 选题配产品：本地规则匹配，不调用大模型，不耗积分 ---
+let PRODUCTS=[];
+let productOffset={};
+const PRODUCTS_URL='https://ctdpotato.github.io/workspace/products.json';
+
+const CAT_FAMILY={
+ '香水':['EDC古龙水','EDP浓香水','EDP浓香精','EDP淡香水','EDP淡香精','EDT淡香水','Extrait de Parfum 香精','女士淡香精（EDP）','淡香水','淡香水（EDC）','固体香膏','发香喷雾'],
+ '身体乳':['身体乳','身体乳霜','身体霜','精华身体乳','香氛身体乳','身体精华乳','身体油霜'],
+ '身体油':['身体护理油','身体精华油','香氛身体油','香氛身体精华油','沐浴按摩油','面部及身体精华油'],
+ '沐浴':['沐浴露','沐浴露/身体洁肤凝露','沐浴油','香氛沐浴露','洗手沐浴露'],
+ '磨砂':['身体磨砂膏','身体磨砂膏/磨砂啫喱','面部磨砂膏'],
+ '护手':['护手霜'],
+ '洗发':['洗发水','洗发水（中小样）','专业洗发水','专业沙龙洗发水','去屑洗发水','控油蓬松洗发水','蓬松洗发水','头皮预洗/洗发膏','头皮预洗油','头皮护理精华'],
+ '护发':['护发精油','护发精华','发膜','护发发膜','发膜/护发霜','护发素','护发素（中小样）','免洗护发乳','免洗护发膜','免洗护发霜','洗前发膜'],
+ '面霜':['面霜','面霜/乳霜','面霜/啫喱','晚霜','夜用面霜','乳液','日用乳液','美白乳液','精华霜（Cream-Serum）','水乳套装（精华水+修护乳）'],
+ '精华':['面部精华','面部精华乳','面部精华油','次抛精华','次抛面部精华','次抛面部精华（1.5ml×30支）','面部精华（粉末）','面部精华（粉液分离次抛）','面部精华（胶囊次抛）'],
+ '水':['化妆水','化妆水/晶粹水','化妆水/柔肤水','爽肤水','爽肤水/凝露水','爽肤水/化妆水','爽肤水/精华水','爽肤水/纯露','精华水','精华水/爽肤水','精华水（化妆水）','精华爽肤水（喷雾）','纯露/爽肤水','控油爽肤水','去角质爽肤水'],
+ '眼霜':['眼霜','眼部精华','眼部精华/眼霜'],
+ '洁面':['洁面乳','洁面慕斯','卸妆洁面霜','卸妆膏','手部清洁液'],
+ '面膜':['贴片面膜','涂抹式面膜','涂抹式清洁泥膜','清洁泥膜','睡眠面膜/涂抹面膜','夜间涂抹面膜'],
+ '防晒':['防晒乳','防晒霜','防晒隔离乳','防晒霜/日用UV美容液'],
+ '唇部':['口红','口红（3.3g）','唇釉','双头唇釉','水光唇釉（4ml）','唇蜜/唇釉','唇油','护唇膏','唇部精华'],
+ '底妆':['粉底液','粉底霜','气垫粉底','粉饼','散粉/蜜粉','蜜粉饼','遮瑕膏','定妆喷雾'],
+ '颊彩':['腮红','高光修容盘','液体高光/提亮液'],
+ '香氛家居':['室内香氛喷雾','香氛喷雾','香氛喷雾/睡眠喷雾','香氛精油'],
+ '颈霜':['颈霜','颈胸精华'],
+ '身体其他':['腿部护理霜','足部护理霜','止汗膏','止汗香体膏']
+};
+const CAT2FAM={};
+for(const f in CAT_FAMILY){CAT_FAMILY[f].forEach(function(c){CAT2FAM[c]=f;});}
+
+const FAM_RULES=[
+ ['香水',/香水|木质调|香调|西普|柑橘|EDP|EDT|香精|前调|后调/],
+ ['身体乳',/身体乳|身体霜|一抹化水|涂身体|润肤|身体护理/],
+ ['沐浴',/沐浴|洗澡/],
+ ['洗发',/洗发|洗头|高颅顶|头油|头皮|蓬松|去油/],
+ ['护发',/护发|发膜|毛躁|发尾|护发素/],
+ ['面霜',/面霜|乳霜|晚霜|修护霜|保湿霜|紧致霜|抗老霜|美白霜|水乳/],
+ ['精华',/精华|复原蜜|次抛|原液|安瓶/],
+ ['水',/精萃水|精粹水|爽肤水|化妆水|柔肤水|精华水|纯露|极光水|原生液|微精华|神仙水/],
+ ['眼霜',/眼霜|眼周|眼纹/],
+ ['面膜',/面膜|敷脸/],
+ ['洁面',/洁面|洗脸|卸妆/],
+ ['防晒',/防晒|紫外线|SPF/],
+ ['唇部',/唇膜|唇釉|口红|唇膏|唇部|唇油|死皮/],
+ ['底妆',/底妆|粉底|气垫|遮瑕|定妆|散粉|蜜粉/],
+ ['颊彩',/腮红|高光|修容/],
+ ['香氛家居',/香薰|蜡烛|扩香|居家香|房间香/],
+ ['磨砂',/磨砂|去角质|鸡皮/],
+ ['护手',/护手|手霜/],
+ ['颈霜',/颈纹|颈霜/]
+];
+const EFF_RULES=[
+ /保湿|滋润|补水|干/,
+ /修护|屏障|舒缓|敏感|温和/,
+ /美白|提亮|焕亮|烟酰胺|暗沉|黄/,
+ /抗老|抗衰|抗皱|紧致|胶原|细纹|松弛/,
+ /控油|清爽|祛痘|油皮|不黏|不粘/,
+ /留香|香氛/,
+ /蓬松|丰盈/
+];
+
+function priceNum(x){
+  const m=String(x||'').replace(/,/g,'').match(/\d{2,5}/g);
+  return m?Math.max.apply(null,m.map(Number)):0;
+}
+function brandMain(b){
+  const m=String(b||'').match(/[\u4e00-\u9fa5]{2,}/);
+  if(m)return m[0];
+  return String(b||'').split(/[\s（(]/)[0];
+}
+function famsOf(text){
+  const r=[];
+  FAM_RULES.forEach(function(x){if(x[1].test(text))r.push(x[0]);});
+  return r;
+}
+
+function scoreProduct(p,title,suggest,famT,famS,cheap,pricey){
+  let s=0;
+  const bm=brandMain(p.b);
+  if(bm&&bm.length>=2&&(title+suggest).indexOf(bm)>=0)s+=15;
+  const fam=CAT2FAM[p.c]||'';
+  if(famT.length){
+    if(famT.indexOf(fam)>=0)s+=10;
+    else if(famS.indexOf(fam)>=0)s+=4;
+    else s-=8;
+  }else if(famS.length){
+    if(famS.indexOf(fam)>=0)s+=5;else s-=4;
+  }
+  const blob=(p.e||'')+(p.w||'')+(p.s||'');
+  for(let i=0;i<EFF_RULES.length;i++){
+    if(EFF_RULES[i].test(title+' '+suggest)&&EFF_RULES[i].test(blob))s+=2;
+  }
+  const pv=priceNum(p.p);
+  if(cheap){if(pv&&pv<200)s+=4;else if(pv>600)s-=3;}
+  if(pricey){if(pv>500)s+=3;else if(pv&&pv<200)s-=2;}
+  return s;
+}
+
+const NON_BEAUTY=/家居服|睡衣|餐具|台灯|茶点|沙发|床品|杯子|锅具|收纳|绿植|摆件/;
+
+function matchProducts(topic,offset){
+  if(!PRODUCTS.length)return null;
+  const title=topic.title||'',suggest=topic.suggest||'';
+  const famT=famsOf(title),famS=famsOf(suggest);
+  if(!famT.length&&!famS.length&&NON_BEAUTY.test(title))return {list:[],total:0,fams:[],missing:[],nonBeauty:true};
+  const cheap=/平价|学生|便宜|不贵|十几块|几十块|性价比/.test(title+suggest);
+  const pricey=/贵价|贵妇|高端|奢侈/.test(title+suggest);
+  let arr=PRODUCTS.map(function(p){return {p:p,s:scoreProduct(p,title,suggest,famT,famS,cheap,pricey)};});
+  arr.sort(function(a,b){return b.s-a.s;});
+  let good=arr.filter(function(x){return x.s>=6;});
+  if(good.length<4){
+    const byFam={},order=[];
+    arr.forEach(function(it){
+      const pv=priceNum(it.p.p);
+      if(pv>1500&&!pricey)return;
+      const f=CAT2FAM[it.p.c]||it.p.c;
+      if(!byFam[f]){byFam[f]=[];order.push(f);}
+      if(byFam[f].length<3)byFam[f].push(it);
+    });
+    good=[];
+    for(let i=0;i<3;i++){order.forEach(function(f){if(byFam[f][i])good.push(byFam[f][i]);});}
+  }
+  const capF=(famT.length<=1)?3:2;
+  const out=[],seenB={},seenF={};
+  for(let i=0;i<good.length;i++){
+    const it=good[i],b=brandMain(it.p.b),f=CAT2FAM[it.p.c]||it.p.c;
+    if(seenB[b])continue;
+    if((seenF[f]||0)>=capF)continue;
+    seenB[b]=1;seenF[f]=(seenF[f]||0)+1;
+    out.push(it.p);
+    if(out.length>=12)break;
+  }
+  const missing=[];
+  famT.forEach(function(f){
+    if(!out.some(function(p){return (CAT2FAM[p.c]||p.c)===f;}))missing.push(f);
+  });
+  const off=(offset||0)*3;
+  return {list:out.slice(off,off+3),total:out.length,fams:famT,missing:missing};
+}
+
+function renderProductRow(t,i){
+  const r=matchProducts(t,productOffset[i]||0);
+  if(!r)return '';
+  if(r.nonBeauty)return '<div class="hot-products"><span class="hp-note">⚠️ 该选题不在美妆品类内，产品库无法匹配，建议手动配或换选题</span></div>';
+  if(!r.list.length)return '';
+  const chips=r.list.map(function(p){
+    const idx=PRODUCTS.indexOf(p);
+    return '<span class="hp-chip" onclick="toggleProdDetail(this,'+idx+')">'+esc(brandMain(p.b))+' '+esc(p.n)+'</span>';
+  }).join('');
+  const more=r.total>3?'<button class="hp-shuffle" onclick="shuffleProducts(event,'+i+')">换一批</button>':'';
+  let note='';
+  if(r.missing.length)note='<span class="hp-note">⚠️ 产品库暂无「'+esc(r.missing.join('/'))+'」品类，补上后自动匹配</span>';
+  else if(!r.fams.length)note='<span class="hp-note">跨品类合集，按账号调性搭配</span>';
+  return '<div class="hot-products"><div class="hp-head"><span class="hp-title">🎯 建议搭配</span>'+more+'</div><div class="hp-list">'+chips+'</div>'+note+'</div>';
+}
+
+function toggleProdDetail(el,idx){
+  const wrap=el.closest('.hot-products');
+  if(!wrap)return;
+  let d=wrap.querySelector('.hp-detail');
+  if(d&&d.getAttribute('data-idx')===String(idx)){d.remove();return;}
+  if(d)d.remove();
+  const p=PRODUCTS[idx];
+  if(!p)return;
+  d=document.createElement('div');
+  d.className='hp-detail';
+  d.setAttribute('data-idx',idx);
+  d.innerHTML='<b>'+esc(p.c)+'</b> ｜ '+esc(p.p)+'<br>'+esc((p.e||'').slice(0,70));
+  wrap.appendChild(d);
+}
+
+function shuffleProducts(e,i){
+  if(e)e.stopPropagation();
+  productOffset[i]=(productOffset[i]||0)+1;
+  renderHotTopicsList();
+}
+
+async function loadProducts(){
+  if(PRODUCTS.length)return;
+  try{
+    const r=await fetch(PRODUCTS_URL+'?t='+Date.now(),{cache:'no-store'});
+    if(r.ok){PRODUCTS=await r.json();}
+  }catch(e){}
+}
+
+
 function renderHot(title,body){
   title.textContent='🔥 爆款热点';
   selectedHotTopics=new Set();
@@ -2062,6 +2258,7 @@ function switchHotAccount(account){
 }
 
 async function loadHotTopics(){
+  await loadProducts();
   try{
     const resp=await fetch(HOT_TOPICS_URL+'?t='+Date.now(),{cache:'no-store'});
     if(resp.ok){
@@ -2093,6 +2290,7 @@ function renderHotTopicsList(){
       <div class="hot-topic-content">
         <div class="hot-topic-title">${esc(t.title)}</div>
         <div class="hot-topic-suggest">💡 ${esc(t.suggest)}</div>
+        ${renderProductRow(t,i)}
         <div class="hot-topic-date">${t.date||''}</div>
       </div>
     </div>
