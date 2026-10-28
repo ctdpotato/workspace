@@ -798,15 +798,19 @@ async function pushAllToGitHub(){
   // 2. 获取远程现有数据，用于合并
   let remoteData=null;
   let sha='';
-  try{
-    const gr=await fetch(url,{headers:h});
-    if(gr.ok){
-      const gd=await gr.json();
-      sha=gd.sha||'';
-      const remoteContent=JSON.parse(decodeURIComponent(escape(atob(gd.content))));
-      remoteData=remoteContent;
-    }
-  }catch(e){}
+  for(let _i=0;_i<3&&!sha;_i++){
+    try{
+      const gr=await fetch(url,{headers:h});
+      if(gr.ok){
+        const gd=await gr.json();
+        sha=gd.sha||'';
+        const remoteContent=JSON.parse(decodeURIComponent(escape(atob(gd.content))));
+        remoteData=remoteContent;
+      }
+    }catch(e){}
+    if(!sha)await new Promise(s=>setTimeout(s,600));
+  }
+  if(!sha)throw new Error('无法获取云端版本号，请检查网络后重试');
   
   // 3. 合并逻辑：本地有数据就更新，本地为空就保留远程的
   function isLocalEmpty(key){
@@ -922,56 +926,62 @@ function syncAllToAgent(){
   btn.style.opacity='0.6';
   const now=new Date();
   const ts=`${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-  pushAllToGitHub().then(()=>{
-    return fetch('https://ctdpotato.github.io/workspace/sync/all_data.json?t='+Date.now(),{cache:'no-store'});
-  }).then(r=>r.json()).then(data=>{
-    if(!data)return;
-    if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',mergeOrdersKeepLocal(LS.get('orders',[]),data.orders))}
-    if(data.memos!==undefined)LS.set('memos',data.memos||[]);
-    if(data.reviews!==undefined)LS.set('reviews',data.reviews||[]);
-    if(data.dataMaint)LS.set('dataMaint',mergeDM(data.dataMaint,LS.get('dataMaint',{})));
-    if(data.weeklyExercise)LS.set('weeklyExercise',data.weeklyExercise);
-    if(data.inspiration){
-      if(data.inspiration.images)LS.set('inspiration_images',data.inspiration.images);
-      if(data.inspiration.texts)LS.set('inspiration_texts',data.inspiration.texts);
-      if(data.inspiration.videos)LS.set('inspiration_videos',data.inspiration.videos);
-    }
-    if(data.plans)for(const k in data.plans)LS.set(k,data.plans[k]);
-    if(data.taskMods)for(const k in data.taskMods)LS.set(k,data.taskMods[k]);
-    if(data.topics)for(const k in data.topics)LS.set(k,data.topics[k]);
-    if(data.mustDos)for(const k in data.mustDos)LS.set(k,data.mustDos[k]);
-    if(data.customTasks)for(const k in data.customTasks)LS.set(k,data.customTasks[k]);
-    if(data.mustDos&&data.mustDos.mustDo!==undefined)LS.set('mustDo',data.mustDos.mustDo);
-    if(data.customTasks&&data.customTasks.customTasks!==undefined)LS.set('customTasks',data.customTasks.customTasks);
-    if($('orderList'))renderOrderList();
-    if($('taskContainer'))renderTasks();
-    localStorage.setItem('allLastSync',ts);
-    const info=$('syncAllInfo');
-    if(info)info.textContent='上次同步: '+ts;
-    btn.textContent='✅ 已同步';
-    btn.style.background='#e8f5e9';
-    btn.style.color='#2e7d32';
-    btn.style.borderColor='#4caf50';
-    setTimeout(()=>{
-      btn.textContent='🔄 全量同步';
-      btn.disabled=false;
-      btn.style.opacity='1';
-      btn.style.background='';
-      btn.style.color='';
-      btn.style.borderColor='';
-    },2000);
-  }).catch(err=>{
-    btn.textContent='❌ 同步失败';
-    btn.style.background='#ffebee';
-    btn.style.color='#c62828';
-    setTimeout(()=>{
-      btn.textContent='🔄 全量同步';
-      btn.disabled=false;
-      btn.style.opacity='1';
-      btn.style.background='';
-      btn.style.color='';
-    },2500);
-  });
+  // 顺序已改：先拉取云端并合并到本地，再推送。避免本机数据少时把云端覆盖掉
+  fetch('https://ctdpotato.github.io/workspace/sync/all_data.json?t='+Date.now(),{cache:'no-store'})
+    .then(r=>r.json())
+    .then(data=>{
+      if(!data)return;
+      if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',mergeOrdersKeepLocal(LS.get('orders',[]),data.orders))}
+      if(data.memos!==undefined)LS.set('memos',data.memos||[]);
+      if(data.reviews!==undefined)LS.set('reviews',data.reviews||[]);
+      if(data.dataMaint)LS.set('dataMaint',mergeDM(data.dataMaint,LS.get('dataMaint',{})));
+      if(data.weeklyExercise)LS.set('weeklyExercise',data.weeklyExercise);
+      if(data.inspiration){
+        if(data.inspiration.images)LS.set('inspiration_images',data.inspiration.images);
+        if(data.inspiration.texts)LS.set('inspiration_texts',data.inspiration.texts);
+        if(data.inspiration.videos)LS.set('inspiration_videos',data.inspiration.videos);
+      }
+      if(data.plans)for(const k in data.plans)LS.set(k,data.plans[k]);
+      if(data.taskMods)for(const k in data.taskMods)LS.set(k,data.taskMods[k]);
+      if(data.topics)for(const k in data.topics)LS.set(k,data.topics[k]);
+      if(data.mustDos)for(const k in data.mustDos)LS.set(k,data.mustDos[k]);
+      if(data.customTasks)for(const k in data.customTasks)LS.set(k,data.customTasks[k]);
+      if(data.mustDos&&data.mustDos.mustDo!==undefined)LS.set('mustDo',data.mustDos.mustDo);
+      if(data.customTasks&&data.customTasks.customTasks!==undefined)LS.set('customTasks',data.customTasks.customTasks);
+    })
+    .catch(()=>{})
+    .then(()=>pushAllToGitHub())
+    .then(()=>{
+      if($('orderList'))renderOrderList();
+      if($('taskContainer'))renderTasks();
+      localStorage.setItem('allLastSync',ts);
+      const info=$('syncAllInfo');
+      if(info)info.textContent='上次同步: '+ts;
+      btn.textContent='✅ 已同步';
+      btn.style.background='#e8f5e9';
+      btn.style.color='#2e7d32';
+      btn.style.borderColor='#4caf50';
+      setTimeout(()=>{
+        btn.textContent='🔄 全量同步';
+        btn.disabled=false;
+        btn.style.opacity='1';
+        btn.style.background='';
+        btn.style.color='';
+        btn.style.borderColor='';
+      },2000);
+    })
+    .catch(err=>{
+      btn.textContent='❌ 同步失败';
+      btn.style.background='#ffebee';
+      btn.style.color='#c62828';
+      setTimeout(()=>{
+        btn.textContent='🔄 全量同步';
+        btn.disabled=false;
+        btn.style.opacity='1';
+        btn.style.background='';
+        btn.style.color='';
+      },2500);
+    });
 }
 
 // === 强制刷新：从云端拉取最新数据 ===
