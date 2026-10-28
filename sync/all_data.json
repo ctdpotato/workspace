@@ -1,6 +1,15 @@
 {
   "orders": [
     {
+      "name": "AMIRO觅光X镜",
+      "brand": "AMIRO觅光",
+      "date": "2026-08-01",
+      "note": "Timeline: 8/1-8/2 | 公司单 | 返点25%",
+      "status": 0,
+      "account": "土豆",
+      "_v4": true
+    },
+    {
       "name": "松下吹风机",
       "account": "土豆",
       "brand": "",
@@ -495,19 +504,19 @@
       "_v4": true
     },
     {
-      "name": "奥妙",
-      "brand": "奥妙",
+      "name": "雅诗兰黛黑神话面霜",
+      "brand": "雅诗兰黛",
       "date": "2026-07-23",
-      "note": "Timeline: 7/23拍摄 | 公司单 | 返点45%",
+      "note": "Timeline: 初稿7/23→发布7/25 | 公司单 | 返点45%",
       "status": 6,
       "account": "土豆",
       "_v4": true
     },
     {
-      "name": "雅诗兰黛黑神话面霜",
-      "brand": "雅诗兰黛",
+      "name": "奥妙",
+      "brand": "奥妙",
       "date": "2026-07-23",
-      "note": "Timeline: 初稿7/23→发布7/25 | 公司单 | 返点45%",
+      "note": "Timeline: 7/23拍摄 | 公司单 | 返点45%",
       "status": 6,
       "account": "土豆",
       "_v4": true
@@ -522,19 +531,19 @@
       "_v4": true
     },
     {
-      "name": "海蓝之谜精粹水乳",
-      "brand": "海蓝之谜",
+      "name": "植物医生石斛精华油",
+      "brand": "植物医生",
       "date": "2026-07-28",
-      "note": "Timeline: 7/28 | 公司单 | 返点45%",
+      "note": "Timeline: 7/28-8/3 | 公司单 | 返点30%",
       "status": 6,
       "account": "宝珠",
       "_v4": true
     },
     {
-      "name": "植物医生石斛精华油",
-      "brand": "植物医生",
+      "name": "海蓝之谜精粹水乳",
+      "brand": "海蓝之谜",
       "date": "2026-07-28",
-      "note": "Timeline: 7/28-8/3 | 公司单 | 返点30%",
+      "note": "Timeline: 7/28 | 公司单 | 返点45%",
       "status": 6,
       "account": "宝珠",
       "_v4": true
@@ -558,6 +567,15 @@
       "_v4": true
     },
     {
+      "name": "溪木源洗面奶",
+      "brand": "溪木源",
+      "date": "2026-08-10",
+      "note": "Timeline: 8/10 | 公司单 | 返点25%",
+      "status": 6,
+      "account": "宝珠",
+      "_v4": true
+    },
+    {
       "name": "笑容加冲牙器",
       "account": "宝珠",
       "brand": "",
@@ -567,15 +585,6 @@
       "rebate": 20,
       "note": "",
       "status": 6,
-      "_v4": true
-    },
-    {
-      "name": "溪木源洗面奶",
-      "brand": "溪木源",
-      "date": "2026-08-10",
-      "note": "Timeline: 8/10 | 公司单 | 返点25%",
-      "status": 6,
-      "account": "宝珠",
       "_v4": true
     },
     {
@@ -600,6 +609,51 @@
       "rebate": null,
       "note": "",
       "status": 6,
+      "_v4": true
+    },
+    {
+      "name": "兰蔻菁纯",
+      "brand": "兰蔻",
+      "date": "",
+      "note": "Timeline: 7-8月 | 公司单 | 返点45%",
+      "status": 6,
+      "account": "宝珠",
+      "_v4": true
+    },
+    {
+      "name": "Valcena抗糖前体胶囊",
+      "brand": "Valcena",
+      "date": "",
+      "note": "已完成 | 公司单 | 返点45%",
+      "status": 6,
+      "account": "宝珠",
+      "_v4": true
+    },
+    {
+      "name": "舒芙蕾慕斯",
+      "brand": "舒芙蕾",
+      "date": "",
+      "note": "已完成 | 公司单 | 返点45%",
+      "status": 6,
+      "account": "宝珠",
+      "_v4": true
+    },
+    {
+      "name": "赫莲娜（黑绷带+绿宝瓶）",
+      "brand": "赫莲娜",
+      "date": "",
+      "note": "已完成 | 公司单 | 返点45%",
+      "status": 6,
+      "account": "土豆",
+      "_v4": true
+    },
+    {
+      "name": "伊菲丹超级面膜",
+      "brand": "伊菲丹",
+      "date": "",
+      "note": "已完成 | 公司单 | 返点45%",
+      "status": 6,
+      "account": "土豆",
       "_v4": true
     },
     {
@@ -636,51 +690,6 @@
       "rebate": 25,
       "note": "",
       "status": 6,
-      "_v4": true
-    },
-    {
-      "name": "伊菲丹超级面膜",
-      "brand": "伊菲丹",
-      "date": "",
-      "note": "已完成 | 公司单 | 返点45%",
-      "status": 6,
-      "account": "土豆",
-      "_v4": true
-    },
-    {
-      "name": "赫莲娜（黑绷带+绿宝瓶）",
-      "brand": "赫莲娜",
-      "date": "",
-      "note": "已完成 | 公司单 | 返点45%",
-      "status": 6,
-      "account": "土豆",
-      "_v4": true
-    },
-    {
-      "name": "舒芙蕾慕斯",
-      "brand": "舒芙蕾",
-      "date": "",
-      "note": "已完成 | 公司单 | 返点45%",
-      "status": 6,
-      "account": "宝珠",
-      "_v4": true
-    },
-    {
-      "name": "Valcena抗糖前体胶囊",
-      "brand": "Valcena",
-      "date": "",
-      "note": "已完成 | 公司单 | 返点45%",
-      "status": 6,
-      "account": "宝珠",
-      "_v4": true
-    },
-    {
-      "name": "兰蔻菁纯",
-      "brand": "兰蔻",
-      "date": "",
-      "note": "Timeline: 7-8月 | 公司单 | 返点45%",
-      "status": 6,
-      "account": "宝珠",
       "_v4": true
     },
     {
@@ -1059,6 +1068,9 @@
       "done": []
     },
     "plan_2026-10-27": {
+      "done": []
+    },
+    "plan_2026-10-28": {
       "done": []
     }
   },
