@@ -2046,6 +2046,7 @@ const HOT_TOPICS_URL='https://ctdpotato.github.io/workspace/hot_topics.json';
 
 // --- 选题配产品 v2：全局去重 + 角色分工 + 搭配理由，纯本地规则，0 积分 ---
 
+const PRODUCTS_URL='https://ctdpotato.github.io/workspace/products.json';
 let PRODUCTS=[];
 let PCACHE=null;
 let ASSIGN={};
@@ -2257,6 +2258,7 @@ function pickOne(fams,ctx,exclude,relax){
 
 function namedProducts(title){
   const out=[];
+  if(!PCACHE)return out;
   const fams=famsOf(title);
   const brands=[];
   PCACHE.forEach(function(pc){
@@ -2399,6 +2401,7 @@ function assignOne(t,acc,exclude,base){
 function assignAll(topics){
   ASSIGN={};USED={};
   prepProducts();
+  if(!PCACHE)return;
   const order=[];
   Object.keys(topics).forEach(function(acc){
     ASSIGN[acc]=new Array(topics[acc].length);
