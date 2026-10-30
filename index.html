@@ -2577,18 +2577,23 @@ async function loadHotTopics(){
     }
   }catch(e){}
   prepProducts();
-  assignAll(hotTopicsData);
+  try{ assignAll(hotTopicsData); }catch(e){ console.warn('配产品失败',e); }
   renderHotTopicsList();
 }
 
 function renderHotTopicsList(){
+  // 当前账号没数据时，自动切到第一个有数据的账号，避免点进来一片空白
+  if(!(hotTopicsData[currentHotAccount]||[]).length){
+    const fb=(typeof HOT_ACCOUNTS!=='undefined'?HOT_ACCOUNTS:[]).find(a=>(hotTopicsData[a]||[]).length>0);
+    if(fb){ currentHotAccount=fb; renderHotAccountTabs(); }
+  }
   const topics=hotTopicsData[currentHotAccount]||[];
   const list=$('hotTopicsList');
   const addBar=$('hotAddBar');
   if(!list)return;
   if(topics.length===0){
     list.innerHTML='<div class="placeholder">暂无热点推荐，每天早上8:00自动更新</div>';
-    addBar.style.display='none';
+    if(addBar)addBar.style.display='none';
     return;
   }
   list.innerHTML=topics.map((t,i)=>`
@@ -2602,7 +2607,7 @@ function renderHotTopicsList(){
       </div>
     </div>
   `).join('');
-  addBar.style.display=selectedHotTopics.size>0?'flex':'none';
+  if(addBar)addBar.style.display=selectedHotTopics.size>0?'flex':'none';
   const cnt=$('hotSelectedCount');
   if(cnt)cnt.textContent='已选 '+selectedHotTopics.size+' 条';
 }
