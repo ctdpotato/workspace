@@ -633,15 +633,26 @@ if(!localStorage.getItem('orders')){
 // 远程同步：每次打开页面时尝试从远程拉取最新商单数据
 (async function syncOrdersFromRemote(){
   try{
-    const resp=await fetch(ORDERS_REMOTE_URL,{cache:'no-store'});
-    if(!resp.ok)return;
-    const text=await resp.text();
-    // 尝试解析为JSON数组
-    let data;
-    try{data=JSON.parse(text)}catch(e){
-      // 可能返回的是HTML包装页面，尝试提取JSON
-      const m=text.match(/\[[\s\S]*\]/);
-      if(m)data=JSON.parse(m[0]);else return;
+    // 优先读全量数据里的商单（这是最新的一份），orders.json 只做兜底，
+    // 避免 orders.json 落后几天时把本机较新的状态覆盖回去
+    let data=null;
+    try{
+      const r1=await fetch('https://ctdpotato.github.io/workspace/sync/all_data.json?t='+Date.now(),{cache:'no-store'});
+      if(r1.ok){
+        const d1=await r1.json();
+        if(d1&&Array.isArray(d1.orders)&&d1.orders.length)data=d1.orders;
+      }
+    }catch(e){}
+    if(!data){
+      const resp=await fetch(ORDERS_REMOTE_URL+'?t='+Date.now(),{cache:'no-store'});
+      if(!resp.ok)return;
+      const text=await resp.text();
+      // 尝试解析为JSON数组
+      try{data=JSON.parse(text)}catch(e){
+        // 可能返回的是HTML包装页面，尝试提取JSON
+        const m=text.match(/\[[\s\S]*\]/);
+        if(m)data=JSON.parse(m[0]);else return;
+      }
     }
     if(!Array.isArray(data)||data.length===0)return;
     // 迁移处理
@@ -676,6 +687,14 @@ async function pushOrdersToGitHub(){
   if(sha)body.sha=sha;
   const resp=await fetch(url,{method:'PUT',headers:{...h,'Content-Type':'application/json'},body:JSON.stringify(body)});
   if(!resp.ok)throw new Error('Sync failed: '+resp.status);
+  // 关键：全量同步后把「合并后的商单」写回本地并同步推 orders.json，
+  // 否则 orders.json 会一直停在旧版本，下次打开页面又把状态覆盖回去
+  try{
+    if(Array.isArray(modules.orders)&&modules.orders.length){
+      LS.set('orders',modules.orders);
+      await pushOrdersToGitHub();
+    }
+  }catch(e){}
   return resp.json();
 }
 
