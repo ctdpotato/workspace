@@ -1,12 +1,24 @@
 [
   {
-    "name": "松下吹风机",
+    "name": "水下",
+    "account": "宝珠",
+    "brand": "",
+    "date": "2026-11-04",
+    "price": "1000",
+    "type": "公司单",
+    "rebate": null,
+    "note": "帕尔玛 ysl",
+    "status": 0,
+    "_v4": true
+  },
+  {
+    "name": "hfp",
     "account": "土豆",
     "brand": "",
-    "date": "2026-10-22",
-    "price": "1800",
+    "date": "",
+    "price": "2400",
     "type": "自己单",
-    "rebate": 30,
+    "rebate": 20,
     "note": "",
     "status": 0,
     "_v4": true
@@ -19,66 +31,6 @@
     "price": "1638",
     "type": "公司单",
     "rebate": null,
-    "note": "",
-    "status": 0,
-    "_v4": true
-  },
-  {
-    "name": "回春油",
-    "account": "宝珠",
-    "brand": "",
-    "date": "2026-11-02",
-    "price": "2240",
-    "type": "自己单",
-    "rebate": 20,
-    "note": "",
-    "status": 0,
-    "_v4": true
-  },
-  {
-    "name": "力士沐浴露",
-    "account": "土豆",
-    "brand": "",
-    "date": "2026-10-23",
-    "price": "1638",
-    "type": "公司单",
-    "rebate": null,
-    "note": "",
-    "status": 1,
-    "_v4": true
-  },
-  {
-    "name": "妇炎洁卫生巾",
-    "account": "宝珠",
-    "brand": "",
-    "date": "2026-10-18",
-    "price": "1820",
-    "type": "自己单",
-    "rebate": 35,
-    "note": "",
-    "status": 3,
-    "_v4": true
-  },
-  {
-    "name": "力士洗发水",
-    "account": "土豆",
-    "brand": "",
-    "date": "2026-10-22",
-    "price": "1638",
-    "type": "公司单",
-    "rebate": null,
-    "note": "",
-    "status": 3,
-    "_v4": true
-  },
-  {
-    "name": "极萌",
-    "account": "土豆",
-    "brand": "",
-    "date": "2026-10-23",
-    "price": "",
-    "type": "自己单",
-    "rebate": 35,
     "note": "",
     "status": 3,
     "_v4": true
@@ -97,26 +49,26 @@
   },
   {
     "name": "回春油",
-    "account": "土豆",
+    "account": "宝珠",
     "brand": "",
-    "date": "2026-10-20",
-    "price": "2100",
+    "date": "2026-11-02",
+    "price": "2240",
     "type": "自己单",
     "rebate": 20,
     "note": "",
-    "status": 4,
+    "status": 3,
     "_v4": true
   },
   {
-    "name": "欧莱雅松露",
-    "account": "宝珠",
+    "name": "松下吹风机",
+    "account": "土豆",
     "brand": "",
-    "date": "2026-10-21",
-    "price": "2100（送品）",
+    "date": "2026-10-22",
+    "price": "1800",
     "type": "自己单",
-    "rebate": 25,
+    "rebate": 30,
     "note": "",
-    "status": 4,
+    "status": 2,
     "_v4": true
   },
   {
@@ -209,6 +161,18 @@
     "_v4": true
   },
   {
+    "name": "妇炎洁卫生巾",
+    "account": "宝珠",
+    "brand": "",
+    "date": "2026-10-18",
+    "price": "1820",
+    "type": "自己单",
+    "rebate": 35,
+    "note": "",
+    "status": 5,
+    "_v4": true
+  },
+  {
     "name": "敷尔佳",
     "account": "土豆",
     "brand": "",
@@ -216,6 +180,66 @@
     "price": "1600",
     "type": "公司单",
     "rebate": null,
+    "note": "",
+    "status": 5,
+    "_v4": true
+  },
+  {
+    "name": "回春油",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-10-20",
+    "price": "2100",
+    "type": "自己单",
+    "rebate": 20,
+    "note": "",
+    "status": 5,
+    "_v4": true
+  },
+  {
+    "name": "欧莱雅松露",
+    "account": "宝珠",
+    "brand": "",
+    "date": "2026-10-21",
+    "price": "2100（送品）",
+    "type": "自己单",
+    "rebate": 25,
+    "note": "",
+    "status": 5,
+    "_v4": true
+  },
+  {
+    "name": "力士洗发水",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-10-22",
+    "price": "1638",
+    "type": "公司单",
+    "rebate": null,
+    "note": "",
+    "status": 5,
+    "_v4": true
+  },
+  {
+    "name": "力士沐浴露",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-10-23",
+    "price": "1638",
+    "type": "公司单",
+    "rebate": null,
+    "note": "",
+    "status": 5,
+    "_v4": true
+  },
+  {
+    "name": "极萌",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-10-23",
+    "price": "",
+    "type": "自己单",
+    "rebate": 35,
     "note": "",
     "status": 5,
     "_v4": true
@@ -702,6 +726,15 @@
     "rebate": 30,
     "note": "",
     "status": 6,
+    "_v4": true
+  },
+  {
+    "name": "AMIRO觅光X镜",
+    "brand": "AMIRO觅光",
+    "date": "2026-08-01",
+    "note": "Timeline: 8/1-8/2 | 公司单 | 返点25%",
+    "status": 0,
+    "account": "土豆",
     "_v4": true
   }
 ]
