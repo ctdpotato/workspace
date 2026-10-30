@@ -1,24 +1,27 @@
 {
   "orders": [
     {
-      "name": "AMIRO觅光X镜",
-      "brand": "AMIRO觅光",
-      "date": "2026-08-01",
-      "note": "Timeline: 8/1-8/2 | 公司单 | 返点25%",
+      "name": "水下",
+      "account": "宝珠",
+      "brand": "",
+      "date": "2026-11-04",
+      "price": "1000",
+      "type": "公司单",
+      "rebate": null,
+      "note": "帕尔玛 ysl",
       "status": 0,
-      "account": "土豆",
       "_v4": true
     },
     {
-      "name": "松下吹风机",
+      "name": "hfp",
       "account": "土豆",
       "brand": "",
-      "date": "2026-10-22",
-      "price": "1800",
+      "date": "",
+      "price": "2400",
       "type": "自己单",
-      "rebate": 30,
+      "rebate": 20,
       "note": "",
-      "status": 2,
+      "status": 0,
       "_v4": true
     },
     {
@@ -29,6 +32,18 @@
       "price": "1638",
       "type": "公司单",
       "rebate": null,
+      "note": "",
+      "status": 3,
+      "_v4": true
+    },
+    {
+      "name": "sk2",
+      "account": "宝珠",
+      "brand": "",
+      "date": "2026-11-01",
+      "price": "1960（送品）",
+      "type": "自己单",
+      "rebate": 30,
       "note": "",
       "status": 3,
       "_v4": true
@@ -46,87 +61,15 @@
       "_v4": true
     },
     {
-      "name": "力士沐浴露",
-      "account": "土豆",
-      "brand": "",
-      "date": "2026-10-23",
-      "price": "1638",
-      "type": "公司单",
-      "rebate": null,
-      "note": "",
-      "status": 5,
-      "_v4": true
-    },
-    {
-      "name": "妇炎洁卫生巾",
-      "account": "宝珠",
-      "brand": "",
-      "date": "2026-10-18",
-      "price": "1820",
-      "type": "自己单",
-      "rebate": 35,
-      "note": "",
-      "status": 5,
-      "_v4": true
-    },
-    {
-      "name": "力士洗发水",
+      "name": "松下吹风机",
       "account": "土豆",
       "brand": "",
       "date": "2026-10-22",
-      "price": "1638",
-      "type": "公司单",
-      "rebate": null,
-      "note": "",
-      "status": 5,
-      "_v4": true
-    },
-    {
-      "name": "极萌",
-      "account": "土豆",
-      "brand": "",
-      "date": "2026-10-23",
-      "price": "",
-      "type": "自己单",
-      "rebate": 35,
-      "note": "",
-      "status": 5,
-      "_v4": true
-    },
-    {
-      "name": "sk2",
-      "account": "宝珠",
-      "brand": "",
-      "date": "2026-11-01",
-      "price": "1960（送品）",
+      "price": "1800",
       "type": "自己单",
       "rebate": 30,
       "note": "",
-      "status": 3,
-      "_v4": true
-    },
-    {
-      "name": "回春油",
-      "account": "土豆",
-      "brand": "",
-      "date": "2026-10-20",
-      "price": "2100",
-      "type": "自己单",
-      "rebate": 20,
-      "note": "",
-      "status": 5,
-      "_v4": true
-    },
-    {
-      "name": "欧莱雅松露",
-      "account": "宝珠",
-      "brand": "",
-      "date": "2026-10-21",
-      "price": "2100（送品）",
-      "type": "自己单",
-      "rebate": 25,
-      "note": "",
-      "status": 5,
+      "status": 2,
       "_v4": true
     },
     {
@@ -219,6 +162,18 @@
       "_v4": true
     },
     {
+      "name": "妇炎洁卫生巾",
+      "account": "宝珠",
+      "brand": "",
+      "date": "2026-10-18",
+      "price": "1820",
+      "type": "自己单",
+      "rebate": 35,
+      "note": "",
+      "status": 5,
+      "_v4": true
+    },
+    {
       "name": "敷尔佳",
       "account": "土豆",
       "brand": "",
@@ -226,6 +181,66 @@
       "price": "1600",
       "type": "公司单",
       "rebate": null,
+      "note": "",
+      "status": 5,
+      "_v4": true
+    },
+    {
+      "name": "回春油",
+      "account": "土豆",
+      "brand": "",
+      "date": "2026-10-20",
+      "price": "2100",
+      "type": "自己单",
+      "rebate": 20,
+      "note": "",
+      "status": 5,
+      "_v4": true
+    },
+    {
+      "name": "欧莱雅松露",
+      "account": "宝珠",
+      "brand": "",
+      "date": "2026-10-21",
+      "price": "2100（送品）",
+      "type": "自己单",
+      "rebate": 25,
+      "note": "",
+      "status": 5,
+      "_v4": true
+    },
+    {
+      "name": "力士洗发水",
+      "account": "土豆",
+      "brand": "",
+      "date": "2026-10-22",
+      "price": "1638",
+      "type": "公司单",
+      "rebate": null,
+      "note": "",
+      "status": 5,
+      "_v4": true
+    },
+    {
+      "name": "力士沐浴露",
+      "account": "土豆",
+      "brand": "",
+      "date": "2026-10-23",
+      "price": "1638",
+      "type": "公司单",
+      "rebate": null,
+      "note": "",
+      "status": 5,
+      "_v4": true
+    },
+    {
+      "name": "极萌",
+      "account": "土豆",
+      "brand": "",
+      "date": "2026-10-23",
+      "price": "",
+      "type": "自己单",
+      "rebate": 35,
       "note": "",
       "status": 5,
       "_v4": true
@@ -504,19 +519,19 @@
       "_v4": true
     },
     {
-      "name": "雅诗兰黛黑神话面霜",
-      "brand": "雅诗兰黛",
+      "name": "奥妙",
+      "brand": "奥妙",
       "date": "2026-07-23",
-      "note": "Timeline: 初稿7/23→发布7/25 | 公司单 | 返点45%",
+      "note": "Timeline: 7/23拍摄 | 公司单 | 返点45%",
       "status": 6,
       "account": "土豆",
       "_v4": true
     },
     {
-      "name": "奥妙",
-      "brand": "奥妙",
+      "name": "雅诗兰黛黑神话面霜",
+      "brand": "雅诗兰黛",
       "date": "2026-07-23",
-      "note": "Timeline: 7/23拍摄 | 公司单 | 返点45%",
+      "note": "Timeline: 初稿7/23→发布7/25 | 公司单 | 返点45%",
       "status": 6,
       "account": "土豆",
       "_v4": true
@@ -531,19 +546,19 @@
       "_v4": true
     },
     {
-      "name": "植物医生石斛精华油",
-      "brand": "植物医生",
+      "name": "海蓝之谜精粹水乳",
+      "brand": "海蓝之谜",
       "date": "2026-07-28",
-      "note": "Timeline: 7/28-8/3 | 公司单 | 返点30%",
+      "note": "Timeline: 7/28 | 公司单 | 返点45%",
       "status": 6,
       "account": "宝珠",
       "_v4": true
     },
     {
-      "name": "海蓝之谜精粹水乳",
-      "brand": "海蓝之谜",
+      "name": "植物医生石斛精华油",
+      "brand": "植物医生",
       "date": "2026-07-28",
-      "note": "Timeline: 7/28 | 公司单 | 返点45%",
+      "note": "Timeline: 7/28-8/3 | 公司单 | 返点30%",
       "status": 6,
       "account": "宝珠",
       "_v4": true
@@ -567,15 +582,6 @@
       "_v4": true
     },
     {
-      "name": "溪木源洗面奶",
-      "brand": "溪木源",
-      "date": "2026-08-10",
-      "note": "Timeline: 8/10 | 公司单 | 返点25%",
-      "status": 6,
-      "account": "宝珠",
-      "_v4": true
-    },
-    {
       "name": "笑容加冲牙器",
       "account": "宝珠",
       "brand": "",
@@ -585,6 +591,15 @@
       "rebate": 20,
       "note": "",
       "status": 6,
+      "_v4": true
+    },
+    {
+      "name": "溪木源洗面奶",
+      "brand": "溪木源",
+      "date": "2026-08-10",
+      "note": "Timeline: 8/10 | 公司单 | 返点25%",
+      "status": 6,
+      "account": "宝珠",
       "_v4": true
     },
     {
@@ -609,51 +624,6 @@
       "rebate": null,
       "note": "",
       "status": 6,
-      "_v4": true
-    },
-    {
-      "name": "兰蔻菁纯",
-      "brand": "兰蔻",
-      "date": "",
-      "note": "Timeline: 7-8月 | 公司单 | 返点45%",
-      "status": 6,
-      "account": "宝珠",
-      "_v4": true
-    },
-    {
-      "name": "Valcena抗糖前体胶囊",
-      "brand": "Valcena",
-      "date": "",
-      "note": "已完成 | 公司单 | 返点45%",
-      "status": 6,
-      "account": "宝珠",
-      "_v4": true
-    },
-    {
-      "name": "舒芙蕾慕斯",
-      "brand": "舒芙蕾",
-      "date": "",
-      "note": "已完成 | 公司单 | 返点45%",
-      "status": 6,
-      "account": "宝珠",
-      "_v4": true
-    },
-    {
-      "name": "赫莲娜（黑绷带+绿宝瓶）",
-      "brand": "赫莲娜",
-      "date": "",
-      "note": "已完成 | 公司单 | 返点45%",
-      "status": 6,
-      "account": "土豆",
-      "_v4": true
-    },
-    {
-      "name": "伊菲丹超级面膜",
-      "brand": "伊菲丹",
-      "date": "",
-      "note": "已完成 | 公司单 | 返点45%",
-      "status": 6,
-      "account": "土豆",
       "_v4": true
     },
     {
@@ -693,6 +663,51 @@
       "_v4": true
     },
     {
+      "name": "伊菲丹超级面膜",
+      "brand": "伊菲丹",
+      "date": "",
+      "note": "已完成 | 公司单 | 返点45%",
+      "status": 6,
+      "account": "土豆",
+      "_v4": true
+    },
+    {
+      "name": "赫莲娜（黑绷带+绿宝瓶）",
+      "brand": "赫莲娜",
+      "date": "",
+      "note": "已完成 | 公司单 | 返点45%",
+      "status": 6,
+      "account": "土豆",
+      "_v4": true
+    },
+    {
+      "name": "舒芙蕾慕斯",
+      "brand": "舒芙蕾",
+      "date": "",
+      "note": "已完成 | 公司单 | 返点45%",
+      "status": 6,
+      "account": "宝珠",
+      "_v4": true
+    },
+    {
+      "name": "Valcena抗糖前体胶囊",
+      "brand": "Valcena",
+      "date": "",
+      "note": "已完成 | 公司单 | 返点45%",
+      "status": 6,
+      "account": "宝珠",
+      "_v4": true
+    },
+    {
+      "name": "兰蔻菁纯",
+      "brand": "兰蔻",
+      "date": "",
+      "note": "Timeline: 7-8月 | 公司单 | 返点45%",
+      "status": 6,
+      "account": "宝珠",
+      "_v4": true
+    },
+    {
       "name": "小棕瓶七夕礼盒",
       "account": "土豆",
       "brand": "雅诗兰黛",
@@ -715,26 +730,13 @@
       "_v4": true
     },
     {
-      "name": "水下",
-      "account": "宝珠",
-      "brand": "",
-      "date": "2026-11-04",
-      "price": "1000",
-      "type": "公司单",
-      "rebate": null,
-      "note": "帕尔玛 ysl",
-      "status": 0
-    },
-    {
-      "name": "hfp",
+      "name": "AMIRO觅光X镜",
+      "brand": "AMIRO觅光",
+      "date": "2026-08-01",
+      "note": "Timeline: 8/1-8/2 | 公司单 | 返点25%",
+      "status": 0,
       "account": "土豆",
-      "brand": "",
-      "date": "",
-      "price": "2400",
-      "type": "自己单",
-      "rebate": 20,
-      "note": "",
-      "status": 0
+      "_v4": true
     }
   ],
   "memos": [],
@@ -1087,6 +1089,12 @@
       "done": []
     },
     "plan_2026-10-28": {
+      "done": []
+    },
+    "plan_2026-10-29": {
+      "done": []
+    },
+    "plan_2026-10-30": {
       "done": []
     }
   },
@@ -2302,6 +2310,16 @@
       ],
       "kid": [],
       "life": []
+    },
+    "customTasks_2026-10-27": {
+      "work": [
+        {
+          "title": "shuk",
+          "time": ""
+        }
+      ],
+      "kid": [],
+      "life": []
     }
   },
   "dataMaint": {
@@ -2376,6 +2394,32 @@
         "amount": 0,
         "date": "2026-10-23",
         "ts": 1792757339788
+      }
+    },
+    "妇炎洁卫生巾|宝珠": {
+      "fries": {
+        "done": false,
+        "amount": 0,
+        "date": "",
+        "ts": 0
+      },
+      "spill": {
+        "done": false,
+        "amount": 0,
+        "date": "",
+        "ts": 0
+      },
+      "like": {
+        "done": false,
+        "amount": 0,
+        "date": "",
+        "ts": 0
+      },
+      "comment": {
+        "done": true,
+        "amount": 22.5,
+        "date": "2026-10-28",
+        "ts": 1793156629305
       }
     }
   }
