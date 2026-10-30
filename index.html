@@ -663,8 +663,17 @@ if(!localStorage.getItem('orders')){
     const remoteKey=JSON.stringify(merged.map(o=>o.name+'|'+o.status+'|'+o.note).sort());
     const localKey=JSON.stringify(local.map(o=>o.name+'|'+o.status+'|'+o.note).sort());
     if(remoteKey!==localKey){
-      // 如果用户在本设备手动改过状态，不以远程覆盖
-      if(localStorage.getItem('ordersLocalChanged')==='1')return;
+      // 本机有还没推上去的改动：同一条以本地为准（不覆盖用户改的状态），
+      // 但云端新增的商单要补进来，否则这台设备会一直缺新单
+      if(localStorage.getItem('ordersLocalChanged')==='1'){
+        const lmap={};local.forEach(o=>{lmap[dmKey(o)]=o});
+        const extra=data.filter(o=>!lmap[dmKey(o)]);
+        if(extra.length){
+          LS.set('orders',local.concat(extra));
+          if($('orderList'))renderOrderList();
+        }
+        return;
+      }
       LS.set('orders',merged);
       // 如果商单页面正在显示，刷新列表
       if($('orderList'))renderOrderList();
