@@ -687,14 +687,9 @@ async function pushOrdersToGitHub(){
   if(sha)body.sha=sha;
   const resp=await fetch(url,{method:'PUT',headers:{...h,'Content-Type':'application/json'},body:JSON.stringify(body)});
   if(!resp.ok)throw new Error('Sync failed: '+resp.status);
-  // 关键：全量同步后把「合并后的商单」写回本地并同步推 orders.json，
-  // 否则 orders.json 会一直停在旧版本，下次打开页面又把状态覆盖回去
-  try{
-    if(Array.isArray(modules.orders)&&modules.orders.length){
-      LS.set('orders',modules.orders);
-      await pushOrdersToGitHub();
-    }
-  }catch(e){}
+  // 推上去之后本地和云端就一致了，标记必须清掉，
+  // 否则标记永久为 1，以后每次打开都不再拉云端、每次同步都用旧数据覆盖云端
+  localStorage.removeItem('ordersLocalChanged');
   return resp.json();
 }
 
@@ -908,6 +903,14 @@ async function pushAllToGitHub(){
           mergedDM[k]=o;
         });
         modules.dataMaint=mergedDM;
+      }else if(key==='orders'){
+        // 本机改过且还没推上去 → 以本地为准；否则远程优先合并，
+        // 避免本地数据较旧的设备把云端较新的商单状态整份覆盖回去
+        if(localStorage.getItem('ordersLocalChanged')==='1'){
+          modules.orders=localModules.orders;
+        }else{
+          modules.orders=mergeOrdersKeepLocal(localModules.orders||[],remoteData.orders||[]);
+        }
       }else if(isLocalEmpty(key)){
         modules[key]=remoteData[key];
       }else{
@@ -947,6 +950,15 @@ async function pushAllToGitHub(){
   
   const resp=await fetch(url,{method:'PUT',headers:{...h,'Content-Type':'application/json'},body:JSON.stringify(body)});
   if(!resp.ok)throw new Error('Sync failed: '+resp.status);
+  // 关键：全量同步后把「合并后的商单」写回本地并同步推 orders.json，
+  // 否则 orders.json 会一直停在旧版本，下次打开页面又把状态覆盖回去
+  try{
+    if(Array.isArray(modules.orders)&&modules.orders.length){
+      LS.set('orders',modules.orders);
+      await pushOrdersToGitHub();
+    }
+  }catch(e){}
+  localStorage.removeItem('ordersLocalChanged');
   return resp.json();
 }
 
