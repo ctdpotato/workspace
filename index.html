@@ -568,8 +568,9 @@ function getTasks(){
 }
 // TOTAL_TASKS 动态计算
 function getTotalTasks(){
-  const mustDoKey='mustDo_'+today();
-  const mustDoItems=LS.get(mustDoKey,[]);
+  // 必完成事件实际存在基础 key「mustDo」（与 getTasks 一致），带日期后缀的只是历史残留
+  let mustDoItems=LS.get('mustDo',[]);
+  if(!mustDoItems.length)mustDoItems=LS.get('mustDo_'+today(),[]);
   const mods=LS.get('taskMods_'+today(),{deleted:[],edited:{}});
   const customTasks=LS.get('customTasks_'+today(),{work:[],kid:[],life:[]});
   const customCount=(customTasks.work||[]).length+(customTasks.kid||[]).length+(customTasks.life||[]).length;
@@ -880,13 +881,18 @@ async function pushAllToGitHub(){
         }
         modules.plans=mergedPlans;
       }else if(key==='mustDos'){
-        // 必完成事件合并：两边都保留，按text去重
+        // 必完成事件合并：
+        // 本机当天改过（增/删/编辑）→ 以本地整份为准，否则编辑会被还原、删除会被复活；
+        // 没改过 → 按 text 并集补齐，只做新增不做删除。
         const mergedMustDos={};
         const remoteMD=remoteData.mustDos||{};
         const localMD=localModules.mustDos||{};
+        const mustDoChanged=localStorage.getItem('mustDoLocalChanged')==='1';
         for(const k in remoteMD) mergedMustDos[k]=remoteMD[k];
         for(const k in localMD){
-          if(!mergedMustDos[k]){
+          if(mustDoChanged){
+            mergedMustDos[k]=localMD[k];
+          }else if(!mergedMustDos[k]){
             mergedMustDos[k]=localMD[k];
           }else if(Array.isArray(mergedMustDos[k])&&Array.isArray(localMD[k])){
             const existingTexts=new Set(mergedMustDos[k].map(t=>t.text||''));
@@ -968,6 +974,7 @@ async function pushAllToGitHub(){
     }
   }catch(e){}
   localStorage.removeItem('ordersLocalChanged');
+  localStorage.removeItem('mustDoLocalChanged');
   return resp.json();
 }
 
@@ -997,9 +1004,9 @@ function syncAllToAgent(){
       if(data.plans)for(const k in data.plans)LS.set(k,data.plans[k]);
       if(data.taskMods)for(const k in data.taskMods)LS.set(k,data.taskMods[k]);
       if(data.topics)for(const k in data.topics)LS.set(k,data.topics[k]);
-      if(data.mustDos)for(const k in data.mustDos)LS.set(k,data.mustDos[k]);
+      if(data.mustDos&&localStorage.getItem('mustDoLocalChanged')!=='1')for(const k in data.mustDos)LS.set(k,data.mustDos[k]);
       if(data.customTasks)for(const k in data.customTasks)LS.set(k,data.customTasks[k]);
-      if(data.mustDos&&data.mustDos.mustDo!==undefined)LS.set('mustDo',data.mustDos.mustDo);
+      if(data.mustDos&&data.mustDos.mustDo!==undefined&&localStorage.getItem('mustDoLocalChanged')!=='1')LS.set('mustDo',data.mustDos.mustDo);
       if(data.customTasks&&data.customTasks.customTasks!==undefined)LS.set('customTasks',data.customTasks.customTasks);
     })
     .catch(()=>{})
@@ -1046,6 +1053,7 @@ function forceRefreshAll(){
   btn.style.opacity='0.6';
   // 清除本地标记，允许远程覆盖
   localStorage.removeItem('ordersLocalChanged');
+  localStorage.removeItem('mustDoLocalChanged');
   const ts=`${new Date().getMonth()+1}/${new Date().getDate()} ${new Date().getHours().toString().padStart(2,'0')}:${new Date().getMinutes().toString().padStart(2,'0')}`;
   // 刷新商单
   fetch(ORDERS_REMOTE_URL+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(data=>{
@@ -1260,6 +1268,7 @@ function addMustDo(){
   const items=LS.get(key,[]);
   items.push({text:text,time:time});
   LS.set(key,items);
+  localStorage.setItem('mustDoLocalChanged','1');
   // 不再重置完成状态，保留已有的done数组
   renderTasks();
   closeModal();
@@ -1269,6 +1278,7 @@ function removeMustDo(idx){
   const items=LS.get(key,[]);
   items.splice(idx,1);
   LS.set(key,items);
+  localStorage.setItem('mustDoLocalChanged','1');
   // 不再重置完成状态，保留已有的done数组
   renderTasks();
 }
@@ -1346,6 +1356,7 @@ function saveEditMustDo(mustIdx,newText,newTime){
     items[mustIdx].text=newText.trim();
     items[mustIdx].time=newTime||'';
     LS.set(key,items);
+    localStorage.setItem('mustDoLocalChanged','1');
     // 不再重置完成状态，保留已有的done数组
     renderTasks();
   }
