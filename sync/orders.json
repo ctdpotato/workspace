@@ -1,14 +1,5 @@
 [
   {
-    "name": "AMIRO觅光X镜",
-    "brand": "AMIRO觅光",
-    "date": "2026-08-01",
-    "note": "Timeline: 8/1-8/2 | 公司单 | 返点25%",
-    "status": 0,
-    "account": "土豆",
-    "_v4": true
-  },
-  {
     "name": "水下",
     "account": "宝珠",
     "brand": "",
@@ -17,8 +8,51 @@
     "type": "公司单",
     "rebate": null,
     "note": "帕尔玛 ysl",
-    "status": 0,
-    "_v4": true
+    "status": 0
+  },
+  {
+    "name": "霸王茶姬",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-11-16",
+    "price": "1800",
+    "type": "自己单",
+    "rebate": 30,
+    "note": "",
+    "status": 0
+  },
+  {
+    "name": "孕妇补剂",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-11-24",
+    "price": "1800",
+    "type": "公司单",
+    "rebate": 30,
+    "note": "",
+    "status": 0
+  },
+  {
+    "name": "孕妇补剂",
+    "account": "宝珠",
+    "brand": "",
+    "date": "2026-11-26",
+    "price": "1960",
+    "type": "自己单",
+    "rebate": 30,
+    "note": "",
+    "status": 0
+  },
+  {
+    "name": "601香水",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-11-27",
+    "price": "1950",
+    "type": "自己单",
+    "rebate": 25,
+    "note": "",
+    "status": 0
   },
   {
     "name": "hfp",
@@ -29,8 +63,7 @@
     "type": "自己单",
     "rebate": 20,
     "note": "",
-    "status": 0,
-    "_v4": true
+    "status": 0
   },
   {
     "name": "松下吹风机",
@@ -222,6 +255,18 @@
     "account": "土豆",
     "brand": "",
     "date": "2026-10-22",
+    "price": "1638",
+    "type": "公司单",
+    "rebate": null,
+    "note": "",
+    "status": 5,
+    "_v4": true
+  },
+  {
+    "name": "力士沐浴露",
+    "account": "土豆",
+    "brand": "",
+    "date": "2026-10-23",
     "price": "1638",
     "type": "公司单",
     "rebate": null,
@@ -620,18 +665,6 @@
     "rebate": null,
     "note": "",
     "status": 6,
-    "_v4": true
-  },
-  {
-    "name": "力士沐浴露",
-    "account": "土豆",
-    "brand": "",
-    "date": "2026-10-23",
-    "price": "1638",
-    "type": "公司单",
-    "rebate": null,
-    "note": "",
-    "status": 5,
     "_v4": true
   },
   {
