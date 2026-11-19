@@ -638,11 +638,8 @@ if(!localStorage.getItem('orders')){
     // 避免 orders.json 落后几天时把本机较新的状态覆盖回去
     let data=null;
     try{
-      const r1=await fetch('https://raw.githubusercontent.com/ctdpotato/workspace/main/sync/all_data.json?t='+Date.now(),{cache:'no-store'});
-      if(r1.ok){
-        const d1=await r1.json();
-        if(d1&&Array.isArray(d1.orders)&&d1.orders.length)data=d1.orders;
-      }
+      const d1=await _cloudData();
+      if(d1&&Array.isArray(d1.orders)&&d1.orders.length)data=d1.orders;
     }catch(e){}
     if(!data){
       const resp=await fetch(ORDERS_REMOTE_URL+'?t='+Date.now(),{cache:'no-store'});
@@ -684,6 +681,24 @@ if(!localStorage.getItem('orders')){
 
 // === GitHub 双向同步（通过API，不走git push） ===
 function _ghCfg(){return{owner:'ctdpotato',repo:'workspace',branch:'main',path:'sync/orders.json',tok:['ghp_9aDl','MqnrENk','MclYT6S','0Mlpej','YzYhfK','2mf0sH'].join('')}}
+// 统一云端拉取：走 GitHub API（实时、无 CDN 缓存），失败才回退 raw。
+// Pages 和 raw 都有 CDN 延迟，会导致拉到旧数据、同步后反而回滚。
+async function _cloudData(){
+  const cfg=_ghCfg();
+  try{
+    const r=await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/sync/all_data.json?ref=${cfg.branch}&t=${Date.now()}`,
+      {headers:{'Authorization':'token '+cfg.tok,'Accept':'application/vnd.github.v3+json'},cache:'no-store'});
+    if(r.ok){
+      const gd=await r.json();
+      if(gd&&gd.content)return JSON.parse(decodeURIComponent(escape(atob(gd.content.replace(/\n/g,'')))));
+    }
+  }catch(e){}
+  try{
+    const r2=await fetch(`https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/${cfg.branch}/sync/all_data.json?t=${Date.now()}`,{cache:'no-store'});
+    if(r2.ok)return await r2.json();
+  }catch(e){}
+  return null;
+}
 async function pushOrdersToGitHub(){
   const cfg=_ghCfg();
   const orders=LS.get('orders',[]);
@@ -973,8 +988,7 @@ function syncAllToAgent(){
   const now=new Date();
   const ts=`${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
   // 顺序已改：先拉取云端并合并到本地，再推送。避免本机数据少时把云端覆盖掉
-  fetch('https://raw.githubusercontent.com/ctdpotato/workspace/main/sync/all_data.json?t='+Date.now(),{cache:'no-store'})
-    .then(r=>r.json())
+  _cloudData()
     .then(data=>{
       if(!data)return;
       if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',mergeOrdersKeepLocal(LS.get('orders',[]),data.orders))}
@@ -1052,7 +1066,7 @@ function forceRefreshAll(){
     }
   }).catch(()=>{}).finally(()=>{
     // 刷新全量数据
-    fetch('https://raw.githubusercontent.com/ctdpotato/workspace/main/sync/all_data.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(data=>{
+    _cloudData().then(data=>{
       if(!data)return;
       if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',mergeOrdersKeepLocal(LS.get('orders',[]),data.orders))}
       if(data.memos!==undefined)LS.set('memos',data.memos||[]);
@@ -1095,11 +1109,8 @@ function forceRefreshAll(){
 async function restoreFromGitHub(){
   const cfg=_ghCfg();
   if(!cfg.tok||!cfg.owner||!cfg.repo)return;
-  const url=`https://raw.githubusercontent.com/ctdpotato/workspace/main/sync/all_data.json?t=${Date.now()}`;
   try{
-    const resp=await fetch(url,{cache:'no-store'});
-    if(!resp.ok)return;
-    const data=await resp.json();
+    const data=await _cloudData();
     if(!data)return;
     if(data.orders&&data.orders.length>0){
       const localOrders=LS.get('orders',[]);
