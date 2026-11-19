@@ -881,27 +881,13 @@ async function pushAllToGitHub(){
         }
         modules.plans=mergedPlans;
       }else if(key==='mustDos'){
-        // 必完成事件合并：
-        // 本机当天改过（增/删/编辑）→ 以本地整份为准，否则编辑会被还原、删除会被复活；
-        // 没改过 → 按 text 并集补齐，只做新增不做删除。
-        const mergedMustDos={};
+        // 必完成事件：只认 mustDo 一个 key，历史日期 key（mustDo_YYYY-MM-DD）一律丢弃。
+        // 本机有未提交改动 → 本地覆盖云端；否则云端为准。
+        // 关键：没改动时以云端为准，保证任意设备上的删除都能同步到全部设备，旧数据不会再被推回来。
         const remoteMD=remoteData.mustDos||{};
         const localMD=localModules.mustDos||{};
         const mustDoChanged=localStorage.getItem('mustDoLocalChanged')==='1';
-        for(const k in remoteMD) mergedMustDos[k]=remoteMD[k];
-        for(const k in localMD){
-          if(mustDoChanged){
-            mergedMustDos[k]=localMD[k];
-          }else if(!mergedMustDos[k]){
-            mergedMustDos[k]=localMD[k];
-          }else if(Array.isArray(mergedMustDos[k])&&Array.isArray(localMD[k])){
-            const existingTexts=new Set(mergedMustDos[k].map(t=>t.text||''));
-            for(const t of localMD[k]){
-              if(!existingTexts.has(t.text||'')) mergedMustDos[k].push(t);
-            }
-          }
-        }
-        modules.mustDos=mergedMustDos;
+        modules.mustDos={mustDo: mustDoChanged?(localMD.mustDo||[]):(remoteMD.mustDo||[])};
       }else if(key==='dataMaint'){
         // 数据维护合并：按 商单+类型 取较新的一条
         const mergedDM={};
@@ -1004,7 +990,7 @@ function syncAllToAgent(){
       if(data.plans)for(const k in data.plans)LS.set(k,data.plans[k]);
       if(data.taskMods)for(const k in data.taskMods)LS.set(k,data.taskMods[k]);
       if(data.topics)for(const k in data.topics)LS.set(k,data.topics[k]);
-      if(data.mustDos&&localStorage.getItem('mustDoLocalChanged')!=='1')for(const k in data.mustDos)LS.set(k,data.mustDos[k]);
+      if(data.mustDos&&localStorage.getItem('mustDoLocalChanged')!=='1'){LS.set('mustDo',data.mustDos.mustDo||[]);Object.keys(localStorage).forEach(function(k){if(k.indexOf('mustDo_')===0)localStorage.removeItem(k);});}
       if(data.customTasks)for(const k in data.customTasks)LS.set(k,data.customTasks[k]);
       if(data.mustDos&&data.mustDos.mustDo!==undefined&&localStorage.getItem('mustDoLocalChanged')!=='1')LS.set('mustDo',data.mustDos.mustDo);
       if(data.customTasks&&data.customTasks.customTasks!==undefined)LS.set('customTasks',data.customTasks.customTasks);
