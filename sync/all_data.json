@@ -22,6 +22,50 @@
       "_v4": true
     },
     {
+      "name": "霸王茶姬",
+      "account": "土豆",
+      "brand": "",
+      "date": "2026-11-16",
+      "price": "1800",
+      "type": "自己单",
+      "rebate": 30,
+      "note": "",
+      "status": 0
+    },
+    {
+      "name": "孕妇补剂",
+      "account": "土豆",
+      "brand": "",
+      "date": "2026-11-24",
+      "price": "1800",
+      "type": "公司单",
+      "rebate": 30,
+      "note": "",
+      "status": 0
+    },
+    {
+      "name": "孕妇补剂",
+      "account": "宝珠",
+      "brand": "",
+      "date": "2026-11-26",
+      "price": "1960",
+      "type": "自己单",
+      "rebate": 30,
+      "note": "",
+      "status": 0
+    },
+    {
+      "name": "601香水",
+      "account": "土豆",
+      "brand": "",
+      "date": "2026-11-27",
+      "price": "1950",
+      "type": "自己单",
+      "rebate": 25,
+      "note": "",
+      "status": 0
+    },
+    {
       "name": "hfp",
       "account": "土豆",
       "brand": "",
@@ -223,6 +267,18 @@
       "account": "土豆",
       "brand": "",
       "date": "2026-10-22",
+      "price": "1638",
+      "type": "公司单",
+      "rebate": null,
+      "note": "",
+      "status": 5,
+      "_v4": true
+    },
+    {
+      "name": "力士沐浴露",
+      "account": "土豆",
+      "brand": "",
+      "date": "2026-10-23",
       "price": "1638",
       "type": "公司单",
       "rebate": null,
@@ -621,18 +677,6 @@
       "rebate": null,
       "note": "",
       "status": 6,
-      "_v4": true
-    },
-    {
-      "name": "力士沐浴露",
-      "account": "土豆",
-      "brand": "",
-      "date": "2026-10-23",
-      "price": "1638",
-      "type": "公司单",
-      "rebate": null,
-      "note": "",
-      "status": 5,
       "_v4": true
     },
     {
@@ -1098,6 +1142,21 @@
       "done": []
     },
     "plan_2026-11-04": {
+      "done": []
+    },
+    "plan_2026-11-17": {
+      "done": []
+    },
+    "plan_2026-11-03": {
+      "done": []
+    },
+    "plan_2026-11-18": {
+      "done": []
+    },
+    "plan_2026-11-19": {
+      "done": []
+    },
+    "plan_2026-11-11": {
       "done": []
     }
   },
@@ -2216,7 +2275,96 @@
     ]
   },
   "mustDos": {
-    "mustDo": []
+    "mustDo": [
+      {
+        "text": "适乐肤报销",
+        "time": ""
+      },
+      {
+        "text": "帕尔玛露出🥔",
+        "time": ""
+      },
+      {
+        "text": "tf香水分享水下",
+        "time": ""
+      },
+      {
+        "text": "德宝纸巾报销",
+        "time": ""
+      },
+      {
+        "text": "鎏金报销",
+        "time": ""
+      },
+      {
+        "text": "买鲜花和无花果",
+        "time": ""
+      },
+      {
+        "text": "tf 帕尔玛 露出",
+        "time": ""
+      },
+      {
+        "text": "得宝报销",
+        "time": ""
+      },
+      {
+        "text": "鎏金洗衣液报销",
+        "time": ""
+      },
+      {
+        "text": "回款",
+        "time": ""
+      },
+      {
+        "text": "拍单报销151杯子",
+        "time": ""
+      }
+    ],
+    "mustDo_2026-08-05": [
+      {
+        "text": "kiki大纲",
+        "time": ""
+      }
+    ],
+    "mustDo_2026-07-29": [
+      {
+        "text": "觅光大纲",
+        "time": ""
+      },
+      {
+        "text": "植物医生大纲",
+        "time": ""
+      }
+    ],
+    "mustDo_2026-08-03": [
+      {
+        "text": "寄快递给野桃",
+        "time": ""
+      },
+      {
+        "text": "kiki水下大纲",
+        "time": ""
+      }
+    ],
+    "mustDo_2026-08-04": [
+      {
+        "text": "kiki大纲",
+        "time": ""
+      },
+      {
+        "text": "野桃寄快递",
+        "time": ""
+      },
+      {
+        "text": "打扫卫生",
+        "time": ""
+      },
+      {
+        "text": "整理原图反馈品牌",
+        "time": ""
+      }
+    ]
   },
   "customTasks": {
     "customTasks_2026-08-04": {
