@@ -638,7 +638,7 @@ if(!localStorage.getItem('orders')){
     // 避免 orders.json 落后几天时把本机较新的状态覆盖回去
     let data=null;
     try{
-      const r1=await fetch('https://ctdpotato.github.io/workspace/sync/all_data.json?t='+Date.now(),{cache:'no-store'});
+      const r1=await fetch('https://raw.githubusercontent.com/ctdpotato/workspace/main/sync/all_data.json?t='+Date.now(),{cache:'no-store'});
       if(r1.ok){
         const d1=await r1.json();
         if(d1&&Array.isArray(d1.orders)&&d1.orders.length)data=d1.orders;
@@ -816,7 +816,7 @@ async function pushAllToGitHub(){
     if(key.startsWith('plan_')){plans[key]=LS.get(key,null);}
     else if(key.startsWith('taskMods_')){taskMods[key]=LS.get(key,null);}
     else if(key.startsWith('topics_')){topics[key]=LS.get(key,null);}
-    else if(key.startsWith('mustDo_')){mustDos[key]=LS.get(key,null);}
+    // mustDo_YYYY-MM-DD 历史 key 不再收集，只同步 mustDo
     else if(key.startsWith('customTasks_')){customTasks[key]=LS.get(key,null);}
   }
   // 必完成事件和自定义任务也要同步（无日期后缀的基础key）
@@ -973,7 +973,7 @@ function syncAllToAgent(){
   const now=new Date();
   const ts=`${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
   // 顺序已改：先拉取云端并合并到本地，再推送。避免本机数据少时把云端覆盖掉
-  fetch('https://ctdpotato.github.io/workspace/sync/all_data.json?t='+Date.now(),{cache:'no-store'})
+  fetch('https://raw.githubusercontent.com/ctdpotato/workspace/main/sync/all_data.json?t='+Date.now(),{cache:'no-store'})
     .then(r=>r.json())
     .then(data=>{
       if(!data)return;
@@ -1052,7 +1052,7 @@ function forceRefreshAll(){
     }
   }).catch(()=>{}).finally(()=>{
     // 刷新全量数据
-    fetch('https://ctdpotato.github.io/workspace/sync/all_data.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(data=>{
+    fetch('https://raw.githubusercontent.com/ctdpotato/workspace/main/sync/all_data.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(data=>{
       if(!data)return;
       if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',mergeOrdersKeepLocal(LS.get('orders',[]),data.orders))}
       if(data.memos!==undefined)LS.set('memos',data.memos||[]);
@@ -1095,7 +1095,7 @@ function forceRefreshAll(){
 async function restoreFromGitHub(){
   const cfg=_ghCfg();
   if(!cfg.tok||!cfg.owner||!cfg.repo)return;
-  const url=`https://ctdpotato.github.io/workspace/sync/all_data.json?t=${Date.now()}`;
+  const url=`https://raw.githubusercontent.com/ctdpotato/workspace/main/sync/all_data.json?t=${Date.now()}`;
   try{
     const resp=await fetch(url,{cache:'no-store'});
     if(!resp.ok)return;
