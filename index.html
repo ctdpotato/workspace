@@ -2573,14 +2573,20 @@ function switchHotAccount(account){
 async function loadHotTopics(){
   await loadProducts();
   try{
-    const resp=await fetch(HOT_TOPICS_URL+'?t='+Date.now(),{cache:'no-store'});
-    if(resp.ok){
-      const data=await resp.json();
-      if(data&&data.topics){
-        hotTopicsData=data.topics;
-        if(data.updateDate){
-          $('hotUpdateInfo').textContent='最近更新：'+data.updateDate;
-        }
+    let data=null;
+    try{
+      const _c=_ghCfg();
+      const _r=await fetch(`https://api.github.com/repos/${_c.owner}/${_c.repo}/contents/hot_topics.json?ref=${_c.branch}&t=${Date.now()}`,{headers:{'Authorization':'token '+_c.tok,'Accept':'application/vnd.github.v3+json'},cache:'no-store'});
+      if(_r.ok){const _g=await _r.json();if(_g&&_g.content)data=JSON.parse(decodeURIComponent(escape(atob(_g.content.replace(/\n/g,'')))));}
+    }catch(e){}
+    if(!data){
+      const resp=await fetch(HOT_TOPICS_URL+'?t='+Date.now(),{cache:'no-store'});
+      if(resp.ok)data=await resp.json();
+    }
+    if(data&&data.topics){
+      hotTopicsData=data.topics;
+      if(data.updateDate){
+        $('hotUpdateInfo').textContent='最近更新：'+data.updateDate;
       }
     }
   }catch(e){}
