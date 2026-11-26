@@ -683,18 +683,33 @@ if(!localStorage.getItem('orders')){
 function _ghCfg(){return{owner:'ctdpotato',repo:'workspace',branch:'main',path:'sync/orders.json',tok:['ghp_9aDl','MqnrENk','MclYT6S','0Mlpej','YzYhfK','2mf0sH'].join('')}}
 // 统一云端拉取：走 GitHub API（实时、无 CDN 缓存），失败才回退 raw。
 // Pages 和 raw 都有 CDN 延迟，会导致拉到旧数据、同步后反而回滚。
+// 带超时的 fetch：移动网络下请求会挂起不返回，导致按钮永远停在「同步中」
+function _ghFetch(url,opts,ms){
+  ms=ms||25000;
+  const ctrl=(typeof AbortController!=='undefined')?new AbortController():null;
+  const o=Object.assign({},opts||{});
+  if(ctrl)o.signal=ctrl.signal;
+  let timer=null;
+  const timeout=new Promise(function(_,rej){
+    timer=setTimeout(function(){ if(ctrl){try{ctrl.abort()}catch(e){}} rej(new Error('网络超时（'+Math.round(ms/1000)+'秒）')); },ms);
+  });
+  return Promise.race([
+    fetch(url,o).then(function(r){clearTimeout(timer);return r}).catch(function(e){clearTimeout(timer);throw e}),
+    timeout
+  ]);
+}
 async function _cloudData(){
   const cfg=_ghCfg();
   try{
-    const r=await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/sync/all_data.json?ref=${cfg.branch}&t=${Date.now()}`,
-      {headers:{'Authorization':'token '+cfg.tok,'Accept':'application/vnd.github.v3+json'},cache:'no-store'});
+    const r=await _ghFetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/sync/all_data.json?ref=${cfg.branch}&t=${Date.now()}`,
+      {headers:{'Authorization':'token '+cfg.tok,'Accept':'application/vnd.github.v3+json'},cache:'no-store'},15000);
     if(r.ok){
       const gd=await r.json();
       if(gd&&gd.content)return JSON.parse(decodeURIComponent(escape(atob(gd.content.replace(/\n/g,'')))));
     }
   }catch(e){}
   try{
-    const r2=await fetch(`https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/${cfg.branch}/sync/all_data.json?t=${Date.now()}`,{cache:'no-store'});
+    const r2=await _ghFetch(`https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/${cfg.branch}/sync/all_data.json?t=${Date.now()}`,{cache:'no-store'},15000);
     if(r2.ok)return await r2.json();
   }catch(e){}
   return null;
@@ -710,8 +725,16 @@ async function pushOrdersToGitHub(){
   try{const gr=await fetch(url,{headers:h});if(gr.ok){const gd=await gr.json();sha=gd.sha||'';}}catch(e){}
   const body={message:'sync: orders update from workstation',content:encoded,branch:cfg.branch};
   if(sha)body.sha=sha;
-  const resp=await fetch(url,{method:'PUT',headers:{...h,'Content-Type':'application/json'},body:JSON.stringify(body)});
-  if(!resp.ok)throw new Error('Sync failed: '+resp.status);
+  let resp=await _ghFetch(url,{method:'PUT',headers:{...h,'Content-Type':'application/json'},body:JSON.stringify(body)},45000);
+  // 409/422：另一台设备刚好推过，sha 过期 → 重新取 sha 再推一次
+  if(resp.status===409||resp.status===422){
+    try{
+      const gr2=await _ghFetch(url,{headers:h},20000);
+      if(gr2.ok){const gd2=await gr2.json();if(gd2&&gd2.sha){body.sha=gd2.sha;
+        resp=await _ghFetch(url,{method:'PUT',headers:{...h,'Content-Type':'application/json'},body:JSON.stringify(body)},45000);}}
+    }catch(e){}
+  }
+  if(!resp.ok)throw new Error('推送失败 HTTP '+resp.status);
   // 推上去之后本地和云端就一致了，标记必须清掉，
   // 否则标记永久为 1，以后每次打开都不再拉云端、每次同步都用旧数据覆盖云端
   localStorage.removeItem('ordersLocalChanged');
@@ -856,7 +879,7 @@ async function pushAllToGitHub(){
   let sha='';
   for(let _i=0;_i<3&&!sha;_i++){
     try{
-      const gr=await fetch(url,{headers:h});
+      const gr=await _ghFetch(url,{headers:h},20000);
       if(gr.ok){
         const gd=await gr.json();
         sha=gd.sha||'';
@@ -1050,9 +1073,13 @@ function syncAllToAgent(){
       },2000);
     })
     .catch(err=>{
+      const _m=(err&&err.message)?err.message:'未知错误';
       btn.textContent='❌ 同步失败';
       btn.style.background='#ffebee';
       btn.style.color='#c62828';
+      const info=$('syncAllInfo');
+      if(info)info.textContent='同步失败：'+_m;
+      try{alert('同步失败：'+_m+'\n\n如果是网络超时，换个网络（关掉WiFi用流量，或反过来）再点一次。');}catch(e){}
       setTimeout(()=>{
         btn.textContent='🔄 全量同步';
         btn.disabled=false;
