@@ -570,7 +570,7 @@ function getTasks(){
 function getTotalTasks(){
   // 必完成事件实际存在基础 key「mustDo」（与 getTasks 一致），带日期后缀的只是历史残留
   let mustDoItems=LS.get('mustDo',[]);
-  if(!mustDoItems.length)mustDoItems=LS.get('mustDo_'+today(),[]);
+  // 历史 key mustDo_YYYY-MM-DD 不再回退读取，否则删掉的旧事项会被旧日期数据带回来
   const mods=LS.get('taskMods_'+today(),{deleted:[],edited:{}});
   const customTasks=LS.get('customTasks_'+today(),{work:[],kid:[],life:[]});
   const customCount=(customTasks.work||[]).length+(customTasks.kid||[]).length+(customTasks.life||[]).length;
@@ -836,7 +836,11 @@ async function pushAllToGitHub(){
   }
   // 必完成事件和自定义任务也要同步（无日期后缀的基础key）
   const mustDoBase=LS.get('mustDo',null);
-  if(mustDoBase!==null) mustDos['mustDo']=mustDoBase;
+  if(mustDoBase!==null){
+    let _mdt=+(localStorage.getItem('mustDoTs')||0);
+    if(!_mdt){_mdt=Date.now();localStorage.setItem('mustDoTs',String(_mdt));}
+    mustDos['mustDo']=mustDoBase;mustDos['ts']=_mdt;
+  }
   const customTasksBase=LS.get('customTasks',null);
   if(customTasksBase!==null) customTasks['customTasks']=customTasksBase;
   localModules.plans=plans;
@@ -901,8 +905,19 @@ async function pushAllToGitHub(){
         // 关键：没改动时以云端为准，保证任意设备上的删除都能同步到全部设备，旧数据不会再被推回来。
         const remoteMD=remoteData.mustDos||{};
         const localMD=localModules.mustDos||{};
-        const mustDoChanged=localStorage.getItem('mustDoLocalChanged')==='1';
-        modules.mustDos={mustDo: mustDoChanged?(localMD.mustDo||[]):(remoteMD.mustDo||[])};
+        const _lts=+(localStorage.getItem('mustDoTs')||0);
+        const _rts=+(remoteMD.ts||0);
+        // 时间戳仲裁：谁最后改谁赢。删除/编辑/新增都会刷新本地时间戳，
+        // 所以「删掉的第二天又回来」不会再发生——本地永远比云端旧数据新。
+        const _lArr=localMD.mustDo||[], _rArr=remoteMD.mustDo||[];
+        // 云端从来没被写过时间戳、且是空的，而本地有数据 → 以本地为准（不会把用户刚加的事项清掉）
+        const _cloudNever=(!_rts && _rArr.length===0 && _lArr.length>0);
+        if(_lts>_rts || _cloudNever){
+          if(!_lts){ _lts=Date.now(); localStorage.setItem('mustDoTs',String(_lts)); }
+          modules.mustDos={mustDo: _lArr, ts: _lts};
+        }else{
+          modules.mustDos={mustDo: _rArr, ts: _rts};
+        }
       }else if(key==='dataMaint'){
         // 数据维护合并：按 商单+类型 取较新的一条
         const mergedDM={};
@@ -1004,9 +1019,13 @@ function syncAllToAgent(){
       if(data.plans)for(const k in data.plans)LS.set(k,data.plans[k]);
       if(data.taskMods)for(const k in data.taskMods)LS.set(k,data.taskMods[k]);
       if(data.topics)for(const k in data.topics)LS.set(k,data.topics[k]);
-      if(data.mustDos&&localStorage.getItem('mustDoLocalChanged')!=='1'){LS.set('mustDo',data.mustDos.mustDo||[]);Object.keys(localStorage).forEach(function(k){if(k.indexOf('mustDo_')===0)localStorage.removeItem(k);});}
+      // 必完成事件：只有云端时间戳更新才写回本地（云端旧数据永远压不过本机的删除/编辑）
+      if(data.mustDos&&data.mustDos.mustDo!==undefined&&(+(data.mustDos.ts||0))>(+(localStorage.getItem('mustDoTs')||0))){
+        LS.set('mustDo',data.mustDos.mustDo||[]);
+        localStorage.setItem('mustDoTs',String(data.mustDos.ts||0));
+        Object.keys(localStorage).forEach(function(k){if(k.indexOf('mustDo_')===0)localStorage.removeItem(k);});
+      }
       if(data.customTasks)for(const k in data.customTasks)LS.set(k,data.customTasks[k]);
-      if(data.mustDos&&data.mustDos.mustDo!==undefined&&localStorage.getItem('mustDoLocalChanged')!=='1')LS.set('mustDo',data.mustDos.mustDo);
       if(data.customTasks&&data.customTasks.customTasks!==undefined)LS.set('customTasks',data.customTasks.customTasks);
     })
     .catch(()=>{})
@@ -1081,10 +1100,17 @@ function forceRefreshAll(){
       if(data.plans)for(const k in data.plans)LS.set(k,data.plans[k]);
       if(data.taskMods)for(const k in data.taskMods)LS.set(k,data.taskMods[k]);
       if(data.topics)for(const k in data.topics)LS.set(k,data.topics[k]);
-      if(data.mustDos)for(const k in data.mustDos)LS.set(k,data.mustDos[k]);
+      // 必完成事件：只有云端时间戳更新才覆盖本地（否则删掉/编辑的会被云端旧数据冲掉）
+      if(data.mustDos&&data.mustDos.mustDo!==undefined&&(+(data.mustDos.ts||0))>(+(localStorage.getItem('mustDoTs')||0))){
+        LS.set('mustDo',data.mustDos.mustDo||[]);
+        localStorage.setItem('mustDoTs',String(data.mustDos.ts||0));
+      }
       if(data.customTasks)for(const k in data.customTasks)LS.set(k,data.customTasks[k]);
       // 恢复必完成事件基础key
-      if(data.mustDos&&data.mustDos.mustDo!==undefined)LS.set('mustDo',data.mustDos.mustDo);
+      if(data.mustDos&&data.mustDos.mustDo!==undefined&&(+(data.mustDos.ts||0))>(+(localStorage.getItem('mustDoTs')||0))){
+        LS.set('mustDo',data.mustDos.mustDo||[]);
+        localStorage.setItem('mustDoTs',String(data.mustDos.ts||0));
+      }
       if(data.customTasks&&data.customTasks.customTasks!==undefined)LS.set('customTasks',data.customTasks.customTasks);
     }).catch(()=>{}).finally(()=>{
       // 重新渲染
@@ -1131,9 +1157,9 @@ async function restoreFromGitHub(){
     if(data.plans){for(const k in data.plans){if(data.plans[k]&&!LS.get(k,null))LS.set(k,data.plans[k])}}
     if(data.taskMods){for(const k in data.taskMods){if(data.taskMods[k]&&!LS.get(k,null))LS.set(k,data.taskMods[k])}}
     if(data.topics){for(const k in data.topics){if(data.topics[k]&&!LS.get(k,null))LS.set(k,data.topics[k])}}
-    if(data.mustDos){for(const k in data.mustDos){if(data.mustDos[k]&&!LS.get(k,null))LS.set(k,data.mustDos[k])}}
+    if(data.mustDos&&data.mustDos.mustDo&&!LS.get('mustDo',null)){LS.set('mustDo',data.mustDos.mustDo);localStorage.setItem('mustDoTs',String(data.mustDos.ts||0));}
     if(data.customTasks){for(const k in data.customTasks){if(data.customTasks[k]&&!LS.get(k,null))LS.set(k,data.customTasks[k])}}
-    if(data.mustDos&&data.mustDos.mustDo!==undefined&&!LS.get('mustDo',null))LS.set('mustDo',data.mustDos.mustDo);
+
     if(data.customTasks&&data.customTasks.customTasks!==undefined&&!LS.get('customTasks',null))LS.set('customTasks',data.customTasks.customTasks);
     return true;
   }catch(e){return false}
@@ -1254,6 +1280,10 @@ function updateProgress(total){
 }
 
 // === 必完成事件管理 ===
+function touchMustDo(){
+  localStorage.setItem('mustDoLocalChanged','1');
+  localStorage.setItem('mustDoTs',String(Date.now()));
+}
 function openMustDoModal(){
   openModal('mustdo');
 }
@@ -1265,7 +1295,7 @@ function addMustDo(){
   const items=LS.get(key,[]);
   items.push({text:text,time:time});
   LS.set(key,items);
-  localStorage.setItem('mustDoLocalChanged','1');
+  touchMustDo();
   // 不再重置完成状态，保留已有的done数组
   renderTasks();
   closeModal();
@@ -1275,7 +1305,7 @@ function removeMustDo(idx){
   const items=LS.get(key,[]);
   items.splice(idx,1);
   LS.set(key,items);
-  localStorage.setItem('mustDoLocalChanged','1');
+  touchMustDo();
   // 不再重置完成状态，保留已有的done数组
   renderTasks();
 }
@@ -1353,7 +1383,7 @@ function saveEditMustDo(mustIdx,newText,newTime){
     items[mustIdx].text=newText.trim();
     items[mustIdx].time=newTime||'';
     LS.set(key,items);
-    localStorage.setItem('mustDoLocalChanged','1');
+    touchMustDo();
     // 不再重置完成状态，保留已有的done数组
     renderTasks();
   }
@@ -1426,6 +1456,15 @@ function launchConfetti(){
 }
 if(planState.done.length===getTotalTasks())showCelebration();
 renderTasks();
+
+// 启动时清掉所有 mustDo_YYYY-MM-DD 历史残留 key（它们是"删了又回来"的旧数据来源）
+(function cleanMustDoHistory(){
+  try{
+    Object.keys(localStorage).forEach(function(k){
+      if(k.indexOf('mustDo_')===0)localStorage.removeItem(k);
+    });
+  }catch(e){}
+})();
 
 // === 自动从 GitHub 恢复数据 ===
 (async function autoRestore(){
