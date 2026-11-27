@@ -665,7 +665,8 @@ if(!localStorage.getItem('orders')){
       // 但云端新增的商单要补进来，否则这台设备会一直缺新单
       if(localStorage.getItem('ordersLocalChanged')==='1'){
         const lmap={};local.forEach(o=>{lmap[dmKey(o)]=o});
-        const extra=data.filter(o=>!lmap[dmKey(o)]);
+        const _dead=_orderDead();
+        const extra=data.filter(o=>!lmap[dmKey(o)]&&!_dead[dmKey(o)]);
         if(extra.length){
           LS.set('orders',local.concat(extra));
           if($('orderList'))renderOrderList();
@@ -742,14 +743,32 @@ async function pushOrdersToGitHub(){
 }
 
 // 云端商单（只含已完成）合并回本地：同名单云端更新，云端没有的本地商单保留，不会被删
+// 已删除商单的墓碑：name|account。删除后记进来，合并时一律排除，
+// 否则云端还留着这条，下次同步就会被「合并」回来（删了又出现）。
+function _orderDead(){
+  const d=LS.get('ordersDeleted',[]);const m={};(d||[]).forEach(k=>m[k]=1);return m;
+}
+function markOrderDeleted(o){
+  if(!o)return;
+  const k=dmKey(o);const d=LS.get('ordersDeleted',[]);
+  if(!d.includes(k)){d.push(k);LS.set('ordersDeleted',d);}
+  localStorage.setItem('ordersLocalChanged','1');
+}
+function unmarkOrderDeleted(o){
+  if(!o)return;
+  const k=dmKey(o);const d=LS.get('ordersDeleted',[]);
+  const i=d.indexOf(k);
+  if(i>-1){d.splice(i,1);LS.set('ordersDeleted',d);}
+}
 function mergeOrdersKeepLocal(local,remote){
+  const dead=_orderDead();
   const rmap={};(remote||[]).forEach(o=>{rmap[dmKey(o)]=o});
   const out=[],seen={};
   (local||[]).forEach(o=>{
-    const k=dmKey(o);seen[k]=1;
+    const k=dmKey(o);if(dead[k])return;seen[k]=1;
     out.push(rmap[k]?Object.assign({},o,rmap[k]):o);
   });
-  (remote||[]).forEach(o=>{const k=dmKey(o);if(!seen[k])out.push(o)});
+  (remote||[]).forEach(o=>{const k=dmKey(o);if(dead[k]||seen[k])return;out.push(o)});
   return out;
 }
 // 投流数据合并：按 商单+类型 取 ts 较新的一条，本机未同步的记录不会被冲掉
@@ -871,6 +890,7 @@ async function pushAllToGitHub(){
   localModules.topics=topics;
   localModules.mustDos=mustDos;
   localModules.customTasks=customTasks;
+  localModules.ordersDeleted=LS.get('ordersDeleted',[]);
   // 修复历史同步造成的乱码，避免污染云端
   for(const _k in localModules){ localModules[_k]=_fixMojibakeDeep(localModules[_k]); }
   
@@ -957,6 +977,11 @@ async function pushAllToGitHub(){
           mergedDM[k]=o;
         });
         modules.dataMaint=mergedDM;
+      }else if(key==='ordersDeleted'){
+        // 墓碑取并集：两台设备各删过不同商单，两边的删除都要生效
+        const _ra=remoteData.ordersDeleted||[], _la=localModules.ordersDeleted||[];
+        const _set={};_ra.forEach(function(k){_set[k]=1});_la.forEach(function(k){_set[k]=1});
+        modules.ordersDeleted=Object.keys(_set);
       }else if(key==='orders'){
         // 本机改过且还没推上去 → 以本地为准；否则远程优先合并，
         // 避免本地数据较旧的设备把云端较新的商单状态整份覆盖回去
@@ -1030,6 +1055,7 @@ function syncAllToAgent(){
     .then(data=>{
       if(!data)return;
       if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',mergeOrdersKeepLocal(LS.get('orders',[]),data.orders))}
+      if(data.ordersDeleted&&data.ordersDeleted.length){const _d=LS.get('ordersDeleted',[]);data.ordersDeleted.forEach(function(k){if(!_d.includes(k))_d.push(k)});LS.set('ordersDeleted',_d);}
       if(data.memos!==undefined)LS.set('memos',data.memos||[]);
       if(data.reviews!==undefined)LS.set('reviews',data.reviews||[]);
       if(data.dataMaint)LS.set('dataMaint',mergeDM(data.dataMaint,LS.get('dataMaint',{})));
@@ -1115,6 +1141,7 @@ function forceRefreshAll(){
     _cloudData().then(data=>{
       if(!data)return;
       if(data.orders&&data.orders.length>0){migrateOrders(data.orders);LS.set('orders',mergeOrdersKeepLocal(LS.get('orders',[]),data.orders))}
+      if(data.ordersDeleted&&data.ordersDeleted.length){const _d=LS.get('ordersDeleted',[]);data.ordersDeleted.forEach(function(k){if(!_d.includes(k))_d.push(k)});LS.set('ordersDeleted',_d);}
       if(data.memos!==undefined)LS.set('memos',data.memos||[]);
       if(data.reviews!==undefined)LS.set('reviews',data.reviews||[]);
       if(data.dataMaint)LS.set('dataMaint',mergeDM(data.dataMaint,LS.get('dataMaint',{})));
@@ -1886,6 +1913,8 @@ function addOrder(){
       status:0
     });
   }
+  // 如果这条之前在墓碑里（删过又加回来），把墓碑清掉
+  unmarkOrderDeleted(orders[orders.length-1]);
   LS.set('orders',orders);
   localStorage.setItem('ordersLocalChanged','1');
   $('newOrderName').value='';$('newOrderBrand').value='';$('newOrderDate').value='';$('newOrderPrice').value='';$('newOrderRebate').value='';$('newOrderNote').value='';
@@ -1966,7 +1995,15 @@ function cycleOrderStatus(i){
   localStorage.setItem('ordersLocalChanged','1');
   renderOrderList();
 }
-function delOrder(i){const a=LS.get('orders',[]);a.splice(i,1);LS.set('orders',a);localStorage.setItem('ordersLocalChanged','1');renderOrderList()}
+function delOrder(i){
+  const a=LS.get('orders',[]);
+  const o=a[i];
+  markOrderDeleted(o);      // 记墓碑，云端再有这条也不会被合并回来
+  a.splice(i,1);
+  LS.set('orders',a);
+  localStorage.setItem('ordersLocalChanged','1');
+  renderOrderList();
+}
 
 // --- Review ---
 function renderReview(title,body){
